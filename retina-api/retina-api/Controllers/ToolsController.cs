@@ -9,9 +9,10 @@ using System.Web.Http;
 
 namespace retina_api.Controllers
 {
+
     public class ToolsController : ApiController
     {
- 
+        
         //This function takes a db record and converts it into Ember.js combatable JSON
         private dynamic getJSONTool(IDataRecord record)
         {
@@ -76,6 +77,19 @@ namespace retina_api.Controllers
                 return Ok(e);
             }
 
+        }
+        
+        [HttpPost]
+        public IHttpActionResult PostImage(dynamic data)
+        {
+            try
+            {
+                return Ok(data.hair);
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
         }
     }
 }
