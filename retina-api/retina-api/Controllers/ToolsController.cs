@@ -79,17 +79,5 @@ namespace retina_api.Controllers
 
         }
         
-        [HttpPost]
-        public IHttpActionResult PostImage(dynamic data)
-        {
-            try
-            {
-                return Ok(data.hair);
-            }
-            catch (Exception e)
-            {
-                return Ok(e);
-            }
-        }
     }
 }
