@@ -32,7 +32,7 @@ namespace retina_api.Controllers
 
             while (myReader.Read())
             {
-                toolList.Add(new Tool((IDataRecord)myReader));
+                toolList.Add(new Tool(myReader));
             }
 
             myConnection.Close();

@@ -11,8 +11,15 @@ namespace retina_api.Controllers
 {
     public class TokenController : ApiController
     {
+
+        private string generateToken()
+        {
+            
+            return "blah";
+        }
+
         [HttpPost]
-        public IHttpActionResult Login(dynamic requestBody)
+        public IHttpActionResult login(dynamic requestBody)
         {
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
@@ -30,7 +37,20 @@ namespace retina_api.Controllers
             if (myReader.Read())
             {
                 string token = generateToken();
-                return Ok( new { access_token = token } );
+
+                SqlCommand addTokenCmd = new SqlCommand("????????????", myConnection);
+                addTokenCmd.CommandType = CommandType.StoredProcedure;
+
+                addTokenCmd.Parameters.AddWithValue("@TokenID", token);
+                SqlDataReader tokenReader = addTokenCmd.ExecuteReader();
+
+                string userID = "";
+                while (tokenReader.Read())
+                {
+                     userID = ((string)((IDataRecord)tokenReader)["UserID"]).TrimEnd(' ');
+                }
+
+                return Ok( new { accesstoken = token, userid = userID } );
             }
             else
             {
@@ -38,9 +58,23 @@ namespace retina_api.Controllers
             }       
         }
 
-        private string generateToken()
+        [HttpDelete]
+        public IHttpActionResult deleteToken(string token)
         {
-            return "blah";
+            SqlConnection myConnection = new DBConnector().newConnection;
+            myConnection.Open();
+
+            SqlCommand cmd = new SqlCommand("????????????", myConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@TokenID", token);
+            cmd.ExecuteNonQuery();
+
+            myConnection.Close();
+
+            return Ok();
         }
+
+       
     }
 }

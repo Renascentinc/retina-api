@@ -48,9 +48,34 @@ namespace retina_api.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult addTool(Tool tool)
+        public IHttpActionResult addTool(dynamic toolData)
         {
-            return Ok();
+
+            try
+            {
+                SqlConnection myConnection = new DBConnector().newConnection;
+                myConnection.Open();
+
+                SqlCommand cmd = new SqlCommand("???", myConnection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Type", (string)toolData.type);
+                cmd.Parameters.AddWithValue("@Brand", (string)toolData.brand);
+                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData.purchasedfrom);
+                cmd.Parameters.AddWithValue("@Price", (string)toolData.price);
+                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData.modelnumber);
+                cmd.Parameters.AddWithValue("@Status", (string)toolData.status);
+
+                cmd.ExecuteNonQuery();
+                myConnection.Close();
+                
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+
         }
 
     }

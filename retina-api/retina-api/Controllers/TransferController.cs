@@ -24,7 +24,7 @@ namespace retina_api.Controllers
                 {
                     SqlCommand cmd = new SqlCommand("??????", myConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@UserID", toolTransferInfo.userid);
+                    cmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo.userid);
                     cmd.Parameters.AddWithValue("@ToolID", toolID);
                     cmd.ExecuteNonQuery();
                 }

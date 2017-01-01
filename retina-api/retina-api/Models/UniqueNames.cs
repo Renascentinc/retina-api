@@ -14,7 +14,8 @@ namespace retina_api.Models
 
         public UniqueNames(string testProc)
         {
-            //Connecto to DB with given testProc
+            
+            //Connect to DB with given testProc
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
@@ -22,13 +23,15 @@ namespace retina_api.Models
             cmd.CommandType = CommandType.StoredProcedure;
 
             SqlDataReader uniqueNameReader = cmd.ExecuteReader();
+            myConnection.Close();
 
             uniqueNames = new List<string>();
-
+            
             while (uniqueNameReader.Read())
             {
                 uniqueNames.Add(((string)((IDataRecord)uniqueNameReader)["UserID"]).TrimEnd(' '));
-            }
+
+            }         
 
         }
     }
