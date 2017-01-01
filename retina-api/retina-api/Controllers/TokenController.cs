@@ -89,8 +89,9 @@ namespace retina_api.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult deleteToken(string token)
+        public IHttpActionResult deleteToken(string id)
         {
+            string token = id;
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
