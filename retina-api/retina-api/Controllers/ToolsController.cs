@@ -45,8 +45,13 @@ namespace retina_api.Controllers
             {
                 return Ok(e);
             }
-
         }
-        
+
+        [HttpPost]
+        public IHttpActionResult addTool(Tool tool)
+        {
+            return Ok();
+        }
+
     }
 }
