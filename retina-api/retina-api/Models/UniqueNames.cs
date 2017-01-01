@@ -10,29 +10,57 @@ namespace retina_api.Models
 {
     public class UniqueNames
     {
-        public List<string> uniqueNames { get; }
+        private SqlDataReader uniqueReader;
+        private SqlConnection myConnection;
+        private SqlCommand cmd;
 
         public UniqueNames(string testProc)
         {
-            
-            //Connect to DB with given testProc
-            SqlConnection myConnection = new DBConnector().newConnection;
-            myConnection.Open();
-
-            SqlCommand cmd = new SqlCommand(testProc, myConnection);
+            myConnection = new DBConnector().newConnection;
+            cmd = new SqlCommand(testProc, myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
+        }
 
-            SqlDataReader uniqueNameReader = cmd.ExecuteReader();
+        public List<string> getUniqueStrings() {
+
+            myConnection.Open();
+            uniqueReader = cmd.ExecuteReader();
+
+            List<string> uniqueStrings = new List<string>();
+            while (uniqueReader.Read())
+            {
+                uniqueStrings.Add(((string)((IDataRecord)uniqueReader)["*"]).TrimEnd(' '));
+            }
+
             myConnection.Close();
 
-            uniqueNames = new List<string>();
-            
-            while (uniqueNameReader.Read())
-            {
-                uniqueNames.Add(((string)((IDataRecord)uniqueNameReader)["UserID"]).TrimEnd(' '));
-
-            }         
+            return uniqueStrings;
 
         }
+
+        public List<dynamic> getUniqueDynamics()
+        {
+
+            myConnection.Open();
+            uniqueReader = cmd.ExecuteReader();
+
+            List<dynamic> uniqueDynamics = new List<dynamic>();
+            dynamic idAndName = new { };
+            while (uniqueReader.Read())
+            {
+                idAndName = new
+                {
+                    userid = ((int)((IDataRecord)uniqueReader)["UserID"]),
+                    username = ((string)((IDataRecord)uniqueReader)["UserName"]).TrimEnd(' ')
+                };
+                uniqueDynamics.Add(idAndName);
+            }
+
+            myConnection.Close();
+
+            return uniqueDynamics;
+
+        }
+
     }
 }

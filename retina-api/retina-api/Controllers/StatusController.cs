@@ -19,8 +19,8 @@ namespace retina_api.Controllers
             try
             {
 
-                List<string> uniqueNames = new UniqueNames("?????").uniqueNames;
-                return Ok(new { status = uniqueNames });
+                List<string> uniqueStrings = new UniqueNames("select_status").getUniqueStrings();
+                return Ok(new { status = uniqueStrings });
 
             }
             catch (Exception e)

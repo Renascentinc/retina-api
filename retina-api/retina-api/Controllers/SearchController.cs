@@ -13,13 +13,25 @@ namespace retina_api.Controllers
     public class SearchController : ApiController
     {
         [HttpGet]
-        public IHttpActionResult search(string status, int userID, string type)
+        public IHttpActionResult search(string status, int userID, string type, string searchType)
         {
+            if (status == "") { status = null; }
+            if (type == "") { status = null; }
+            if (searchType == "") { searchType = null; }
 
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("??????", myConnection);
+            SqlCommand cmd;
+            if (searchType == "toolboxsearch")
+            {
+                cmd = new SqlCommand("?????", myConnection);
+            }
+            else
+            {
+                cmd = new SqlCommand("??????", myConnection);
+            }
+
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@Status", status);
@@ -38,7 +50,7 @@ namespace retina_api.Controllers
             myConnection.Close();
 
             return Ok(new { data = toolList });
-
+            
     
         }
     }

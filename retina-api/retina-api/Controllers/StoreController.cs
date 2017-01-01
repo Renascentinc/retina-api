@@ -1,5 +1,4 @@
-﻿using retina_api.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,17 +7,17 @@ using System.Web.Http;
 
 namespace retina_api.Controllers
 {
-    public class TypesController : ApiController
+    public class StoreController : ApiController
     {
         [HttpGet]
-        public IHttpActionResult getTypes()
+        public IHttpActionResult getOwners()
         {
 
             try
             {
 
-                List<string> uniqueStrings = new UniqueNames("select_type").getUniqueStrings();
-                return Ok(new { types = uniqueStrings });
+                List<string> uniqueStrings = new Models.UniqueNames("select_purchased_from").getUniqueStrings();
+                return Ok(new { stores = uniqueStrings });
 
             }
             catch (Exception e)

@@ -23,7 +23,7 @@ namespace retina_api.Controllers
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("testproc", myConnection);
+                SqlCommand cmd = new SqlCommand("tool_details", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@ToolID", id);
@@ -33,7 +33,7 @@ namespace retina_api.Controllers
                 Tool tool = null;
                 while (myReader.Read())
                 {
-                    tool = new Tool((IDataRecord)myReader);
+                    tool = new Tool(myReader);
                 }
 
                 myConnection.Close();

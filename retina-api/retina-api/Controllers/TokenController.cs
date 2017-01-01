@@ -24,7 +24,7 @@ namespace retina_api.Controllers
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("????????????", myConnection);
+            SqlCommand cmd = new SqlCommand("authenticate_user", myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@UserName", requestBody.identification);
@@ -32,30 +32,26 @@ namespace retina_api.Controllers
 
             SqlDataReader myReader = cmd.ExecuteReader();
 
-            myConnection.Close();
-
-            if (myReader.Read())
+            while (myReader.Read())
             {
+                
+                string userID = ((string)((IDataRecord)myReader)["UserID"]).TrimEnd(' ');
+
                 string token = generateToken();
 
-                SqlCommand addTokenCmd = new SqlCommand("????????????", myConnection);
+                SqlCommand addTokenCmd = new SqlCommand("add_token", myConnection);
                 addTokenCmd.CommandType = CommandType.StoredProcedure;
 
                 addTokenCmd.Parameters.AddWithValue("@TokenID", token);
-                SqlDataReader tokenReader = addTokenCmd.ExecuteReader();
+                addTokenCmd.Parameters.AddWithValue("@UserID", userID);
 
-                string userID = "";
-                while (tokenReader.Read())
-                {
-                     userID = ((string)((IDataRecord)tokenReader)["UserID"]).TrimEnd(' ');
-                }
+                addTokenCmd.ExecuteNonQuery();
 
                 return Ok( new { accesstoken = token, userid = userID } );
             }
-            else
-            {
-                return Unauthorized();
-            }       
+
+            myConnection.Close();
+            return Unauthorized();    
         }
 
         [HttpDelete]
@@ -64,7 +60,7 @@ namespace retina_api.Controllers
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("????????????", myConnection);
+            SqlCommand cmd = new SqlCommand("delete_token", myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@TokenID", token);

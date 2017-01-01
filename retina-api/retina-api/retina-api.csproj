@@ -110,6 +110,7 @@
     <Compile Include="Controllers\BrandsController.cs" />
     <Compile Include="Controllers\OwnersController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\TransferController.cs" />
     <Compile Include="Controllers\TypesController.cs" />

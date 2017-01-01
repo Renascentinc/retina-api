@@ -19,8 +19,8 @@ namespace retina_api.Controllers
             try
             {
 
-                List<string> uniqueNames = new UniqueNames("?????").uniqueNames;
-                return Ok(new { owners = uniqueNames });
+                List<dynamic> uniqueDynamics = new UniqueNames("select_user").getUniqueDynamics();
+                return Ok(new { owners = uniqueDynamics });
 
             }catch (Exception e)
             {
