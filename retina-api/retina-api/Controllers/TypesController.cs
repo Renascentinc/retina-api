@@ -17,7 +17,7 @@ namespace retina_api.Controllers
             try
             {
 
-                List<string> uniqueStrings = new UniqueNames("select_type").getUniqueStrings();
+                List<string> uniqueStrings = new UniqueNames("select_type").getUniqueStrings("Type");
                 return Ok(new { types = uniqueStrings });
 
             }

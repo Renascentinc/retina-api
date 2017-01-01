@@ -17,11 +17,12 @@ namespace retina_api.Models
         public UniqueNames(string testProc)
         {
             myConnection = new DBConnector().newConnection;
+            //the testProcs called here are assumed to require no parameters
             cmd = new SqlCommand(testProc, myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
         }
 
-        public List<string> getUniqueStrings() {
+        public List<string> getUniqueStrings(string queryParam) {
 
             myConnection.Open();
             uniqueReader = cmd.ExecuteReader();
@@ -29,7 +30,7 @@ namespace retina_api.Models
             List<string> uniqueStrings = new List<string>();
             while (uniqueReader.Read())
             {
-                uniqueStrings.Add(((string)((IDataRecord)uniqueReader)["*"]).TrimEnd(' '));
+                uniqueStrings.Add(((string)((IDataRecord)uniqueReader)[queryParam]).TrimEnd(' '));
             }
 
             myConnection.Close();

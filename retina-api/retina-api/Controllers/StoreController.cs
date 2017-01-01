@@ -16,7 +16,7 @@ namespace retina_api.Controllers
             try
             {
 
-                List<string> uniqueStrings = new Models.UniqueNames("select_purchased_from").getUniqueStrings();
+                List<string> uniqueStrings = new Models.UniqueNames("select_purchased_from").getUniqueStrings("PurchasedFrom");
                 return Ok(new { stores = uniqueStrings });
 
             }

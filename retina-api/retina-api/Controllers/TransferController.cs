@@ -20,11 +20,23 @@ namespace retina_api.Controllers
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
+                SqlCommand transactionIDCmd = new SqlCommand("??????", myConnection);
+                transactionIDCmd.CommandType = CommandType.StoredProcedure;
+
+                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo.userid);
+
+                SqlDataReader transactionIDReader = transactionIDCmd.ExecuteReader();
+                int transactionID = 0;
+                while (transactionIDReader.Read())
+                {
+                    transactionID = (int)(((IDataRecord)transactionIDReader)["@TransactionID"]);
+                }
+
                 foreach (int toolID in toolTransferInfo.toolids)
                 {
                     SqlCommand cmd = new SqlCommand("??????", myConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo.userid);
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionID );
                     cmd.Parameters.AddWithValue("@ToolID", toolID);
                     cmd.ExecuteNonQuery();
                 }
