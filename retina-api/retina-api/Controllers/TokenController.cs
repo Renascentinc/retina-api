@@ -42,8 +42,6 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult login( dynamic requestBody)
         {
-            //return Ok( new { jusername = username, jpassword = password } );
-            return Ok( new { joe = requestBody } );
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
