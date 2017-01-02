@@ -51,7 +51,8 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult addTool(JObject toolData)
         {
-            
+            return( Ok( toolData ) );
+            /*
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
@@ -60,12 +61,12 @@ namespace retina_api.Controllers
                 SqlCommand cmd = new SqlCommand("???", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Type", (string)toolData.type);
-                cmd.Parameters.AddWithValue("@Brand", (string)toolData.brand);
-                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData.purchasedfrom);
-                cmd.Parameters.AddWithValue("@Price", (string)toolData.price);
-                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData.modelnumber);
-                cmd.Parameters.AddWithValue("@Status", (string)toolData.status);
+                cmd.Parameters.AddWithValue("@Type", (string)toolData["type"]);
+                cmd.Parameters.AddWithValue("@Brand", (string)toolData["brand"]);
+                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData["purchasedfrom"]);
+                cmd.Parameters.AddWithValue("@Price", (string)toolData["price"]);
+                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData["modelnumber"]);
+                cmd.Parameters.AddWithValue("@Status", (string)toolData["status"]);
 
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
@@ -76,6 +77,7 @@ namespace retina_api.Controllers
             {
                 return Ok(e);
             }
+            */
 
         }
 
