@@ -84,7 +84,7 @@ namespace retina_api.Controllers
                 }
             }catch (Exception e)
             {
-                return Unauthorized();
+                return Ok(e);
             }
         }
 
