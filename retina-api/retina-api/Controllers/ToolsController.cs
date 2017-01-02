@@ -1,4 +1,5 @@
-﻿using retina_api.Models;
+﻿using Newtonsoft.Json.Linq;
+using retina_api.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -48,11 +49,11 @@ namespace retina_api.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult addTool(dynamic toolData)
+        public IHttpActionResult addTool(JObject toolData)
         {
-
+            
             try
-            {
+            {/*
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -68,8 +69,8 @@ namespace retina_api.Controllers
 
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
-                
-                return Ok();
+               */
+                return Ok(toolData);
             }
             catch (Exception e)
             {
