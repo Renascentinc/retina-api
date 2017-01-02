@@ -76,7 +76,7 @@ namespace retina_api.Controllers
                     addTokenCmd.ExecuteNonQuery();
 
                     myTokenConnection.Close();
-                    return Ok(new { accesstoken = token, userid = userID });
+                    return Ok(new { access_token = token, userid = userID });
                 }
                 else
                 {
