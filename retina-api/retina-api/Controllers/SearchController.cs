@@ -36,9 +36,9 @@ namespace retina_api.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                //cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@Status", status);
                 cmd.Parameters.AddWithValue("@UserID", userID);
-                //cmd.Parameters.AddWithValue("@Type", type);
+                cmd.Parameters.AddWithValue("@Type", type);
 
                 SqlDataReader myReader = cmd.ExecuteReader();
 

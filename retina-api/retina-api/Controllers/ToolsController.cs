@@ -1,4 +1,5 @@
-﻿using retina_api.Models;
+﻿using Newtonsoft.Json.Linq;
+using retina_api.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -48,9 +49,10 @@ namespace retina_api.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult addTool(dynamic toolData)
+        public IHttpActionResult addTool(JObject toolData)
         {
-
+            return( Ok( toolData ) );
+            
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
@@ -62,21 +64,20 @@ namespace retina_api.Controllers
                 cmd.Parameters.AddWithValue("@Type", (string)toolData["type"]);
                 cmd.Parameters.AddWithValue("@Brand", (string)toolData["brand"]);
                 cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData["purchasedfrom"]);
-                cmd.Parameters.AddWithValue("@Date", toolData["purchasedate"]);
                 cmd.Parameters.AddWithValue("@Price", (string)toolData["price"]);
                 cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData["modelnumber"]);
                 cmd.Parameters.AddWithValue("@Status", (string)toolData["status"]);
-                cmd.Parameters.AddWithValue("@SerialNumber", (string)toolData["serialnumber"]);
-                cmd.Parameters.AddWithValue("@UserID", (string)toolData["userid"]);
+
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
-                
+               
                 return Ok();
             }
             catch (Exception e)
             {
                 return Ok(e);
             }
+            
 
         }
 
