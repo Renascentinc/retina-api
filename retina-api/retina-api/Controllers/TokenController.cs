@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -40,7 +41,7 @@ namespace retina_api.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult login(dynamic requestBody)
+        public IHttpActionResult login( JObject requestBody)
         {
             try
             {
@@ -50,8 +51,8 @@ namespace retina_api.Controllers
                 SqlCommand cmd = new SqlCommand("authenticate_user", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@UserName", (string)requestBody.identification);
-                cmd.Parameters.AddWithValue("@Password", (string)requestBody.password);
+                cmd.Parameters.AddWithValue("@UserName", (string)requestBody["username"]);
+                cmd.Parameters.AddWithValue("@Password", (string)requestBody["password"]);
 
                 SqlDataReader myReader = cmd.ExecuteReader();
 
@@ -75,7 +76,7 @@ namespace retina_api.Controllers
                     addTokenCmd.ExecuteNonQuery();
 
                     myTokenConnection.Close();
-                    return Ok(new { accesstoken = token, userid = userID });
+                    return Ok(new { access_token = token, userid = userID });
                 }
                 else
                 {
@@ -84,7 +85,7 @@ namespace retina_api.Controllers
                 }
             }catch (Exception e)
             {
-                return Unauthorized();
+                return Ok(e);
             }
         }
 
