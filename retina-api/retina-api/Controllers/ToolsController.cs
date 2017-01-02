@@ -14,8 +14,8 @@ namespace retina_api.Controllers
 
     public class ToolsController : ApiController
     {
-        
-      
+
+
         [HttpGet]
         public IHttpActionResult GetbyID(int id)
         {
@@ -38,7 +38,7 @@ namespace retina_api.Controllers
                 }
 
                 myConnection.Close();
- 
+
                 return Ok( new { data = tool } );
 
             }
@@ -51,8 +51,7 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult addTool(JObject toolData)
         {
-            return( Ok( toolData ) );
-            
+
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
@@ -70,14 +69,13 @@ namespace retina_api.Controllers
 
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
-               
+
                 return Ok();
             }
             catch (Exception e)
             {
                 return Ok(e);
             }
-            
 
         }
 
