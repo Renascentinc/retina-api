@@ -50,7 +50,7 @@ namespace retina_api.Controllers
                 SqlCommand cmd = new SqlCommand("authenticate_user", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@UserName", (string)requestBody.identification);
+                cmd.Parameters.AddWithValue("@UserName", (string)requestBody.username);
                 cmd.Parameters.AddWithValue("@Password", (string)requestBody.password);
 
                 SqlDataReader myReader = cmd.ExecuteReader();
