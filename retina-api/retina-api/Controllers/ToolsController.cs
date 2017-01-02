@@ -59,13 +59,15 @@ namespace retina_api.Controllers
                 SqlCommand cmd = new SqlCommand("???", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Type", (string)toolData.type);
-                cmd.Parameters.AddWithValue("@Brand", (string)toolData.brand);
-                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData.purchasedfrom);
-                cmd.Parameters.AddWithValue("@Price", (string)toolData.price);
-                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData.modelnumber);
-                cmd.Parameters.AddWithValue("@Status", (string)toolData.status);
-
+                cmd.Parameters.AddWithValue("@Type", (string)toolData["type"]);
+                cmd.Parameters.AddWithValue("@Brand", (string)toolData["brand"]);
+                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData["purchasedfrom"]);
+                cmd.Parameters.AddWithValue("@Date", toolData["purchasedate"]);
+                cmd.Parameters.AddWithValue("@Price", (string)toolData["price"]);
+                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData["modelnumber"]);
+                cmd.Parameters.AddWithValue("@Status", (string)toolData["status"]);
+                cmd.Parameters.AddWithValue("@SerialNumber", (string)toolData["serialnumber"]);
+                cmd.Parameters.AddWithValue("@UserID", (string)toolData["userid"]);
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
                 
