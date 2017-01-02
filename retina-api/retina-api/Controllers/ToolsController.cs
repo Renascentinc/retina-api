@@ -53,7 +53,7 @@ namespace retina_api.Controllers
         {
             
             try
-            {/*
+            {
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -69,8 +69,8 @@ namespace retina_api.Controllers
 
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
-               */
-                return Ok(toolData);
+               
+                return Ok();
             }
             catch (Exception e)
             {
