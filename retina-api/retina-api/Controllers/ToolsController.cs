@@ -1,4 +1,5 @@
-﻿using retina_api.Models;
+﻿using Newtonsoft.Json.Linq;
+using retina_api.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,7 +53,7 @@ namespace retina_api.Controllers
         {
 
             try
-            {
+            {/*
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -68,8 +69,9 @@ namespace retina_api.Controllers
 
                 cmd.ExecuteNonQuery();
                 myConnection.Close();
-                
-                return Ok();
+                */
+
+                return Ok(toolData);
             }
             catch (Exception e)
             {

@@ -15,42 +15,48 @@ namespace retina_api.Controllers
         [HttpGet]
         public IHttpActionResult search(string status, int userID, string type, string searchType)
         {
-            if (status == "") { status = null; }
-            if (type == "") { status = null; }
-            if (searchType == "") { searchType = null; }
-
-            SqlConnection myConnection = new DBConnector().newConnection;
-            myConnection.Open();
-
-            SqlCommand cmd;
-            if (searchType == "toolboxsearch")
+            try
             {
-                cmd = new SqlCommand("?????", myConnection);
+                if (status == "") { status = null; }
+                if (type == "") { status = null; }
+                if (searchType == "") { searchType = null; }
+
+                SqlConnection myConnection = new DBConnector().newConnection;
+                myConnection.Open();
+
+                SqlCommand cmd;
+                if (searchType == "toolboxsearch")
+                {
+                    cmd = new SqlCommand("?????", myConnection);
+                }
+                else
+                {
+                    cmd = new SqlCommand("transfer_tools", myConnection);
+                }
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@UserID", userID);
+                //cmd.Parameters.AddWithValue("@Type", type);
+
+                SqlDataReader myReader = cmd.ExecuteReader();
+
+                List<Tool> toolList = new List<Tool>();
+
+                while (myReader.Read())
+                {
+                    toolList.Add(new Tool(myReader));
+                }
+
+                myConnection.Close();
+
+                return Ok(new { data = toolList });
             }
-            else
+            catch (Exception e)
             {
-                cmd = new SqlCommand("??????", myConnection);
-            }
-
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@Status", status);
-            cmd.Parameters.AddWithValue("@UserID", userID);
-            cmd.Parameters.AddWithValue("@Type", type);
-
-            SqlDataReader myReader = cmd.ExecuteReader();
-
-            List<Tool> toolList = new List<Tool>();
-
-            while (myReader.Read())
-            {
-                toolList.Add(new Tool(myReader));
-            }
-
-            myConnection.Close();
-
-            return Ok(new { data = toolList });
-            
+                return Ok(e);
+            }        
     
         }
     }
