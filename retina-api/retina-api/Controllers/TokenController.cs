@@ -80,11 +80,11 @@ namespace retina_api.Controllers
                 else
                 {
                     myConnection.Close();
-                    return Ok(requestBody);
+                    return Ok();
                 }
             }catch (Exception e)
             {
-                return Ok(requestBody);
+                return Ok(e);
             }
         }
 
