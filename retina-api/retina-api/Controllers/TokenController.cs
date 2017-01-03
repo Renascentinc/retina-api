@@ -90,9 +90,9 @@ namespace retina_api.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult deleteToken(string id)
+        public IHttpActionResult deleteToken(JObject token)
         {
-            string token = id;
+            string accessToken = (string)token["access_token"];
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 

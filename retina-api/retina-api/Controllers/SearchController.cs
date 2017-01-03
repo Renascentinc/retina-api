@@ -31,7 +31,7 @@ namespace retina_api.Controllers
                 }
                 else
                 {
-                    cmd = new SqlCommand("transfer_tools", myConnection);
+                    cmd = new SqlCommand("search_tools", myConnection);
                 }
 
                 cmd.CommandType = CommandType.StoredProcedure;

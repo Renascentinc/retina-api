@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace retina_api.Controllers
     {
         
         [HttpPut]
-        public IHttpActionResult transfer(dynamic toolTransferInfo)
+        public IHttpActionResult transfer(JObject toolTransferInfo)
         {
             try
             {
@@ -23,7 +24,7 @@ namespace retina_api.Controllers
                 SqlCommand transactionIDCmd = new SqlCommand("??????", myConnection);
                 transactionIDCmd.CommandType = CommandType.StoredProcedure;
 
-                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo.userid);
+                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["userid"]);
 
                 SqlDataReader transactionIDReader = transactionIDCmd.ExecuteReader();
                 int transactionID = 0;
@@ -32,7 +33,7 @@ namespace retina_api.Controllers
                     transactionID = (int)(((IDataRecord)transactionIDReader)["@TransactionID"]);
                 }
 
-                foreach (int toolID in toolTransferInfo.toolids)
+                foreach (int toolID in toolTransferInfo["toolids"])
                 {
                     SqlCommand cmd = new SqlCommand("??????", myConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
