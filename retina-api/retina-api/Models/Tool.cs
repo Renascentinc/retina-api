@@ -19,16 +19,16 @@ namespace retina_api.Models
             id = (int)record["ToolID"];
             attributes = new
             {
-                toolclass = ((string)record["Class"]).TrimEnd(' '),
+                toolclass = (record["Class"] != DBNull.Value) ? ((string)record["Class"]).TrimEnd(' ') : "",           
                 type = ((string)record["Type"]).TrimEnd(' '),
                 brand = ((string)record["Brand"]).TrimEnd(' '),
                 datepurchased = record["DatePurchased"],
-                purchasedfrom = ((string)record["PurchasedFrom"]).TrimEnd(' '),
+                purchasedfrom = (record["PurchasedFrom"] != DBNull.Value) ? ((string)record["PurchasedFrom"]).TrimEnd(' ') : "",
                 price = record["Price"],
                 modelnumber = ((string)record["ModelNumber"]).TrimEnd(' '),
                 status = ((string)record["Status"]).TrimEnd(' '),
                 serialnumber = ((string)record["SerialNumber"]).TrimEnd(' '),
-                userid = ((string)record["UserID"]).TrimEnd(' ')
+                userid = record["UserID"]           
  
             };
         }

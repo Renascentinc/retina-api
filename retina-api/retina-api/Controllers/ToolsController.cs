@@ -54,33 +54,45 @@ namespace retina_api.Controllers
             
             try
             {
+                
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
                 SqlCommand cmd = new SqlCommand("add_tool", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Type", (string)toolData["type"]);
-                cmd.Parameters.AddWithValue("@Brand", (string)toolData["brand"]);
-                cmd.Parameters.AddWithValue("@PurchasedFrom", ((string)toolData["purchasedfrom"] != "") ? (string)toolData["purchasedfrom"] : null );
-                cmd.Parameters.AddWithValue("@Price", ((string)toolData["price"] != "") ? (string)toolData["price"] : null);
-                cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData["modelnumber"]);
-                cmd.Parameters.AddWithValue("@Status", (string)toolData["status"]);
-                cmd.Parameters.AddWithValue("@SerialNumber", (string)toolData["serialnumber"]);
-                cmd.Parameters.AddWithValue("@Date", ((string)toolData["purchasedate"] != "") ? (string)toolData["purchasedate"] : null );
-                cmd.Parameters.AddWithValue("@UserID", (int)toolData["userid"]);
+                JObject attributes = (JObject)toolData["data"]["attributes"];
+
+                cmd.Parameters.AddWithValue("@Type", (string)attributes["type"]);
+                cmd.Parameters.AddWithValue("@Brand", (string)attributes["brand"]);
+                cmd.Parameters.AddWithValue("@PurchasedFrom", ((string)attributes["purchasedfrom"] != "") ? (string)attributes["purchasedfrom"] : null );
+
+                if ((string)attributes["price"] != "")
+                {
+                    cmd.Parameters.AddWithValue("@Price", (float)attributes["price"]);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Price", null);
+                }
+                
+                cmd.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);
+                cmd.Parameters.AddWithValue("@Status", (string)attributes["status"]);
+                cmd.Parameters.AddWithValue("@SerialNumber", (string)attributes["serialnumber"]);
+                cmd.Parameters.AddWithValue("@Date", ((string)attributes["purchasedate"] != "") ? (string)attributes["purchasedate"] : null );
+                cmd.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
                
 
                 SqlDataReader toolReader = cmd.ExecuteReader();
-
+                
                 Tool tool = null;
                 while (toolReader.Read())
                 {
                     tool = new Tool(toolReader);
                 }
-
+                
                 myConnection.Close();
-               
+                
                 return Ok(tool);
             }
             catch (Exception e)
