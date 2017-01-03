@@ -73,7 +73,7 @@ namespace retina_api.Controllers
                 }
                 else
                 {
-                    cmd.Parameters.AddWithValue("@Price", "");
+                    cmd.Parameters.AddWithValue("@Price", null);
                 }
                 
                 cmd.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);

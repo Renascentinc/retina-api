@@ -12,6 +12,32 @@ namespace retina_api.Controllers
 {
     public class SearchController : ApiController
     {
+        
+        [HttpGet]
+        public IHttpActionResult autocompleteSearch(string parameter)
+        {
+            SqlConnection myConnection = new DBConnector().newConnection;
+            myConnection.Open();
+
+            SqlCommand cmd = new SqlCommand("search_single_tool", myConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Number", parameter);
+
+            SqlDataReader searchReader = cmd.ExecuteReader();
+
+            List<Tool> toolList = new List<Tool>();
+
+            while (searchReader.Read())
+            {
+                toolList.Add(new Tool(searchReader));
+            }
+
+            myConnection.Close();
+
+            return Ok(new { data = toolList });
+        }
+        
+
         [HttpGet]
         public IHttpActionResult search(string status, int userID, string type, string searchType)
         {
