@@ -27,6 +27,8 @@ namespace retina_api.Models
                 price = record["Price"],
                 modelnumber = ((string)record["ModelNumber"]).TrimEnd(' '),
                 status = ((string)record["Status"]).TrimEnd(' '),
+                serialnumber = ((string)record["SerialNumber"]).TrimEnd(' '),
+                userid = ((string)record["UserID"]).TrimEnd(' ')
  
             };
         }

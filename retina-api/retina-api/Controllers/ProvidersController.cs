@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace retina_api.Controllers
 {
-    public class StoreController : ApiController
+    public class ProvidersController : ApiController
     {
         [HttpGet]
         public IHttpActionResult getOwners()
@@ -17,7 +17,7 @@ namespace retina_api.Controllers
             {
 
                 List<string> uniqueStrings = new Models.UniqueNames("select_purchased_from").getUniqueStrings("PurchasedFrom");
-                return Ok(new { stores = uniqueStrings });
+                return Ok(new { providers = uniqueStrings });
 
             }
             catch (Exception e)

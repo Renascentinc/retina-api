@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace retina_api.Controllers
 {
-    public class OwnersController : ApiController
+    public class UsersController : ApiController
     {
         [HttpGet]
         public IHttpActionResult getOwners()
@@ -20,7 +20,7 @@ namespace retina_api.Controllers
             {
 
                 List<dynamic> uniqueDynamics = new UniqueNames("select_user").getUniqueDynamics();
-                return Ok(new { owners = uniqueDynamics });
+                return Ok(new { users = uniqueDynamics });
 
             }catch (Exception e)
             {

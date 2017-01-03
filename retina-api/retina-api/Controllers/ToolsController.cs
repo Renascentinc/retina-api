@@ -14,8 +14,8 @@ namespace retina_api.Controllers
 
     public class ToolsController : ApiController
     {
-
-
+        
+      
         [HttpGet]
         public IHttpActionResult GetbyID(int id)
         {
@@ -38,7 +38,7 @@ namespace retina_api.Controllers
                 }
 
                 myConnection.Close();
-
+ 
                 return Ok( new { data = tool } );
 
             }
@@ -51,33 +51,43 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult addTool(JObject toolData)
         {
-            return( Ok( toolData ) );
-/*
+            
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("???", myConnection);
+                SqlCommand cmd = new SqlCommand("add_tool", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@Type", (string)toolData["type"]);
                 cmd.Parameters.AddWithValue("@Brand", (string)toolData["brand"]);
-                cmd.Parameters.AddWithValue("@PurchasedFrom", (string)toolData["purchasedfrom"]);
-                cmd.Parameters.AddWithValue("@Price", (string)toolData["price"]);
+                cmd.Parameters.AddWithValue("@PurchasedFrom", ((string)toolData["purchasedfrom"] != "") ? (string)toolData["purchasedfrom"] : null );
+                cmd.Parameters.AddWithValue("@Price", ((string)toolData["price"] != "") ? (string)toolData["price"] : null);
                 cmd.Parameters.AddWithValue("@ModelNumber", (string)toolData["modelnumber"]);
                 cmd.Parameters.AddWithValue("@Status", (string)toolData["status"]);
+                cmd.Parameters.AddWithValue("@SerialNumber", (string)toolData["serialnumber"]);
+                cmd.Parameters.AddWithValue("@Date", ((string)toolData["purchasedate"] != "") ? (string)toolData["purchasedate"] : null );
+                cmd.Parameters.AddWithValue("@UserID", (int)toolData["userid"]);
+               
 
-                cmd.ExecuteNonQuery();
+                SqlDataReader toolReader = cmd.ExecuteReader();
+
+                Tool tool = null;
+                while (toolReader.Read())
+                {
+                    tool = new Tool(toolReader);
+                }
+
                 myConnection.Close();
-
-                return Ok();
+               
+                return Ok(tool);
             }
             catch (Exception e)
             {
                 return Ok(e);
             }
-            */
+            
 
         }
 
