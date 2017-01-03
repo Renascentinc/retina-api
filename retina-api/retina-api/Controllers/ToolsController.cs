@@ -73,7 +73,7 @@ namespace retina_api.Controllers
                 }
                 else
                 {
-                    cmd.Parameters.AddWithValue("@Price", null);
+                    cmd.Parameters.AddWithValue("@Price", "");
                 }
                 
                 cmd.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);
@@ -93,7 +93,7 @@ namespace retina_api.Controllers
                 
                 myConnection.Close();
                 
-                return Ok(tool);
+                return Ok(new { data = tool });
             }
             catch (Exception e)
             {
