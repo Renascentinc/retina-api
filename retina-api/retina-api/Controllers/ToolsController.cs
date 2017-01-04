@@ -14,22 +14,18 @@ namespace retina_api.Controllers
 
     public class ToolsController : ApiController
     {
-        
-      
-        [HttpGet]
-        public IHttpActionResult GetbyID(int id)
+
+        public dynamic getToolByID(int id)
         {
             try
             {
-                SqlConnection myConnection = new DBConnector().newConnection;
-                myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("tool_details", myConnection);
-                cmd.CommandType = CommandType.StoredProcedure;
+                DBConnector myConnector = new DBConnector();
+                SqlCommand getToolCommand = myConnector.newProcedure("tool_details");
 
-                cmd.Parameters.AddWithValue("@ToolID", id);
+                getToolCommand.Parameters.AddWithValue("@ToolID", id);
 
-                SqlDataReader myReader = cmd.ExecuteReader();
+                SqlDataReader myReader = getToolCommand.ExecuteReader();
 
                 Tool tool = null;
                 while (myReader.Read())
@@ -37,7 +33,37 @@ namespace retina_api.Controllers
                     tool = new Tool(myReader);
                 }
 
-                myConnection.Close();
+                myConnector.closeConnection();
+
+                return (new { data = tool });
+
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetbyID(int id)
+        {
+            try
+            {
+
+                DBConnector myConnector = new DBConnector();
+                SqlCommand getToolCommand = myConnector.newProcedure("tool_details");
+
+                getToolCommand.Parameters.AddWithValue("@ToolID", id);
+
+                SqlDataReader myReader = getToolCommand.ExecuteReader();
+
+                Tool tool = null;
+                while (myReader.Read())
+                {
+                    tool = new Tool(myReader);
+                }
+
+                myConnector.closeConnection();
  
                 return Ok( new { data = tool } );
 
@@ -54,63 +80,94 @@ namespace retina_api.Controllers
             
             try
             {
-                
-                SqlConnection myConnection = new DBConnector().newConnection;
-                myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("add_tool", myConnection);
-                cmd.CommandType = CommandType.StoredProcedure;
+                DBConnector myConnector = new DBConnector();
+
+
+                //Begin Add tool
+                SqlCommand addToolCommand = myConnector.newProcedure("add_tool");
 
                 JObject attributes = (JObject)toolData["data"]["attributes"];
 
-                cmd.Parameters.AddWithValue("@Type", (string)attributes["type"]);
-                cmd.Parameters.AddWithValue("@Brand", (string)attributes["brand"]);
-                cmd.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);
-                cmd.Parameters.AddWithValue("@Status", (string)attributes["status"]);
-                cmd.Parameters.AddWithValue("@SerialNumber", (string)attributes["serialnumber"]);
-                cmd.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
+                addToolCommand.Parameters.AddWithValue("@Type", (string)attributes["type"]);
+                addToolCommand.Parameters.AddWithValue("@Brand", (string)attributes["brand"]);
+                addToolCommand.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);
+                addToolCommand.Parameters.AddWithValue("@Status", (string)attributes["status"]);
+                addToolCommand.Parameters.AddWithValue("@SerialNumber", (string)attributes["serialnumber"]);
+                addToolCommand.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
 
                 JToken purchasedfrom = attributes["purchasedfrom"];
                 if ((string)purchasedfrom == "" || purchasedfrom == null)
                 {
-                    cmd.Parameters.AddWithValue("@PurchasedFrom", DBNull.Value);
+                    addToolCommand.Parameters.AddWithValue("@PurchasedFrom", DBNull.Value);
                 }else
                 {
-                    cmd.Parameters.AddWithValue("@PurchasedFrom", (string)purchasedfrom);
+                    addToolCommand.Parameters.AddWithValue("@PurchasedFrom", (string)purchasedfrom);
                 }
 
 
                 JToken price = attributes["price"];
                 if ((string)price == "" || price == null)
                 {
-                    cmd.Parameters.AddWithValue("@Price", DBNull.Value);
+                    addToolCommand.Parameters.AddWithValue("@Price", DBNull.Value);
                 }
                 else
                 {
-                    cmd.Parameters.AddWithValue("@Price", (float)price);
+                    addToolCommand.Parameters.AddWithValue("@Price", (float)price);
                 }
                                   
 
                 JToken purchasedate = attributes["purchasedate"];
                 if ((string)purchasedate == "" || purchasedate == null) 
                 {
-                    cmd.Parameters.AddWithValue("@Date", DBNull.Value);
+                    addToolCommand.Parameters.AddWithValue("@Date", DBNull.Value);
                 }else
                 {
-                    cmd.Parameters.AddWithValue("@Date", (string)purchasedate);
+                    addToolCommand.Parameters.AddWithValue("@Date", (string)purchasedate);
                 }
-                             
-
-                SqlDataReader toolReader = cmd.ExecuteReader();
+                            
+                SqlDataReader toolReader = addToolCommand.ExecuteReader();
                 
                 Tool tool = null;
                 while (toolReader.Read())
                 {
-                    tool = new Tool(toolReader);
+                    tool = new Tool(toolReader, true);
                 }
                 
-                myConnection.Close();
-                
+                myConnector.closeConnection();
+                //End add tool
+
+
+                //Begin create transaction
+                myConnector = new DBConnector();
+
+                SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
+                transactionCommand.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
+
+                SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
+
+                int transactionID = 0;
+                while (transactionIDReader.Read())
+                {
+                    transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
+                }
+
+                myConnector.closeConnection();
+                //End create transaction
+
+
+                //Begin give transaction a tool
+                myConnector = new DBConnector();
+
+                SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
+                toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                toolTransactionCommand.Parameters.AddWithValue("@ToolID", tool.id);
+                toolTransactionCommand.Parameters.AddWithValue("@Status", tool.attributes.status);
+                toolTransactionCommand.ExecuteNonQuery();
+
+                myConnector.closeConnection();
+                //End give transaction a tool
+
                 return Ok(new { data = tool });
             }
             catch (Exception e)

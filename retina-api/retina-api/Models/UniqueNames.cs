@@ -12,7 +12,7 @@ namespace retina_api.Models
     {
         private SqlDataReader uniqueReader;
         private SqlConnection myConnection;
-        private SqlCommand cmd;
+        public SqlCommand cmd;
 
         public UniqueNames(string testProc)
         {
