@@ -33,17 +33,17 @@ namespace retina_api.Controllers
         [HttpPut]
         public IHttpActionResult updateStatus(JObject statusInfo)
         {
-            int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
+           // int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
 
-            if (userID != null)
-            {
+           // if (userID != null)
+           // {
                 try
                 {
                     DBConnector myConnector = new DBConnector();
 
                     SqlCommand statusCommand = myConnector.newProcedure("update_tool_status");
-                    statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["status"]);
-                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
+                    statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
+                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["attributes"]["toolid"]);
                     statusCommand.ExecuteNonQuery();
 
                     myConnector.closeConnection();
@@ -51,7 +51,7 @@ namespace retina_api.Controllers
                     myConnector = new DBConnector();
 
                     SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
-                    transactionCommand.Parameters.AddWithValue("@UserID", userID);
+                    transactionCommand.Parameters.AddWithValue("@UserID", (int)statusInfo["data"]["attributes"]["userid"]);
 
                     SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
 
@@ -67,8 +67,8 @@ namespace retina_api.Controllers
 
                     SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
                     toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
-                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
-                    toolTransactionCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["status"]);
+                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["attributes"]["toolid"]);
+                    toolTransactionCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
                     toolTransactionCommand.ExecuteNonQuery();
 
                     myConnector.closeConnection();
@@ -78,10 +78,10 @@ namespace retina_api.Controllers
                 {
                     return Ok(e);
                 }
-            }else
-            {
-                return Unauthorized();
-            }
+            //}else
+            //{
+          //      return Unauthorized();
+           // }
 
 
             
