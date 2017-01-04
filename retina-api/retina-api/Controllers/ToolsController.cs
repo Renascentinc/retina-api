@@ -76,7 +76,7 @@ namespace retina_api.Controllers
                     cmd.Parameters.AddWithValue("@PurchasedFrom", DBNull.Value);
                 }else
                 {
-                    cmd.Parameters.AddWithValue("@PurchasedFrom", purchasedfrom);
+                    cmd.Parameters.AddWithValue("@PurchasedFrom", (string)purchasedfrom);
                 }
 
 
@@ -97,7 +97,7 @@ namespace retina_api.Controllers
                     cmd.Parameters.AddWithValue("@Date", DBNull.Value);
                 }else
                 {
-                    cmd.Parameters.AddWithValue("@Date", purchasedate);
+                    cmd.Parameters.AddWithValue("@Date", (string)purchasedate);
                 }
                              
 
