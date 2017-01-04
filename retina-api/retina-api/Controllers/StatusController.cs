@@ -37,30 +37,46 @@ namespace retina_api.Controllers
 
             if (userID != null)
             {
-                DBConnector myConnector = new DBConnector();
-
-                SqlCommand statusCommand = myConnector.newProcedure("update_tool_status");
-                statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["status"]);
-                statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
-                statusCommand.ExecuteNonQuery();
-
-                SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
-                transactionCommand.Parameters.AddWithValue("@UserID", userID);
-
-                SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
-
-                int transactionID = 0;
-                while (transactionIDReader.Read())
+                try
                 {
-                    transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
+                    DBConnector myConnector = new DBConnector();
+
+                    SqlCommand statusCommand = myConnector.newProcedure("update_tool_status");
+                    statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["status"]);
+                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
+                    statusCommand.ExecuteNonQuery();
+
+                    myConnector.closeConnection();
+
+                    myConnector = new DBConnector();
+
+                    SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
+                    transactionCommand.Parameters.AddWithValue("@UserID", userID);
+
+                    SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
+
+                    int transactionID = 0;
+                    while (transactionIDReader.Read())
+                    {
+                        transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
+                    }
+
+                    myConnector.closeConnection();
+
+                    myConnector = new DBConnector();
+
+                    SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
+                    toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
+                    toolTransactionCommand.ExecuteNonQuery();
+
+                    myConnector.closeConnection();
+
+                    return Ok();
+                }catch(Exception e)
+                {
+                    return Ok(e);
                 }
-
-                SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
-                toolTransactionCommand.Parameters.AddWithValue("@TrasactionID", transactionID);
-                toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
-                toolTransactionCommand.ExecuteNonQuery();
-
-                return Ok();
             }else
             {
                 return Unauthorized();

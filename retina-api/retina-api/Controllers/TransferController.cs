@@ -18,31 +18,42 @@ namespace retina_api.Controllers
         {
             try
             {
-                SqlConnection myConnection = new DBConnector().newConnection;
-                myConnection.Open();
+                DBConnector myConnector = new DBConnector();
 
-                SqlCommand transactionIDCmd = new SqlCommand("add_transaction", myConnection);
-                transactionIDCmd.CommandType = CommandType.StoredProcedure;
-
-                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["userid"]);
+                SqlCommand transactionIDCmd = myConnector.newProcedure("add_transaction");
+                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["data"]["userid"]);
 
                 SqlDataReader transactionIDReader = transactionIDCmd.ExecuteReader();
                 int transactionID = 0;
                 while (transactionIDReader.Read())
                 {
-                    transactionID = (int)(((IDataRecord)transactionIDReader)["@TransactionID"]);
+                    transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
                 }
 
-                foreach (int toolID in toolTransferInfo["toolids"])
+                myConnector.closeConnection();
+
+                myConnector = new DBConnector();
+
+                foreach (int toolID in toolTransferInfo["data"]["toolids"])
                 {
-                    SqlCommand cmd = new SqlCommand("add_tool_transaction", myConnection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@TransactionID", transactionID );
-                    cmd.Parameters.AddWithValue("@ToolID", toolID);
-                    cmd.ExecuteNonQuery();
+                    SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
+                    toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", toolID);
+                    toolTransactionCommand.ExecuteNonQuery();
                 }
-               
-                myConnection.Close();
+
+                myConnector.closeConnection();
+
+                myConnector = new DBConnector();
+
+                foreach (int toolID in toolTransferInfo["data"]["toolids"]) {
+                    SqlCommand updateToolCommand = myConnector.newProcedure("update_tool");
+                    updateToolCommand.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["data"]["userid"]);
+                    updateToolCommand.Parameters.AddWithValue("@ToolID", toolID);
+                    updateToolCommand.ExecuteNonQuery();
+                }
+
+                myConnector.closeConnection();
 
                 return Ok();
             }catch (Exception e)

@@ -92,22 +92,29 @@ namespace retina_api.Controllers
         [HttpDelete]
         public IHttpActionResult deleteToken(JObject token)
         {
-            string accessToken = (string)token["access_token"];
-            SqlConnection myConnection = new DBConnector().newConnection;
-            myConnection.Open();
+            try
+            {
+                string accessToken = (string)token["access_token"];
+                SqlConnection myConnection = new DBConnector().newConnection;
+                myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("delete_token", myConnection);
-            cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("delete_token", myConnection);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@TokenID", token);
-            cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@TokenID", accessToken);
+                cmd.ExecuteNonQuery();
 
-            myConnection.Close();
+                myConnection.Close();
 
-            return Ok();
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return Ok(e);
+            }
         }
 
-        public int verifyToken(string token)
+        public int? verifyToken(string token)
         {
             DBConnector myConnector = new DBConnector();
 
@@ -115,11 +122,13 @@ namespace retina_api.Controllers
             tokenCommand.Parameters.AddWithValue("@TokenID", token);
             SqlDataReader tokenReader = tokenCommand.ExecuteReader();
 
-            int userID = 0;
+            int? userID = null;
             while (tokenReader.Read())
             {
                 userID = (int)(((IDataRecord)tokenReader)["UserID"]);
             }
+
+            myConnector.closeConnection();
 
             return userID;
         }

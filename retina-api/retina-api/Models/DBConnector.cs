@@ -31,5 +31,10 @@ namespace retina_api.Controllers
             return cmd;
 
         }
+
+        public void closeConnection()
+        {
+            newConnection.Close();
+        }
     }
 }
