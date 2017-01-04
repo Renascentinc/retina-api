@@ -65,23 +65,41 @@ namespace retina_api.Controllers
 
                 cmd.Parameters.AddWithValue("@Type", (string)attributes["type"]);
                 cmd.Parameters.AddWithValue("@Brand", (string)attributes["brand"]);
-                cmd.Parameters.AddWithValue("@PurchasedFrom", ((string)attributes["purchasedfrom"] != "") ? (string)attributes["purchasedfrom"] : null );
-
-                if ((string)attributes["price"] != "")
-                {
-                    cmd.Parameters.AddWithValue("@Price", (float)attributes["price"]);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Price", null);
-                }
-                
                 cmd.Parameters.AddWithValue("@ModelNumber", (string)attributes["modelnumber"]);
                 cmd.Parameters.AddWithValue("@Status", (string)attributes["status"]);
                 cmd.Parameters.AddWithValue("@SerialNumber", (string)attributes["serialnumber"]);
-                cmd.Parameters.AddWithValue("@Date", ((string)attributes["purchasedate"] != "") ? (string)attributes["purchasedate"] : null );
                 cmd.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
-               
+
+                JToken purchasedfrom = attributes["purchasedfrom"];
+                if ((string)purchasedfrom == "" || purchasedfrom == null)
+                {
+                    cmd.Parameters.AddWithValue("@PurchasedFrom", DBNull.Value);
+                }else
+                {
+                    cmd.Parameters.AddWithValue("@PurchasedFrom", purchasedfrom);
+                }
+
+
+                JToken price = attributes["price"];
+                if ((string)price == "" || price == null)
+                {
+                    cmd.Parameters.AddWithValue("@Price", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Price", (float)price);
+                }
+                                  
+
+                JToken purchasedate = attributes["purchasedate"];
+                if ((string)purchasedate == "" || purchasedate == null) 
+                {
+                    cmd.Parameters.AddWithValue("@Date", DBNull.Value);
+                }else
+                {
+                    cmd.Parameters.AddWithValue("@Date", purchasedate);
+                }
+                             
 
                 SqlDataReader toolReader = cmd.ExecuteReader();
                 
