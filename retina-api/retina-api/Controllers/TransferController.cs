@@ -32,17 +32,29 @@ namespace retina_api.Controllers
 
                 myConnector.closeConnection();
 
-                myConnector = new DBConnector();
-
-                foreach (int toolID in toolTransferInfo["data"]["toolids"])
+                
+                using (SqlConnection connection = new DBConnector().newConnection)
                 {
-                    SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
-                    toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
-                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", toolID);
-                    toolTransactionCommand.ExecuteNonQuery();
-                }
+                    connection.Open();
 
-                myConnector.closeConnection();
+                    foreach (int toolID in toolTransferInfo["data"]["toolids"])
+                    {
+
+                        SqlCommand toolTransactionCommand = new SqlCommand("add_tool_transaction", connection);
+                        toolTransactionCommand.CommandType = CommandType.StoredProcedure;
+
+                        toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
+                        toolTransactionCommand.Parameters.AddWithValue("@ToolID", toolID);
+
+                        string status = new ToolsController().getToolByID(toolID).data.attributes.status;
+                        toolTransactionCommand.Parameters.AddWithValue("@Status", status);
+                        toolTransactionCommand.ExecuteNonQuery();
+
+
+                    }
+                    connection.Close();
+                }
+                
 
                 myConnector = new DBConnector();
 

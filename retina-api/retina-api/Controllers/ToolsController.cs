@@ -14,8 +14,36 @@ namespace retina_api.Controllers
 
     public class ToolsController : ApiController
     {
-        
-      
+
+        public dynamic getToolByID(int id)
+        {
+            try
+            {
+
+                DBConnector myConnector = new DBConnector();
+                SqlCommand getToolCommand = myConnector.newProcedure("tool_details");
+
+                getToolCommand.Parameters.AddWithValue("@ToolID", id);
+
+                SqlDataReader myReader = getToolCommand.ExecuteReader();
+
+                Tool tool = null;
+                while (myReader.Read())
+                {
+                    tool = new Tool(myReader);
+                }
+
+                myConnector.closeConnection();
+
+                return (new { data = tool });
+
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+        }
+
         [HttpGet]
         public IHttpActionResult GetbyID(int id)
         {
@@ -134,6 +162,7 @@ namespace retina_api.Controllers
                 SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
                 toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
                 toolTransactionCommand.Parameters.AddWithValue("@ToolID", tool.id);
+                toolTransactionCommand.Parameters.AddWithValue("@Status", tool.attributes.status);
                 toolTransactionCommand.ExecuteNonQuery();
 
                 myConnector.closeConnection();

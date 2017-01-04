@@ -68,6 +68,7 @@ namespace retina_api.Controllers
                     SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
                     toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
                     toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["toolid"]);
+                    toolTransactionCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["status"]);
                     toolTransactionCommand.ExecuteNonQuery();
 
                     myConnector.closeConnection();
