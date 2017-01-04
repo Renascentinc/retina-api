@@ -17,7 +17,6 @@ namespace retina_api.Models
         public UniqueNames(string testProc)
         {
             myConnection = new DBConnector().newConnection;
-            //the testProcs called here are assumed to require no parameters
             cmd = new SqlCommand(testProc, myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -20,5 +21,15 @@ namespace retina_api.Controllers
                             "connection timeout = 30");
         }
         
+        public SqlCommand newProcedure(string procedure)
+        {
+            newConnection.Open();
+
+            SqlCommand cmd = new SqlCommand(procedure, newConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            return cmd;
+
+        }
     }
 }

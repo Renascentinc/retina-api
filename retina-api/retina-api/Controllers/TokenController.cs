@@ -107,6 +107,22 @@ namespace retina_api.Controllers
             return Ok();
         }
 
-       
-    }
+        public int verifyToken(string token)
+        {
+            DBConnector myConnector = new DBConnector();
+
+            SqlCommand tokenCommand = myConnector.newProcedure("validate_token");
+            tokenCommand.Parameters.AddWithValue("@TokenID", token);
+            SqlDataReader tokenReader = tokenCommand.ExecuteReader();
+
+            int userID = 0;
+            while (tokenReader.Read())
+            {
+                userID = (int)(((IDataRecord)tokenReader)["UserID"]);
+            }
+
+            return userID;
+        }
+
+}
 }

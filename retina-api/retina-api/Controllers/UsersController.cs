@@ -13,7 +13,7 @@ namespace retina_api.Controllers
     public class UsersController : ApiController
     {
         [HttpGet]
-        public IHttpActionResult getOwners()
+        public IHttpActionResult getUser()
         {
 
             try
