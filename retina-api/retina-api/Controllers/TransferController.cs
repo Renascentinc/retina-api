@@ -21,7 +21,7 @@ namespace retina_api.Controllers
                 DBConnector myConnector = new DBConnector();
 
                 SqlCommand transactionIDCmd = myConnector.newProcedure("add_transaction");
-                transactionIDCmd.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["data"]["userid"]);
+                transactionIDCmd.Parameters.AddWithValue("@UserID", (int)toolTransferInfo["userid"]);
 
                 SqlDataReader transactionIDReader = transactionIDCmd.ExecuteReader();
                 int transactionID = 0;
@@ -33,7 +33,7 @@ namespace retina_api.Controllers
                 myConnector.closeConnection();
 
 
-                foreach (int toolID in toolTransferInfo["data"]["toolids"])
+                foreach (int toolID in toolTransferInfo["toolids"])
                 {
                     string status = new ToolsController().getToolByID(toolID).data.attributes.status;
 
@@ -51,10 +51,10 @@ namespace retina_api.Controllers
 
                 
 
-                foreach (int toolID in toolTransferInfo["data"]["toolids"]) {
+                foreach (int toolID in toolTransferInfo["toolids"]) {
                     myConnector = new DBConnector();
                     SqlCommand updateToolCommand = myConnector.newProcedure("update_tool");
-                    updateToolCommand.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["data"]["userid"]);
+                    updateToolCommand.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["userid"]);
                     updateToolCommand.Parameters.AddWithValue("@ToolID", toolID);
                     updateToolCommand.ExecuteNonQuery();
                     myConnector.closeConnection();
