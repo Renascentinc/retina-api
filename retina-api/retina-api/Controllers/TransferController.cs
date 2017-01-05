@@ -47,9 +47,7 @@ namespace retina_api.Controllers
 
                     myConnector.closeConnection();
                 }
-                             
-
-                
+                                        
 
                 foreach (int toolID in toolTransferInfo["toolids"]) {
                     myConnector = new DBConnector();
@@ -62,7 +60,7 @@ namespace retina_api.Controllers
 
                
 
-                return Ok();
+                return Ok(toolTransferInfo);
             }catch (Exception e)
 
             {
