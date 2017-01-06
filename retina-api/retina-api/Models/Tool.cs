@@ -19,6 +19,9 @@ namespace retina_api.Models
             string emailVar = "";
             dynamic phonenumberVar = "";
 
+
+            //Only try to access the email and phone columns from the record if the record isn't coming from the
+            //search stored procedure... Not a nice solution, but works for now
             if (search == false)
             {
                 emailVar = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--";
