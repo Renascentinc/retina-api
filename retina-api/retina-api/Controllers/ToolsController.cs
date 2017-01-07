@@ -14,12 +14,12 @@ namespace retina_api.Controllers
 
     public class ToolsController : ApiController
     {
-        
+
         public dynamic getToolByID(int toolID)
         {
             try
             {
-                
+
                 DBConnector myConnector = new DBConnector();
                 SqlCommand getToolCommand = myConnector.newProcedure("tool_details");
 
@@ -43,7 +43,7 @@ namespace retina_api.Controllers
                 return Ok(e);
             }
         }
-        
+
 
         [HttpGet]
         public IHttpActionResult GetbyID(int id)
@@ -65,8 +65,8 @@ namespace retina_api.Controllers
                 }
 
                 myConnector.closeConnection();
- 
-                return Ok( new { data = tool } );
+
+                return Ok(new { data = tool });
 
             }
             catch (Exception e)
@@ -78,7 +78,7 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult addTool(JObject toolData)
         {
-            
+
             try
             {
 
@@ -99,7 +99,8 @@ namespace retina_api.Controllers
                 if ((string)purchasedfrom == "" || purchasedfrom == null)
                 {
                     addToolCommand.Parameters.AddWithValue("@PurchasedFrom", DBNull.Value);
-                }else
+                }
+                else
                 {
                     addToolCommand.Parameters.AddWithValue("@PurchasedFrom", (string)purchasedfrom);
                 }
@@ -113,25 +114,26 @@ namespace retina_api.Controllers
                 {
                     addToolCommand.Parameters.AddWithValue("@Price", (float)price);
                 }
-                                  
+
 
                 JToken purchasedate = attributes["purchasedate"];
-                if ((string)purchasedate == "" || purchasedate == null) 
+                if ((string)purchasedate == "" || purchasedate == null)
                 {
                     addToolCommand.Parameters.AddWithValue("@Date", DBNull.Value);
-                }else
+                }
+                else
                 {
                     addToolCommand.Parameters.AddWithValue("@Date", (string)purchasedate);
                 }
-                            
+
                 SqlDataReader toolReader = addToolCommand.ExecuteReader();
-                
+
                 Tool tool = null;
                 while (toolReader.Read())
                 {
                     tool = new Tool(toolReader);
                 }
-                
+
                 myConnector.closeConnection();
 
                 return Ok(new { data = tool });
@@ -140,9 +142,48 @@ namespace retina_api.Controllers
             {
                 return Ok(e);
             }
-            
+
 
         }
 
+        [HttpPatch]
+        public IHttpActionResult updateStatus(JObject statusInfo, int id)
+        {
+            //The commented out code here is template code for token verification that i didn't want to delete,
+            //even though it isn't actively being used
+
+            //int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
+
+            // if (userID != null)
+            // {
+            try
+            {
+                DBConnector myConnector = new DBConnector();
+
+                SqlCommand statusCommand = myConnector.newProcedure("change_status");
+                statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
+                statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["id"]);
+
+                SqlDataReader statusReader = statusCommand.ExecuteReader();
+
+                Tool tool = null;
+                while (statusReader.Read())
+                {
+                    tool = new Tool(statusReader);
+                }
+
+                myConnector.closeConnection();
+
+                return Ok(new { data = tool });
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+            //}else
+            //{
+            //      return Unauthorized();
+            // }
+        }
     }
 }
