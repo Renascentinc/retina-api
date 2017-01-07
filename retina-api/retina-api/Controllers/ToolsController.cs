@@ -66,7 +66,7 @@ namespace retina_api.Controllers
 
                 myConnector.closeConnection();
 
-                return Ok(new { dataum = tool });
+                return Ok(new { data = tool });
 
             }
             catch (Exception e)
