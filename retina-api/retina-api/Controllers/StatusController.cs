@@ -30,50 +30,35 @@ namespace retina_api.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPatch]
         public IHttpActionResult updateStatus(JObject statusInfo)
         {
-           // int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
+            //The commented out code here is template code for token verification that i didn't want to delete,
+            //even though it isn't actively being used
 
-           // if (userID != null)
-           // {
+            //int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
+
+            // if (userID != null)
+            // {
                 try
                 {
                     DBConnector myConnector = new DBConnector();
 
-                    SqlCommand statusCommand = myConnector.newProcedure("update_tool_status");
+                    SqlCommand statusCommand = myConnector.newProcedure("change_status");
                     statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
-                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["attributes"]["toolid"]);
-                    statusCommand.ExecuteNonQuery();
+                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["id"]);
 
-                    myConnector.closeConnection();
+                    SqlDataReader statusReader =  statusCommand.ExecuteReader();
 
-                    myConnector = new DBConnector();
-
-                    SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
-                    transactionCommand.Parameters.AddWithValue("@UserID", (int)statusInfo["data"]["attributes"]["userid"]);
-
-                    SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
-
-                    int transactionID = 0;
-                    while (transactionIDReader.Read())
+                    Tool tool = null;
+                    while (statusReader.Read())
                     {
-                        transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
+                        tool = new Tool(statusReader);
                     }
 
                     myConnector.closeConnection();
 
-                    myConnector = new DBConnector();
-
-                    SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
-                    toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
-                    toolTransactionCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["attributes"]["toolid"]);
-                    toolTransactionCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
-                    toolTransactionCommand.ExecuteNonQuery();
-
-                    myConnector.closeConnection();
-
-                    return Ok();
+                    return Ok(new { data = tool });
                 }catch(Exception e)
                 {
                     return Ok(e);

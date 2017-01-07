@@ -35,20 +35,19 @@ namespace retina_api.Controllers
 
                 foreach (int toolID in toolTransferInfo["toolids"])
                 {
-                    string status = new ToolsController().getToolByID(toolID).data.attributes.status;
 
                     myConnector = new DBConnector();
 
                     SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
                     toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
                     toolTransactionCommand.Parameters.AddWithValue("@ToolID", toolID);
-                    toolTransactionCommand.Parameters.AddWithValue("@Status", status);
+
                     toolTransactionCommand.ExecuteNonQuery();
 
                     myConnector.closeConnection();
                 }
                                         
-
+                /*
                 foreach (int toolID in toolTransferInfo["toolids"]) {
                     myConnector = new DBConnector();
                     SqlCommand updateToolCommand = myConnector.newProcedure("update_tool");
@@ -57,7 +56,7 @@ namespace retina_api.Controllers
                     updateToolCommand.ExecuteNonQuery();
                     myConnector.closeConnection();
                 }
-
+                */
                
 
                 return Ok();
