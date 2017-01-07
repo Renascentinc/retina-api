@@ -149,7 +149,7 @@ namespace retina_api.Controllers
         [HttpPatch]
         public IHttpActionResult updateStatus(JObject statusInfo, int id)
         {
-            //The commented out code here is template code for token verification that i didn't want to delete,
+            //The commented out code here is template code for token verification that i didn't want to delete
             //even though it isn't actively being used
 
             //int? userID = new TokenController().verifyToken((string)(statusInfo["authentication"]));
