@@ -132,7 +132,7 @@ namespace retina_api.Controllers
                 Tool tool = null;
                 while (toolReader.Read())
                 {
-                    tool = new Tool(toolReader, true);
+                    tool = new Tool(toolReader);
                 }
                 
                 myConnector.closeConnection();

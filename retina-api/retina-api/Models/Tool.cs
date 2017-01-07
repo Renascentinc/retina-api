@@ -14,8 +14,19 @@ namespace retina_api.Models
         public int id { get; }
         public dynamic attributes { get; }
 
-        public Tool(IDataRecord record, bool add = false)            
+        public Tool(IDataRecord record, bool search = false)            
         {
+            string emailVar = "";
+            dynamic phonenumberVar = "";
+
+            //Only try to access the email and phone columns from the record if the record isn't coming from the
+            //search stored procedure... Not a nice solution, but works for now
+            if (search == false)
+            {
+                emailVar = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--";
+                phonenumberVar = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--";
+            }
+
             type = "tool";
             id = (int)record["ToolID"];
             attributes = new
@@ -23,15 +34,17 @@ namespace retina_api.Models
                 toolclass = (record["Class"] != DBNull.Value) ? ((string)record["Class"]).TrimEnd(' ') : "",
                 type = ((string)record["Type"]).TrimEnd(' '),
                 brand = ((string)record["Brand"]).TrimEnd(' '),
-                datepurchased = (record["DatePurchased"] != DBNull.Value) ? (record["DatePurchased"]) : "" ,
-                purchasedfrom = (record["PurchasedFrom"] != DBNull.Value) ? ((string)record["PurchasedFrom"]).TrimEnd(' ') : "",
-                price = (record["Price"] != DBNull.Value) ? (record["Price"]) : "",
+                purchasedate = (record["DatePurchased"] != DBNull.Value) ? record["DatePurchased"] : "--",
+                purchasedfrom = (record["PurchasedFrom"] != DBNull.Value) ? ((string)record["PurchasedFrom"]).TrimEnd(' ') : "--",
+                price = (record["Price"] != DBNull.Value) ? (record["Price"]) : "--",
                 modelnumber = ((string)record["ModelNumber"]).TrimEnd(' '),
                 status = ((string)record["Status"]).TrimEnd(' '),
                 serialnumber = ((string)record["SerialNumber"]).TrimEnd(' '),
                 userid = record["UserID"],
-                username = (add == false) ? ((string)record["UserName"]).TrimEnd(' ') : ""
- 
+                username = (record["UserName"] != DBNull.Value) ? ((string)record["UserName"]).TrimEnd(' ') : "--",
+                email = emailVar, // (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--",
+                phonenumber = phonenumberVar //(record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--"
+
             };
         }
     }

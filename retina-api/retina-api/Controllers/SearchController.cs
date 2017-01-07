@@ -37,7 +37,7 @@ namespace retina_api.Controllers
 
             while (searchReader.Read())
             {
-                toolList.Add(new Tool(searchReader));
+                toolList.Add(new Tool(searchReader, true));
             }
 
             myConnection.Close();
@@ -80,7 +80,7 @@ namespace retina_api.Controllers
 
                 while (searchReader.Read())
                 {
-                    toolList.Add(new Tool(searchReader));
+                    toolList.Add(new Tool(searchReader, true));
                 }
 
                 myConnection.Close();
@@ -156,7 +156,7 @@ namespace retina_api.Controllers
 
                 while (myReader.Read())
                 {
-                    toolList.Add(new Tool(myReader));
+                    toolList.Add(new Tool(myReader, true));
                 }
 
                 myConnection.Close();
@@ -225,7 +225,7 @@ namespace retina_api.Controllers
 
                 while (myReader.Read())
                 {
-                    toolList.Add(new Tool(myReader));
+                    toolList.Add(new Tool(myReader, true));
                 }
 
                 myConnection.Close();

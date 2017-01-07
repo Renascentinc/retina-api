@@ -60,7 +60,7 @@ namespace retina_api.Controllers
 
                
 
-                return Ok(toolTransferInfo);
+                return Ok();
             }catch (Exception e)
 
             {
