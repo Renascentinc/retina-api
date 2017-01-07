@@ -46,7 +46,7 @@ namespace retina_api.Controllers
 
                     SqlCommand statusCommand = myConnector.newProcedure("change_status");
                     statusCommand.Parameters.AddWithValue("@Status", (string)statusInfo["data"]["attributes"]["status"]);
-                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["attributes"]["toolid"]);
+                    statusCommand.Parameters.AddWithValue("@ToolID", (int)statusInfo["data"]["id"]);
 
                     SqlDataReader statusReader =  statusCommand.ExecuteReader();
 
