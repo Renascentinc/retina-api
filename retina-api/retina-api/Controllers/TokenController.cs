@@ -60,6 +60,7 @@ namespace retina_api.Controllers
                 {
 
                     int userID = (int)(((IDataRecord)myReader)["UserID"]);
+                    string userRole = ((string)(((IDataRecord)myReader)["Role"])).TrimEnd(' ');
                     myConnection.Close(); // done with this connection
 
                     string token = generateToken();
@@ -76,7 +77,7 @@ namespace retina_api.Controllers
                     addTokenCmd.ExecuteNonQuery();
 
                     myTokenConnection.Close();
-                    return Ok(new { access_token = token, userid = userID });
+                    return Ok(new { access_token = token, userid = userID, role = userRole  });
                 }
                 else
                 {

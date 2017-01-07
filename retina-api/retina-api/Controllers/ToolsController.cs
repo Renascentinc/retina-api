@@ -84,8 +84,6 @@ namespace retina_api.Controllers
 
                 DBConnector myConnector = new DBConnector();
 
-
-                //Begin Add tool
                 SqlCommand addToolCommand = myConnector.newProcedure("add_tool");
 
                 JObject attributes = (JObject)toolData["data"]["attributes"];
@@ -105,7 +103,6 @@ namespace retina_api.Controllers
                 {
                     addToolCommand.Parameters.AddWithValue("@PurchasedFrom", (string)purchasedfrom);
                 }
-
 
                 JToken price = attributes["price"];
                 if ((string)price == "" || price == null)
@@ -136,38 +133,6 @@ namespace retina_api.Controllers
                 }
                 
                 myConnector.closeConnection();
-                //End add tool
-
-
-                //Begin create transaction
-                myConnector = new DBConnector();
-
-                SqlCommand transactionCommand = myConnector.newProcedure("add_transaction");
-                transactionCommand.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
-
-                SqlDataReader transactionIDReader = transactionCommand.ExecuteReader();
-
-                int transactionID = 0;
-                while (transactionIDReader.Read())
-                {
-                    transactionID = (int)(((IDataRecord)transactionIDReader)["TransactionID"]);
-                }
-
-                myConnector.closeConnection();
-                //End create transaction
-
-
-                //Begin give transaction a tool
-                myConnector = new DBConnector();
-
-                SqlCommand toolTransactionCommand = myConnector.newProcedure("add_tool_transaction");
-                toolTransactionCommand.Parameters.AddWithValue("@TransactionID", transactionID);
-                toolTransactionCommand.Parameters.AddWithValue("@ToolID", tool.id);
-                toolTransactionCommand.Parameters.AddWithValue("@Status", tool.attributes.status);
-                toolTransactionCommand.ExecuteNonQuery();
-
-                myConnector.closeConnection();
-                //End give transaction a tool
 
                 return Ok(new { data = tool });
             }

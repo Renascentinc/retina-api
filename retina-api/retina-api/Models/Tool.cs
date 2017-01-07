@@ -14,18 +14,21 @@ namespace retina_api.Models
         public int id { get; }
         public dynamic attributes { get; }
 
-        public Tool(IDataRecord record, bool search = false)            
+        public Tool(IDataRecord record)//, bool search = false)            
         {
-            string emailVar = "";
-            dynamic phonenumberVar = "";
+            //Everything commented out was my code before jere changed the procs. I wanted to keep my old code until the new
+            //is tested more thoroughly
+
+           // string emailVar = "";
+           // dynamic phonenumberVar = "";
 
             //Only try to access the email and phone columns from the record if the record isn't coming from the
             //search stored procedure... Not a nice solution, but works for now
-            if (search == false)
-            {
-                emailVar = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--";
-                phonenumberVar = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--";
-            }
+           // if (search == false)
+         //   {
+        //        emailVar = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--";
+         //       phonenumberVar = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--";
+         //   }
 
             type = "tool";
             id = (int)record["ToolID"];
@@ -42,8 +45,8 @@ namespace retina_api.Models
                 serialnumber = ((string)record["SerialNumber"]).TrimEnd(' '),
                 userid = record["UserID"],
                 username = (record["UserName"] != DBNull.Value) ? ((string)record["UserName"]).TrimEnd(' ') : "--",
-                email = emailVar, // (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--",
-                phonenumber = phonenumberVar //(record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--"
+                email = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--",
+                phonenumber = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--"
 
             };
         }
