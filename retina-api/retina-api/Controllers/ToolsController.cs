@@ -56,7 +56,7 @@ namespace retina_api.Controllers
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("???", myConnection);
+                SqlCommand cmd = new SqlCommand("????", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@Type", (string)toolData.type);
