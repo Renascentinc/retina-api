@@ -13,15 +13,7 @@ namespace retina_api.Controllers
         public SqlConnection newConnection { get; }
 
         public DBConnector()
-        {/*
-            newConnection = new SqlConnection(
-                            "user id = renascentinc;" +
-                            "password = Skylark777!;" +
-                            "server=retinadbserver.database.windows.net;" +
-                            "database = retina_develop_db;" +
-                            "connection timeout = 30");
-                            */
-
+        {
             ConnectionStringSettings retinaConnectionString = ConfigurationManager.ConnectionStrings["RetinaDBConnection"];
             newConnection = new SqlConnection(retinaConnectionString.ConnectionString);
         }
