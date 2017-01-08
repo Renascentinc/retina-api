@@ -241,4 +241,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-./retina-api/retina-api/Secrets.config
+Secrets.config
