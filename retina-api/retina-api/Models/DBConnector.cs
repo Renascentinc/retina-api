@@ -17,7 +17,7 @@ namespace retina_api.Controllers
             ConnectionStringSettings retinaConnectionString = ConfigurationManager.ConnectionStrings["RetinaDBConnection"];
             newConnection = new SqlConnection(retinaConnectionString.ConnectionString);
         }
-        
+        //
         public SqlCommand newProcedure(string procedure)
         {
             newConnection.Open();
