@@ -18,7 +18,7 @@ namespace retina_api.Controllers
         {
 
             try
-            {
+            {//
 
                 List<string> uniqueStrings = new UniqueNames("select_status").getUniqueStrings("Status");
                 return Ok(new { status = uniqueStrings });
