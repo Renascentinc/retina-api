@@ -150,6 +150,7 @@ namespace retina_api.Controllers
                 myConnector.closeConnection();
 
                 return Ok(new { data = tool });
+
             }
             catch (Exception e)
             {
