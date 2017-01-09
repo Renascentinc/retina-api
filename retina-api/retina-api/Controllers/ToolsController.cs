@@ -95,6 +95,8 @@ namespace retina_api.Controllers
                 addToolCommand.Parameters.AddWithValue("@SerialNumber", (string)attributes["serialnumber"]);
                 addToolCommand.Parameters.AddWithValue("@UserID", (int)attributes["userid"]);
 
+                //The following adds optional values to the query. If the value given is null or "", convert it to
+                //DBNull.Value. Else, insert it into query.
                 JToken purchasedfrom = attributes["purchasedfrom"];
                 if ((string)purchasedfrom == "" || purchasedfrom == null)
                 {
@@ -125,6 +127,17 @@ namespace retina_api.Controllers
                 {
                     addToolCommand.Parameters.AddWithValue("@Date", (string)purchasedate);
                 }
+
+                JToken year = attributes["year"];
+                if ((string)year == "" || (string)year == null)
+                {
+                    addToolCommand.Parameters.AddWithValue("@Year", DBNull.Value);
+                }
+                else
+                {
+                    addToolCommand.Parameters.AddWithValue("@Year", (int)year);
+                }
+
 
                 SqlDataReader toolReader = addToolCommand.ExecuteReader();
 
