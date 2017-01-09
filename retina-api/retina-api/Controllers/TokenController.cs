@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -40,7 +41,7 @@ namespace retina_api.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult login(dynamic requestBody)
+        public IHttpActionResult login( JObject requestBody)
         {
             try
             {
@@ -50,8 +51,8 @@ namespace retina_api.Controllers
                 SqlCommand cmd = new SqlCommand("authenticate_user", myConnection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@UserName", (string)requestBody.identification);
-                cmd.Parameters.AddWithValue("@Password", (string)requestBody.password);
+                cmd.Parameters.AddWithValue("@UserName", (string)requestBody["username"]);
+                cmd.Parameters.AddWithValue("@Password", (string)requestBody["password"]);
 
                 SqlDataReader myReader = cmd.ExecuteReader();
 
@@ -59,6 +60,7 @@ namespace retina_api.Controllers
                 {
 
                     int userID = (int)(((IDataRecord)myReader)["UserID"]);
+                    string userRole = ((string)(((IDataRecord)myReader)["Role"])).TrimEnd(' ');
                     myConnection.Close(); // done with this connection
 
                     string token = generateToken();
@@ -75,7 +77,7 @@ namespace retina_api.Controllers
                     addTokenCmd.ExecuteNonQuery();
 
                     myTokenConnection.Close();
-                    return Ok(new { accesstoken = token, userid = userID });
+                    return Ok(new { access_token = token, userid = userID, role = userRole  });
                 }
                 else
                 {
@@ -89,22 +91,48 @@ namespace retina_api.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult deleteToken(string token)
+        public IHttpActionResult deleteToken(JObject token)
         {
-            SqlConnection myConnection = new DBConnector().newConnection;
-            myConnection.Open();
+            try
+            {
+                string accessToken = (string)token["access_token"];
+                SqlConnection myConnection = new DBConnector().newConnection;
+                myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("delete_token", myConnection);
-            cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("delete_token", myConnection);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@TokenID", token);
-            cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@TokenID", accessToken);
+                cmd.ExecuteNonQuery();
 
-            myConnection.Close();
+                myConnection.Close();
 
-            return Ok();
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return Ok(e);
+            }
         }
 
-       
-    }
+        public int? verifyToken(string token)
+        {
+            DBConnector myConnector = new DBConnector();
+
+            SqlCommand tokenCommand = myConnector.newProcedure("validate_token");
+            tokenCommand.Parameters.AddWithValue("@TokenID", token);
+            SqlDataReader tokenReader = tokenCommand.ExecuteReader();
+
+            int? userID = null;
+            while (tokenReader.Read())
+            {
+                userID = (int)(((IDataRecord)tokenReader)["UserID"]);
+            }
+
+            myConnector.closeConnection();
+
+            return userID;
+        }
+
+}
 }

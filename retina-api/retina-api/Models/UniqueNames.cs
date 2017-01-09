@@ -12,12 +12,11 @@ namespace retina_api.Models
     {
         private SqlDataReader uniqueReader;
         private SqlConnection myConnection;
-        private SqlCommand cmd;
+        public SqlCommand cmd;
 
         public UniqueNames(string testProc)
         {
             myConnection = new DBConnector().newConnection;
-            //the testProcs called here are assumed to require no parameters
             cmd = new SqlCommand(testProc, myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
         }
