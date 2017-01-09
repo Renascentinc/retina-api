@@ -46,18 +46,6 @@ namespace retina_api.Controllers
 
                     myConnector.closeConnection();
                 }
-                                        
-                /*
-                foreach (int toolID in toolTransferInfo["toolids"]) {
-                    myConnector = new DBConnector();
-                    SqlCommand updateToolCommand = myConnector.newProcedure("update_tool");
-                    updateToolCommand.Parameters.AddWithValue("@UserID", (string)toolTransferInfo["userid"]);
-                    updateToolCommand.Parameters.AddWithValue("@ToolID", toolID);
-                    updateToolCommand.ExecuteNonQuery();
-                    myConnector.closeConnection();
-                }
-                */
-               
 
                 return Ok();
             }catch (Exception e)
