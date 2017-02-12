@@ -108,12 +108,14 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BrandsController.cs" />
+    <Compile Include="Controllers\DropdownsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\ProvidersController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\TransferController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
+    <Compile Include="Models\attributes.cs" />
     <Compile Include="Models\Tool.cs" />
     <Compile Include="Models\DBConnector.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -122,6 +124,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\UniqueNames.cs" />
+    <Compile Include="Models\Dropdown.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
