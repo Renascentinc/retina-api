@@ -20,7 +20,7 @@ namespace retina_api.Controllers
                 List<dynamic> uniqueDynamics = new UniqueNames("select_user").getUniqueDynamics();
                 return Ok(new { users = uniqueDynamics });
 
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 return Ok(e);
             }
