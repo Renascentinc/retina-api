@@ -25,9 +25,8 @@ namespace retina_api.Controllers
 
             if (parameter != null)
             {
-                cmd.Parameters.AddWithValue("@Number", parameter.ToUpper());
-            }
-            else
+                cmd.Parameters.AddWithValue("@Number", parameter);
+            }else
             {
                 cmd.Parameters.AddWithValue("@Number", DBNull.Value);
             }
@@ -45,12 +44,14 @@ namespace retina_api.Controllers
 
             return Ok(new { data = toolList });
         }
+        
 
         [HttpGet]
         public IHttpActionResult toolboxAutocompleteSearch(int? currentUser, string parameter)
         {
             try
             {
+
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -175,6 +176,7 @@ namespace retina_api.Controllers
         {
             try
             {
+
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -185,8 +187,7 @@ namespace retina_api.Controllers
                 if (status != null)
                 {
                     cmd.Parameters.AddWithValue("@Status", status);
-                }
-                else
+                }else
                 {
                     cmd.Parameters.AddWithValue("@Status", DBNull.Value);
                 }
