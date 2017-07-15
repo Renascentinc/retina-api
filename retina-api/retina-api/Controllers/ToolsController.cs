@@ -199,5 +199,58 @@ namespace retina_api.Controllers
             //      return Unauthorized();
             // }
         }
+
+        [HttpDelete]
+        public IHttpActionResult DeleteTool(int id)
+        {
+            try
+            {
+                DBConnector dbConnector = new DBConnector();
+
+                SqlCommand deleteToolCommand = dbConnector.newProcedure("delete_tool");
+                deleteToolCommand.Parameters.AddWithValue("@ToolID", id);
+
+                deleteToolCommand.ExecuteNonQuery();
+
+                dbConnector.closeConnection();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+        }
+
+        [HttpDelete]
+        public IHttpActionResult DeleteTools(JObject tools)
+        {
+            JToken tool_list = tools["data"];
+            try
+            {
+                foreach (JToken tool in tool_list)
+                {
+                    DBConnector dbConnector = new DBConnector();
+                    Console.Write("Connected");
+
+                    SqlCommand deleteToolCommand = dbConnector.newProcedure("delete_tool");
+                    Console.Write("initiated command");
+                    deleteToolCommand.Parameters.AddWithValue("@ToolID", "1179");
+                    Console.Write("added value");
+
+
+                    deleteToolCommand.ExecuteNonQuery();
+                    Console.Write("executed_query");
+
+                    dbConnector.closeConnection();
+                    Console.Write("closed connection");
+                }
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Ok(e);
+            }
+        }
     }
 }
