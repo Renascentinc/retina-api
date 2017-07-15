@@ -67,7 +67,7 @@ namespace retina_api.Controllers
 
                 if (parameter != null)
                 {
-                    cmd.Parameters.AddWithValue("@Number", parameter);
+                    cmd.Parameters.AddWithValue("@Number", parameter.ToUpper());
                 }else
                 {
                     cmd.Parameters.AddWithValue("@Number", DBNull.Value);
