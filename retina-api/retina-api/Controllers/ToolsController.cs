@@ -231,19 +231,13 @@ namespace retina_api.Controllers
                 foreach (JToken tool in tool_list)
                 {
                     DBConnector dbConnector = new DBConnector();
-                    Console.Write("Connected");
 
                     SqlCommand deleteToolCommand = dbConnector.newProcedure("delete_tool");
-                    Console.Write("initiated command");
-                    deleteToolCommand.Parameters.AddWithValue("@ToolID", "1179");
-                    Console.Write("added value");
-
+                    deleteToolCommand.Parameters.AddWithValue("@ToolID", tool["id"].ToString());
 
                     deleteToolCommand.ExecuteNonQuery();
-                    Console.Write("executed_query");
 
                     dbConnector.closeConnection();
-                    Console.Write("closed connection");
                 }
                 return Ok();
             }
