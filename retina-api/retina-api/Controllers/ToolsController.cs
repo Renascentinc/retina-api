@@ -201,7 +201,7 @@ namespace retina_api.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteTool(string id)
+        public IHttpActionResult DeleteTool(int id)
         {
             try
             {
