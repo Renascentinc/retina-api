@@ -13,13 +13,10 @@ namespace retina_api.Controllers
         [HttpGet]
         public IHttpActionResult getBrands()
         {
-
             try
             {
-
                 List<string> uniqueStrings = new UniqueNames("select_brand").getUniqueStrings("Brand");
                 return Ok(new { brands = uniqueStrings });
-
             }
             catch (Exception e)
             {
