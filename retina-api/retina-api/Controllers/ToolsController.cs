@@ -159,7 +159,7 @@ namespace retina_api.Controllers
         }
 
         [HttpPatch]
-        public IHttpActionResult updateStatus(JObject newData)
+        public IHttpActionResult UpdateTool(JObject newData)
         {
 			//The commented out code here is template code for token verification that i didn't want to delete
 			//even though it isn't actively being used
