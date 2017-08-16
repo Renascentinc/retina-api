@@ -20,7 +20,7 @@ namespace retina_api.Controllers
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("search_single_tool", myConnection);
+            SqlCommand cmd = new SqlCommand("fuzzy_tool_search", myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             if (parameter != null)
@@ -171,14 +171,14 @@ namespace retina_api.Controllers
 
 
         [HttpGet]
-        public IHttpActionResult search(string status, int? userID, string type, string brand)
+        public IHttpActionResult DropdownToolSearch(string status, int? userID, string type, string brand)
         {
             try
             {
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("search_tools", myConnection);
+                SqlCommand cmd = new SqlCommand("dropdown_tool_search", myConnection);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
