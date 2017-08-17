@@ -51,7 +51,7 @@ namespace retina_api.Models
                 idAndName = new
                 {
                     userid = ((int)((IDataRecord)uniqueReader)["UserID"]),
-                    username = ((string)((IDataRecord)uniqueReader)["UserName"]).TrimEnd(' ')
+                    username = ((IDataRecord)uniqueReader)["UserName"].ToString().Trim(' ')
                 };
                 uniqueDynamics.Add(idAndName);
             }

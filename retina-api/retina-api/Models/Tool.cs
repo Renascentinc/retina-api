@@ -36,7 +36,7 @@ namespace retina_api.Models
                 phonenumber = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "",
                 year = (record["Year"] != DBNull.Value) ? record["Year"] : ""
 
-        };
+            };
         }
     }
 }
