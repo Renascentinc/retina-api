@@ -13,10 +13,8 @@ namespace retina_api.Controllers
         [HttpGet]
         public IHttpActionResult getTypes()
         {
-
             try
             {
-
                 List<string> uniqueStrings = new UniqueNames("select_type").getUniqueStrings("Type");
                 return Ok(new { types = uniqueStrings });
 
