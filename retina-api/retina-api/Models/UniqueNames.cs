@@ -29,7 +29,7 @@ namespace retina_api.Models
             List<string> uniqueStrings = new List<string>();
             while (uniqueReader.Read())
             {
-                uniqueStrings.Add(((string)((IDataRecord)uniqueReader)[queryParam]).TrimEnd(' '));
+                uniqueStrings.Add(((IDataRecord)uniqueReader)[queryParam].ToString().TrimEnd(' '));
             }
 
             myConnection.Close();
@@ -50,8 +50,8 @@ namespace retina_api.Models
             {
                 idAndName = new
                 {
-                    userid = ((int)((IDataRecord)uniqueReader)["UserID"]),
-                    username = ((IDataRecord)uniqueReader)["UserName"].ToString().Trim(' ')
+                    userid = ((IDataRecord)uniqueReader)["UserID"],
+                    username = ((IDataRecord)uniqueReader)["UserName"].ToString().TrimEnd(' ')
                 };
                 uniqueDynamics.Add(idAndName);
             }

@@ -59,8 +59,8 @@ namespace retina_api.Controllers
                 if (myReader.Read())
                 {
 
-                    int userID = (int)(((IDataRecord)myReader)["UserID"]);
-                    string userRole = ((string)(((IDataRecord)myReader)["Role"])).TrimEnd(' ');
+                    int userID = (int)((IDataRecord)myReader)["UserID"];
+                    string userRole = ((IDataRecord)myReader)["Role"].ToString().TrimEnd(' ');
                     myConnection.Close(); // done with this connection
 
                     string token = generateToken();
