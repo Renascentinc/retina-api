@@ -78,10 +78,8 @@ namespace retina_api.Controllers
         [HttpPost]
         public IHttpActionResult addTool(JObject toolData)
         {
-
             try
             {
-
                 DBConnector myConnector = new DBConnector();
 
                 SqlCommand addToolCommand = myConnector.newProcedure("add_tool");
