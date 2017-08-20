@@ -50,66 +50,66 @@ namespace retina_api.Controllers
             }
         }
 
-		[HttpDelete]
-		public IHttpActionResult DeleteBrand(JObject brand_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand delete_brand_command = db_connector.newProcedure("delete_brand");
+    	[HttpDelete]
+    	public IHttpActionResult DeleteBrand(JObject brand_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand delete_brand_command = db_connector.newProcedure("delete_brand");
 
-				delete_brand_command.Parameters.AddWithValue("@Brand", (string)brand_obj["brand"]);
+    			delete_brand_command.Parameters.AddWithValue("@Brand", (string)brand_obj["brand"]);
 
-				delete_brand_command.ExecuteNonQuery();
-				db_connector.closeConnection();
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			delete_brand_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
 
-		[HttpPatch]
-		public IHttpActionResult UpdateBrand(JObject brand_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand update_brand_command = db_connector.newProcedure("update_brand");
+    	[HttpPatch]
+    	public IHttpActionResult UpdateBrand(JObject brand_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand update_brand_command = db_connector.newProcedure("update_brand");
 
-				update_brand_command.Parameters.AddWithValue("@OldBrand", (string)brand_obj["oldbrand"]);
-				update_brand_command.Parameters.AddWithValue("@NewBrand", (string)brand_obj["newbrand"]);
+    			update_brand_command.Parameters.AddWithValue("@OldBrand", (string)brand_obj["oldbrand"]);
+    			update_brand_command.Parameters.AddWithValue("@NewBrand", (string)brand_obj["newbrand"]);
 
-				update_brand_command.ExecuteNonQuery();
-				db_connector.closeConnection();
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			update_brand_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
 
-		[HttpPost]
-		public IHttpActionResult AddBrand(JObject brand_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand add_brand_command = db_connector.newProcedure("add_brand");
+    	[HttpPost]
+    	public IHttpActionResult AddBrand(JObject brand_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand add_brand_command = db_connector.newProcedure("add_brand");
 
-				add_brand_command.Parameters.AddWithValue("@Brand", (string)brand_obj["brand"]);
+    			add_brand_command.Parameters.AddWithValue("@Brand", (string)brand_obj["brand"]);
 
-				add_brand_command.ExecuteNonQuery();
-				db_connector.closeConnection();
+    			add_brand_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
 
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
     }
 }

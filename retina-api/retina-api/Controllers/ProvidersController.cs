@@ -9,7 +9,7 @@ namespace retina_api.Controllers
 {
     public class ProvidersController : ApiController
     {
-		//Deprecated. Use this.GetProviders(bool? userEnteredBrands) instead so
+		//Deprecated. Use this.GetProviders(bool? userEnteredProviders) instead so
 		//that you can use the query parameter
 		[HttpGet]
         public IHttpActionResult getProviders()
@@ -27,90 +27,90 @@ namespace retina_api.Controllers
         }
 
 
-		[HttpGet]
-		public IHttpActionResult GetProviders(bool? userEnteredProviders)
-		{
-			try
-			{
-				List<string> providers;
+    	[HttpGet]
+    	public IHttpActionResult GetProviders(bool? userEnteredProviders)
+    	{
+    		try
+    		{
+    			List<string> providers;
 
-				if (userEnteredProviders == true)
-				{
-					providers = new UniqueNames("user_input_purchasedfrom").getUniqueStrings("PurchasedFrom");
-				}
-				else
-				{
-					providers = new UniqueNames("select_purchased_from").getUniqueStrings("PurchasedFrom");
-				}
+    			if (userEnteredProviders == true)
+    			{
+    				providers = new UniqueNames("user_input_purchasedfrom").getUniqueStrings("PurchasedFrom");
+    			}
+    			else
+    			{
+    				providers = new UniqueNames("select_purchased_from").getUniqueStrings("PurchasedFrom");
+    			}
 
-				return Ok(new { providers = providers });
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			return Ok(new { providers = providers });
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
 
-		[HttpDelete]
-		public IHttpActionResult DeleteProvider(JObject provider_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand delete_provider_command = db_connector.newProcedure("delete_purchasedfrom");
+    	[HttpDelete]
+    	public IHttpActionResult DeleteProvider(JObject provider_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand delete_provider_command = db_connector.newProcedure("delete_purchasedfrom");
 
-				delete_provider_command.Parameters.AddWithValue("@PurchasedFrom", (string)provider_obj["provider"]);
+    			delete_provider_command.Parameters.AddWithValue("@PurchasedFrom", (string)provider_obj["provider"]);
 
-				delete_provider_command.ExecuteNonQuery();
-				db_connector.closeConnection();
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			delete_provider_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
 
-		[HttpPatch]
-		public IHttpActionResult UpdateProvider(JObject provider_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand update_provider_command = db_connector.newProcedure("update_purchasedfrom");
+    	[HttpPatch]
+    	public IHttpActionResult UpdateProvider(JObject provider_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand update_provider_command = db_connector.newProcedure("update_purchasedfrom");
 
-				update_provider_command.Parameters.AddWithValue("@OldPurchasedFrom", (string)provider_obj["oldprovider"]);
-				update_provider_command.Parameters.AddWithValue("@NewPurchasedFrom", (string)provider_obj["newprovider"]);
+    			update_provider_command.Parameters.AddWithValue("@OldPurchasedFrom", (string)provider_obj["oldprovider"]);
+    			update_provider_command.Parameters.AddWithValue("@NewPurchasedFrom", (string)provider_obj["newprovider"]);
 
-				update_provider_command.ExecuteNonQuery();
-				db_connector.closeConnection();
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			update_provider_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
 
-		[HttpPost]
-		public IHttpActionResult AddProvider(JObject provider_obj)
-		{
-			try
-			{
-				DBConnector db_connector = new DBConnector();
-				SqlCommand add_provider_command = db_connector.newProcedure("add_purchasedfrom");
+    	[HttpPost]
+    	public IHttpActionResult AddProvider(JObject provider_obj)
+    	{
+    		try
+    		{
+    			DBConnector db_connector = new DBConnector();
+    			SqlCommand add_provider_command = db_connector.newProcedure("add_purchasedfrom");
 
-				add_provider_command.Parameters.AddWithValue("@PurchasedFrom", (string)provider_obj["provider"]);
+    			add_provider_command.Parameters.AddWithValue("@PurchasedFrom", (string)provider_obj["provider"]);
 
-				add_provider_command.ExecuteNonQuery();
-				db_connector.closeConnection();
+    			add_provider_command.ExecuteNonQuery();
+    			db_connector.closeConnection();
 
-				return Ok();
-			}
-			catch (Exception e)
-			{
-				return Ok(e);
-			}
-		}
+    			return Ok();
+    		}
+    		catch (Exception e)
+    		{
+    			return Ok(e);
+    		}
+    	}
     }
 }
