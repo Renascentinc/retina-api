@@ -1,9 +1,6 @@
 ﻿using retina_api.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Data.SqlClient;
 using Newtonsoft.Json.Linq;
@@ -26,7 +23,6 @@ namespace retina_api.Controllers
                 return Ok(e);
             }
         }
-
 
 		[HttpDelete]
 		public IHttpActionResult DeleteType(JObject type_obj)
