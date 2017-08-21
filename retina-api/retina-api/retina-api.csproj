@@ -135,6 +135,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
