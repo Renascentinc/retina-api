@@ -22,7 +22,10 @@ namespace retina_api.Models
                 status = (record["Status"] != DBNull.Value) ? ((string)record["Status"]).TrimEnd(' ') : "",
                 transactiondate = (record["Date"] != DBNull.Value) ? record["Date"] : "",
                 username = (record["UserName"] != DBNull.Value) ? ((string)record["UserName"]).TrimEnd(' ') : "",
-			};
-		}
+                email = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "",
+                phonenumber = (record["PhoneNumber"] != DBNull.Value) ? ((string)record["PhoneNumber"]).TrimEnd(' ') : "",
+                type = (record["Type"] != DBNull.Value) ? ((string)record["Type"]).TrimEnd(' ') : "",
+            };
+        }
     }
 }
