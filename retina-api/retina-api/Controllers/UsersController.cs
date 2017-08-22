@@ -74,16 +74,16 @@ namespace retina_api.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult FuzzySearchForUsers(string search_parameter)
+        public IHttpActionResult FuzzySearchForUsers(string parameter)
         {
             try 
             {
                 DBConnector db_connector = new DBConnector();
                 SqlCommand fuzzy_search_command = db_connector.newProcedure("fuzzy_user_search");
 
-				if (search_parameter != null)
+				if (parameter != null)
 				{
-					fuzzy_search_command.Parameters.AddWithValue("@UserName", search_parameter);
+					fuzzy_search_command.Parameters.AddWithValue("@UserName", parameter);
 				}
 				else
 				{
