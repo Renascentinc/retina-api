@@ -16,6 +16,7 @@ namespace retina_api.Models
         public List<string> type { get; set; }
         public List<string> status { get; set; }
         public List<string> provider { get; set; }
+        public List<string> role { get; set; }
 
         public attributes()
         {

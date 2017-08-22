@@ -14,7 +14,14 @@ namespace retina_api.Controllers
     public class DropdownsController : ApiController
     {
         [HttpGet]
-        public IHttpActionResult getDropdowns(int? currentUser, bool? user, bool? brand, bool? provider, bool? status, bool? type, bool? restricteduser)
+        public IHttpActionResult getDropdowns(int? currentUser, 
+                                              bool? user, 
+                                              bool? brand, 
+                                              bool? provider, 
+                                              bool? status, 
+                                              bool? type, 
+                                              bool? restricteduser,
+                                              bool? role)
         {
 
             try
@@ -44,6 +51,11 @@ namespace retina_api.Controllers
                 if (user == true)
                 {
                     d.attributes.user = new UniqueNames("select_user").getUniqueDynamics();
+                }
+
+                if (role == true)
+                {
+					d.attributes.role = new UniqueNames("select_role").getUniqueStrings("Role");
                 }
 
                 if (currentUser != null && restricteduser == true)
