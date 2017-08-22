@@ -55,7 +55,7 @@ namespace retina_api.Controllers
 
                 if (role == true)
                 {
-					d.attributes.role = new UniqueNames("select_role").getUniqueStrings("Role");
+                    d.attributes.role = new UniqueNames("select_role").getUniqueStrings("Role");
                 }
 
                 if (currentUser != null && restricteduser == true)
