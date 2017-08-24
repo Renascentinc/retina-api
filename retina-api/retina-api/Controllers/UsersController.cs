@@ -180,5 +180,26 @@ namespace retina_api.Controllers
 				return Ok(e);
 			}
 		}
+
+        [HttpDelete]
+        public IHttpActionResult DeactivateUser(int id){
+			try
+			{
+				DBConnector dbConnector = new DBConnector();
+
+				SqlCommand deleteToolCommand = dbConnector.newProcedure("deactivate_user");
+				deleteToolCommand.Parameters.AddWithValue("@UserID", id);
+
+				deleteToolCommand.ExecuteNonQuery();
+
+				dbConnector.closeConnection();
+
+                return Ok(new {data = new {type = "user", id = id}});
+			}
+			catch (Exception e)
+			{
+				return Ok(e);
+			}
+        }
     }
 }
