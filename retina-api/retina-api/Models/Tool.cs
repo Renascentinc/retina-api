@@ -14,7 +14,7 @@ namespace retina_api.Models
         public int id { get; }
         public dynamic attributes { get; }
 
-        public Tool(IDataRecord record)        
+        public Tool(IDataRecord record)
         {
 
             type = "tool";
@@ -24,19 +24,19 @@ namespace retina_api.Models
                 toolclass = (record["Class"] != DBNull.Value) ? ((string)record["Class"]).TrimEnd(' ') : "",
                 type = ((string)record["Type"]).TrimEnd(' '),
                 brand = ((string)record["Brand"]).TrimEnd(' '),
-                purchasedate = (record["DatePurchased"] != DBNull.Value) ? record["DatePurchased"] : "--",
-                purchasedfrom = (record["PurchasedFrom"] != DBNull.Value) ? ((string)record["PurchasedFrom"]).TrimEnd(' ') : "--",
-                price = (record["Price"] != DBNull.Value) ? (record["Price"]) : "--",
+                purchasedate = (record["DatePurchased"] != DBNull.Value) ? record["DatePurchased"] : "",
+                purchasedfrom = (record["PurchasedFrom"] != DBNull.Value) ? ((string)record["PurchasedFrom"]).TrimEnd(' ') : "",
+                price = (record["Price"] != DBNull.Value) ? (record["Price"]) : "",
                 modelnumber = ((string)record["ModelNumber"]).TrimEnd(' '),
                 status = ((string)record["Status"]).TrimEnd(' '),
                 serialnumber = ((string)record["SerialNumber"]).TrimEnd(' '),
                 userid = record["UserID"],
-                username = (record["UserName"] != DBNull.Value) ? ((string)record["UserName"]).TrimEnd(' ') : "--",
-                email = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "--",
-                phonenumber = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "--",
-                year = (record["Year"] != DBNull.Value) ? record["Year"] : "--"
+                username = (record["UserName"] != DBNull.Value) ? ((string)record["UserName"]).TrimEnd(' ') : "",
+                email = (record["Email"] != DBNull.Value) ? ((string)record["Email"]).TrimEnd(' ') : "",
+                phonenumber = (record["PhoneNumber"] != DBNull.Value) ? record["PhoneNumber"] : "",
+                year = (record["Year"] != DBNull.Value) ? record["Year"] : ""
 
-        };
+            };
         }
     }
 }

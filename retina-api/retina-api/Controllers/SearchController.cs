@@ -20,13 +20,14 @@ namespace retina_api.Controllers
             SqlConnection myConnection = new DBConnector().newConnection;
             myConnection.Open();
 
-            SqlCommand cmd = new SqlCommand("search_single_tool", myConnection);
+            SqlCommand cmd = new SqlCommand("fuzzy_tool_search", myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             if (parameter != null)
             {
-                cmd.Parameters.AddWithValue("@Number", parameter);
-            }else
+                cmd.Parameters.AddWithValue("@Number", parameter.ToUpper());
+            }
+            else
             {
                 cmd.Parameters.AddWithValue("@Number", DBNull.Value);
             }
@@ -44,14 +45,12 @@ namespace retina_api.Controllers
 
             return Ok(new { data = toolList });
         }
-        
 
         [HttpGet]
         public IHttpActionResult toolboxAutocompleteSearch(int? currentUser, string parameter)
         {
             try
             {
-
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
@@ -68,7 +67,7 @@ namespace retina_api.Controllers
 
                 if (parameter != null)
                 {
-                    cmd.Parameters.AddWithValue("@Number", parameter);
+                    cmd.Parameters.AddWithValue("@Number", parameter.ToUpper());
                 }else
                 {
                     cmd.Parameters.AddWithValue("@Number", DBNull.Value);
@@ -172,22 +171,22 @@ namespace retina_api.Controllers
 
 
         [HttpGet]
-        public IHttpActionResult search(string status, int? userID, string type, string brand)
+        public IHttpActionResult DropdownToolSearch(string status, int? userID, string type, string brand)
         {
             try
             {
-
                 SqlConnection myConnection = new DBConnector().newConnection;
                 myConnection.Open();
 
-                SqlCommand cmd = new SqlCommand("search_tools", myConnection);
+                SqlCommand cmd = new SqlCommand("dropdown_tool_search", myConnection);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 if (status != null)
                 {
                     cmd.Parameters.AddWithValue("@Status", status);
-                }else
+                }
+                else
                 {
                     cmd.Parameters.AddWithValue("@Status", DBNull.Value);
                 }
