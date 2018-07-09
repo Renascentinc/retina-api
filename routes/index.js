@@ -9,17 +9,13 @@ router.get('/', function(req, res, next) {
 
 async function rod() {
   const client = new Client({
-    // user: 'dbuser',
-    // host: 'localhost',
-    database: 'test-db',
-    // password: 'secretpassword',
-    // port: 3211,
+    database: 'test-db'
   });
 
   try {
     await client.connect();
-    const response = await client.query('SELECT $1::text as message', ['Hello world!']);
-    console.log(response.rows[0].message);
+    const response = await client.query('select * from helloWorld() as message');
+    console.log(response);
     return response.rows[0].message;
   } catch (e) {
     console.log(e);

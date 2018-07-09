@@ -1,8 +1,8 @@
-CREATE OR REPLACE FUNCTION helloWorld() RETURNS string AS $$
+CREATE OR REPLACE FUNCTION helloWorlddd() RETURNS varchar AS $$
 DECLARE
-  message string;
+  message varchar;
 BEGIN
-    SELECT "Hello World" INTO message;
+    SELECT 'Hello World' as message into message;
     RETURN message;
 END;
 $$ LANGUAGE plpgsql;
