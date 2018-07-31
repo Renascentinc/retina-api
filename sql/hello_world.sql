@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION helloWorlddd() RETURNS varchar AS $$
+(a text) RETURNS varchar AS $$
 DECLARE
   message varchar;
 BEGIN
