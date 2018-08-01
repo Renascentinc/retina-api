@@ -1,8 +1,7 @@
-(a text) RETURNS varchar AS $$
-DECLARE
-  message varchar;
+CREATE OR REPLACE FUNCTION get_tools() RETURNS SETOF "TestTable"
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    SELECT 'Hello World' as message into message;
-    RETURN message;
+    RETURN QUERY SELECT * FROM "TestTable";
 END;
-$$ LANGUAGE plpgsql;
+$$;

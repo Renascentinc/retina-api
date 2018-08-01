@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('retina-api:server');
 var http = require('http');
 var boot = require('../boot');
+var tearDown = require('../tear-down');
 
 /**
  * Get port from environment and store in Express.
@@ -31,7 +32,14 @@ boot().then(() => {
   server.on('listening', onListening);
 });
 
+process.on('SIGTERM', () => {
+  console.log('waga!!!');
+  process.exit(0);
+});
 
+process.on('SIGINT', () => {
+  tearDown().then(() => process.exit(0));
+});
 
 /**
  * Normalize a port into a number, string, or false.
