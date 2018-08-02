@@ -1,2 +1,0 @@
--- DROP DATABASE IF EXISTS "testDb";
-CREATE DATABASE "testDb";

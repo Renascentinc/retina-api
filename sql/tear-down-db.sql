@@ -1,2 +1,0 @@
-DROP FUNCTION get_tools;
-DROP TABLE IF EXISTS "TestTable";

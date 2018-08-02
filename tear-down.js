@@ -1,8 +1,7 @@
+const { Client } = require('pg');
 
-const db = require('./db');
+let a = [1,2,3,4];
 
-async function tearDown(){
-  await db.query('tear-down-db.sql');
+for (let blah in a) {
+  console.log(blah)
 }
-
-module.exports = tearDown;

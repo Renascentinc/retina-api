@@ -1,7 +1,0 @@
-CREATE OR REPLACE FUNCTION get_tools() RETURNS SETOF "TestTable"
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    RETURN QUERY SELECT * FROM "TestTable";
-END;
-$$;

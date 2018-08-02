@@ -1,28 +1,56 @@
 const { Client } = require('pg');
-const db = require('./db');
-var fs = require('fs');
+const { DbBuilder } = require('./db');
+const fs = require('fs');
 
-async function boot(){
-  const bootClient = new Client({
-    database: 'postgres'
+async function deleteFunctionsFromDb(db) {
+  let dropStatements = await db.rawQuery({
+    text: `SELECT 'DROP FUNCTION IF EXISTS ' || ns.nspname || '.' || proname || '(' || oidvectortypes(proargtypes) || ');'
+           FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
+           WHERE ns.nspname = 'public';`,
+    rowMode: 'array'
   });
 
+  dropStatements = dropStatements.rows.map(row => row[0]).join('');
   try {
-    await bootClient.connect();
-    // Maybe do a foreach through the files in the sql folder to boot up the DB?
-    await bootClient.query(fs.readFileSync('sql/create-db.sql', 'utf8'));
+    await db.rawQuery(dropStatements);
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+async function loadFunctionsIntoDb(db) {
+  let files = fs.readdirSync('./sql/functions');
+
+  let fileTexts = [];
+  for (let i in files) {
+    fileTexts.push(fs.readFileSync(`./sql/functions/${files[i]}`, {encoding: 'utf-8'}));
+  }
+
+  try {
+    await db.rawQuery(fileTexts.join(';'));
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+// So far only local configuration
+async function boot(){
+  let connection = new Client({
+    database: 'test-db'
+  });
+
+  let db = await new DbBuilder()
+                      .withDbConnection(connection)
+                      .build();
+
+  try {
+    await deleteFunctionsFromDb(db);
+    await loadFunctionsIntoDb(db);
   } catch (e) {
     console.log(e);
   }
 
-  await bootClient.end();
-
-  try {
-    await db.query('test-create-table.sql');
-    await db.query('test-create-proc.sql');
-  } catch (e) {
-    console.log(e);
-  }
+  return db;
 };
 
- module.exports = boot;
+module.exports = boot;

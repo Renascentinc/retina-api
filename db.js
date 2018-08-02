@@ -1,21 +1,78 @@
 const { Client } = require('pg');
-const fs = require('fs');
+var named = require('yesql').pg
 
-async function query(file){
-  const client = new Client({
-    database: 'testDb'
-  });
+class Db {
 
-  client.connect();
+  constructor(connection) {
+    this.connection = connection;
+  }
 
-  try {
-    var result = await client.query(fs.readFileSync(`sql/${file}`, 'utf8'));
-    await client.end();
-    return result
-  } catch (e) {
-    console.log(e);
-    await client.end();
+  async execute_stored_procedure(procedureName, params) {
+    if (typeof params != 'object')
+    {
+      throw new TypeError(`argument \'params\' must be an object; instead was of type \'${typeof params}\'`)
+    }
+
+    let namedParams = [];
+    for (let key in params) {
+      namedParams.push(`${key} => :${[key]}`);
+    }
+    namedParams = namedParams.join(', ');
+
+    let namedQuery = named(`SELECT * FROM ${procedureName}(${namedParams})`)(params);
+
+    try {
+      let result = await this.connection.query(namedQuery);
+      return result.rows[0][procedureName];
+    } catch (e) {
+      console.log(e);
+      throw Error(`Query '${namedQuery.text}' with values [${namedQuery.values}] failed to execute`);
+    }
+  }
+
+  async rawQuery(query) {
+    return await this.connection.query(query);
+  }
+
+  async open() {
+    await this.connection.connect();
+  }
+
+  async close() {
+    await this.connection.end();
   }
 }
 
-module.exports = { query };
+class DbBuilder {
+
+  withDbConnection(dbConnection) {
+    this.dbConnection = dbConnection;
+    return this;
+  }
+
+  async build() {
+    if (typeof this.dbConnection != 'object' || this.dbConnection == null) {
+      throw Error(`An incorrect database client was provided`);
+    }
+    let db = new Db(this.dbConnection);
+
+    db.open();
+
+    let functionNames = await db.rawQuery({
+      text: `SELECT DISTINCT routine_name FROM information_schema.routines
+             WHERE routine_type='FUNCTION' AND specific_schema='public'`,
+      rowMode: 'array'
+    });
+
+    // Smelly code here, calling db versus this
+    functionNames.rows.forEach(row => {
+      db[row[0]] = async (args) => {
+        return await db.execute_stored_procedure(row[0], args);
+      }
+    });
+
+    return db;
+  }
+}
+
+module.exports = { DbBuilder };

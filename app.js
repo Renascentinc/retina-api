@@ -1,55 +1,68 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const { ApolloServer, gql } = require('apollo-server');
+const boot = require('./boot');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+// This is a (sample) collection of books we'll be able to query
+// the GraphQL server for.  A more complete example might fetch
+// from an existing data source like a REST API or database.
+const db = {
+  books: [
+    {
+      title: 'Harry Potter and the Chamber of Secrets',
+      author: 'J.K. Rowling',
+      waga: "dude"
+    },
+    {
+      title: 'Jurassic Park',
+      author: 'Michael Crichton',
+      waga: "man"
+    }
+  ]
+};
 
-var app = express();
+const typeDefs = gql`
+  # Comments in GraphQL are defined with the hash (#) symbol.
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+  type Book {
+    title: String
+    author: String
+    waga: String
+  }
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+  type Query {
+    books: [Book]
+  }
+`;
 
-app.use('/', function(_,_,next) {
-  console.log("dude");
-  next();
-});
+const resolvers = {
+  Query: {
+     books: async (a,b,context) => {
+       let response = await context.db.hello_world({part_one: 'We have landed', part_two: 'Oh Yea'});
+       return [{title: response}]
+     }
+  }
+};
 
-app.use('/', function(_,res,next) {
-  console.log("waga");
-  next();
-});
+(async () => {
+  let db = await boot();
 
-app.use('/users', users);
+  process.on('SIGTERM', () => {
+    console.log('Closing on SIGTERM');
+    db.close();
+    process.exit(0);
+  });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+  process.on('SIGINT', () => {
+    console.log('Closing on SIGINT');
+    db.close();
+    process.exit(0);
+  });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: {db}
+  });
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+  server.listen();
+  console.log('Listening on port 4000')
+})()
