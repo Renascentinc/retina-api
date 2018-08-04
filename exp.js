@@ -1,11 +1,19 @@
 
 
-class Dude {
-  constructor() {
-    this['waga'] = function() {
-      console.log('dude')
-    }
-  }
+async function waga() {
+  throw Error('Waga throws!!!');
 }
 
-module.exports = Dude;
+async function dude() {
+  await waga();
+}
+
+(async () => {
+  try {
+    await dude()
+  } catch (e) {
+    console.log(e)
+  } finally {
+
+  }
+})()
