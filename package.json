@@ -3,12 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node main",
+    "test": "mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
     "graphql": "^0.13.2",
     "pg": "^7.4.3",
+    "winston": "^3.0.0",
     "yesql": "^3.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "rewire": "^4.0.1"
   }
 }

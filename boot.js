@@ -35,22 +35,18 @@ async function loadFunctionsIntoDb(db) {
 
 // So far only local configuration
 async function boot(){
-  let connection = new Client({
-    database: 'test-db'
-  });
+  let connection = new Client();
 
-  let db = await new DbBuilder()
-                      .withDbConnection(connection)
-                      .build();
+  let dbAdapter = await new DbAdapter({ database: 'test-db' });
 
   try {
-    await deleteFunctionsFromDb(db);
-    await loadFunctionsIntoDb(db);
+    await deleteFunctionsFromDb(dbAdapter);
+    await loadFunctionsIntoDb(dbAdapter);
   } catch (e) {
     console.log(e);
   }
 
-  return db;
+  return dbAdapter;
 };
 
 module.exports = boot;
