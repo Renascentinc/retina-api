@@ -1,11 +1,10 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool (
-	id bigint DEFAULT nextval('tool_sampleid_seq'::regclass) NOT NULL,
+	id integer primary key,
 	type character varying(80),
 	brand character varying(80),
-	purchase_date date,
-	PRIMARY KEY(id)
+	purchase_date date
 );
 
 COMMIT;

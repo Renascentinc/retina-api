@@ -7,5 +7,9 @@ module.exports = {
   dropAllTables:
     `DROP SCHEMA public CASCADE;
      CREATE SCHEMA public;
-     GRANT ALL ON SCHEMA public TO public;`
+     GRANT ALL ON SCHEMA public TO public;`,
+
+  getAllFunctionNames:
+    `SELECT DISTINCT routine_name FROM information_schema.routines
+     WHERE routine_type='FUNCTION' AND specific_schema='public'`
 }

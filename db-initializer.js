@@ -2,7 +2,7 @@ const { Client } = require('pg');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
 const DbAdapter = require('./db-adapter');
-const { getDropFunctionsQueries, dropAllTables } = require('./sql/raw-queries');
+const { getDropFunctionsQueries, dropAllTables, getAllFunctionNames } = require('./sql/raw-queries');
 const logger = require('./logger');
 
 //TODO: Consider making a global "query" function that will do a try/catch and log information
@@ -27,7 +27,16 @@ async function initializeDb() {
     throw e;
   }
 
-  // return await new DbAdapter(dbClient);
+  let functionNames;
+  try {
+    functionNames = await getFunctionNames(dbClient);
+  } catch (e) {
+    logger.error(`Unable to get function names for database '${dbClient.database}'`);
+    await dbClient.end();
+    throw e;
+  }
+
+  return await new DbAdapter(dbClient, functionNames);
 }
 
 function getDbClient() {
@@ -65,6 +74,13 @@ async function loadFunctions(dbClient) {
     logger.error(`Unable to load functions into database '${dbClient.database}'`);
     throw e;
   }
+}
+
+async function getFunctionNames(dbClient) {
+  return await dbClient.query({
+    text: getAllFunctionNames,
+    rowMode: 'array'
+  });
 }
 
 async function loadSchema(dbClient) {

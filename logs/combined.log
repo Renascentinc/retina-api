@@ -1,11 +1,13 @@
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Unable to get function names for database 'local_db'","level":"error"}
 {"message":"Unable to initialize database. Shutting down application","level":"error"}
-{"message":"Unable to start application because of the following error\nError: getaddrinfo ENOTFOUND coolAwsHost coolAwsHost:5432","level":"error"}
-{"message":"Unable to initialize database. Shutting down application","level":"error"}
-{"message":"Unable to start application because of error Error: getaddrinfo ENOTFOUND coolAwsHost coolAwsHost:5432","level":"error"}
-{"message":"Unable to initialize database. Shutting down application","level":"error"}
-{"message":"Unable to start application because of error \"Error: getaddrinfo ENOTFOUND coolAwsHost coolAwsHost:5432\"","level":"error"}
-{"message":"Could not connect to database","level":"error"}
-{"message":"Could not connect to database","level":"error"}
-{"message":"Could not connect to database","level":"error"}
-{"message":"Unable to load schema into database 'local_db'","level":"error"}
-{"message":"Unable to create tables and functions for database local_db","level":"error"}
+{"message":"Unable to start application because of error \"ReferenceError: dbClient is not defined\"","level":"error"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"silly"}
