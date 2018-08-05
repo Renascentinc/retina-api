@@ -1,19 +1,9 @@
+dude()
 
-
-async function waga() {
-  throw Error('Waga throws!!!');
+ function dude() {
+   waga();
 }
 
-async function dude() {
-  await waga();
+ function waga() {
+  console.log('dddd');
 }
-
-(async () => {
-  try {
-    await dude()
-  } catch (e) {
-    console.log(e)
-  } finally {
-
-  }
-})()
