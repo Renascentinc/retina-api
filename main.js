@@ -1,20 +1,20 @@
 
 const logger = require('./logger');
-const Application = require('./application');
+const Server = require('./server');
 
-async main() {
-  let app = new Application();
-  async app.start();
+async function main() {
+  let server = new Server();
+  await server.start();
 
-  process.on('SIGTERM', () => {
+  process.on('SIGTERM', async () => {
     logger.silly(`Shutting down app on signal 'SIGTERM'`);
-    async app.shutdown();
+    await server.shutdown();
     process.exit(0);
   });
 
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     logger.silly(`Shutting down app on signal 'SIGINT'`);
-    async app.shutdown();
+    await server.shutdown();
     process.exit(0);
   });
 }
