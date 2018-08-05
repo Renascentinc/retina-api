@@ -4,19 +4,13 @@ const graphQlUtils = require('./utils/graphql-utils');
 const appConfig = require('./app-config');
 const logger = require('./logger');
 
-// TODO Probably remove Application and have only a server
 class Server {
 
+  constructor(dbAdapter) {
+    this.dbAdapter = dbAdapter;
+  }
+
   start() {
-
-    // is it really right to have db logic in server?
-    try {
-      this.dbAdapter = initializeDb();
-    } catch (e) {
-      logger.error('Unable to initialize database. Shutting down server');
-      this.shutdown();
-    }
-
     let apolloServer = new ApolloServer({
       typeDefs: graphQlUtils.getTypeDefsFromDirectory(appConfig['server.graphql.typeDefDir']),
       resolvers: graphQlUtils.getResolversFromDirectory(appConfig['server.graphql.resolverDir']),

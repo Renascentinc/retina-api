@@ -1,20 +1,25 @@
 
 const logger = require('./logger');
-const Server = require('./server');
+const Application = require('./application');
 
 async function main() {
-  let server = new Server();
-  await server.start();
+  let app = new Application();
+
+  try {
+    await app.start();
+  } catch (e) {
+    logger.error(`Unable to start application because of error "${e}"`);
+  }
 
   process.on('SIGTERM', async () => {
     logger.silly(`Shutting down app on signal 'SIGTERM'`);
-    await server.shutdown();
+    await app.shutdown();
     process.exit(0);
   });
 
   process.on('SIGINT', async () => {
     logger.silly(`Shutting down app on signal 'SIGINT'`);
-    await server.shutdown();
+    await app.shutdown();
     process.exit(0);
   });
 }

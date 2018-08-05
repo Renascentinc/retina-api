@@ -5,7 +5,7 @@ const fileUtils = rewire(`${process.env.PWD}/utils/file-utils`);
 
 describe('file-utils', function() {
 
-  describe('normalizeDirectoryName', function() {
+  describe('normalizeDirectoryName()', function() {
     let normalizeDirectoryName = fileUtils.__get__('normalizeDirectoryName');
 
     it('should return directory name with final forward slash removed', () => {
@@ -29,7 +29,7 @@ describe('file-utils', function() {
 
   });
 
-  describe('readFilesFromDir', function() {
+  describe('readFilesFromDir()', function() {
     it('should read data from the correct number of files', () => {
       let fileArray = fileUtils.readFilesFromDir(`${process.env.PWD}/tests/resources/utils/dir_with_files`);
       assert.equal(fileArray.length, 2);
@@ -41,7 +41,7 @@ describe('file-utils', function() {
       assert.equal(fileArray.length, 0);
       assert.ok(fileArray.join() == '');
     });
-    
+
   });
 
 });

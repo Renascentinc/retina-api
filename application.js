@@ -1,18 +1,31 @@
 
-const Db = require('./db');
-const Server = require('./sserver');
-const { initializeDb } = require('./db-initializer')
+const { initializeDb } = require('./db-initializer');
+const Server = require('./server');
+const logger = require('./logger');
 
 class Application {
 
-  start() {
-    let dbAdapter = initializeDb();
-    this.server = async new Server(dbAdapter);
-    async this.server.start();
+  async start() {
+    let dbAdapter;
+    try {
+      dbAdapter = await initializeDb();
+    } catch (e) {
+      logger.error('Unable to initialize database. Shutting down application');
+      throw e;
+    }
+
+    this.server = await new Server(dbAdapter);
+
+    try {
+      await this.server.start();
+    } catch (e) {
+      logger.error('Unable to start server. Shutting down application');
+      throw e;
+    }
   }
 
-  shutdown() {
-    async this.server.shutdown();
+  async shutdown() {
+    await this.server.shutdown();
   }
 
 }

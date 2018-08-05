@@ -5,7 +5,7 @@ const graphqlUtils = rewire(`${process.env.PWD}/utils/graphql-utils`);
 
 describe('graphql-utils', function() {
 
-  describe('getTypeDefsFromDirectory', function() {
+  describe('getTypeDefsFromDirectory()', function() {
 
     it('should return array of gql objects', () => {
       let typeDefs = graphqlUtils.getTypeDefsFromDirectory(`${process.env.PWD}/tests/resources/utils/dir_with_graphql_files`);
@@ -14,7 +14,7 @@ describe('graphql-utils', function() {
     });
   });
 
-  describe('getResolversFromDirectory', function() {
+  describe('getResolversFromDirectory()', function() {
 
     it('should return an object containing resolvers', () => {
       let typeDefs = graphqlUtils.getResolversFromDirectory('dummy_dir');
