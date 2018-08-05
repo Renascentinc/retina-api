@@ -4,10 +4,6 @@ const DbAdapter = require('./db-adapter');
 const { getDropFunctionsQueries } = require('./sql/raw-queries');
 
 async function initializeDb() {
-  if (appConfig['db.refreshSchema']) {
-    // See about dropping all tables. Is a postgres connection needed?
-  }
-
   let dbClient = getDbClient();
   await dropFunctions(dbClient);
   await loadFunctions(dbClient);
@@ -23,7 +19,7 @@ async function getDbClient() {
     port: appConfig['db.port']
   });
 
-  dbClient.connect();
+  await dbClient.connect();
   return dbClient;
 }
 
