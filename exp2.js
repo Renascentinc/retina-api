@@ -1,4 +1,12 @@
+const {getDbClientInstance} = require('./retina-db-client')
 
-const Dude = require('./exp');
 
-console.log(new Dude().waga())
+
+function callIt() {
+  let boogie;
+
+  boogie = getDbClientInstance();
+  boogie = getDbClientInstance();
+}
+
+module.exports = {callIt}

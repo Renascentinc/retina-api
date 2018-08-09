@@ -2,6 +2,7 @@
 const { initializeDb } = require('./db-initializer');
 const Server = require('./server');
 const logger = require('./logger');
+const devData = require('./dev-data');
 
 class Application {
 
@@ -9,9 +10,10 @@ class Application {
     let dbAdapter;
     try {
       dbAdapter = await initializeDb();
+      await dbAdapter.seedDb();
     } catch (e) {
-      logger.error('Unable to initialize database. Shutting down application');
-      throw e;
+      logger.error(`Unable to initialize database. ${e}`);
+      throw new Error('Unable to initialize database');
     }
 
     this.server = await new Server(dbAdapter);
@@ -19,8 +21,8 @@ class Application {
     try {
       await this.server.start();
     } catch (e) {
-      logger.error('Unable to start server. Shutting down application');
-      throw e;
+      logger.error(`Unable to start server. ${e}`);
+      throw new Error('Unable to start server');
     }
   }
 

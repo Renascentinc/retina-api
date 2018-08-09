@@ -24,7 +24,7 @@ describe('server', function() {
       };
 
       let server = new Server(db);
-      // server.start();
+      server.start();
     });
 
   });

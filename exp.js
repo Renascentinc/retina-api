@@ -1,9 +1,11 @@
-dude()
 
- function dude() {
-   waga();
-}
+const {getDbClientInstance} = require('./retina-db-client')
 
- function waga() {
-  console.log('dddd');
-}
+const {callIt} = require('./exp2')
+
+let boogie;
+
+boogie = getDbClientInstance();
+boogie = getDbClientInstance();
+
+callIt();
