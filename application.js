@@ -10,7 +10,7 @@ class Application {
     let dbAdapter;
     try {
       dbAdapter = await initializeDb();
-      await dbAdapter.seedDb();
+      // await dbAdapter.seedDb();
     } catch (e) {
       logger.error(`Unable to initialize database. ${e}`);
       throw new Error('Unable to initialize database');
