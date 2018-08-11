@@ -8,15 +8,17 @@
 //   describe('initializeDb()', () => {
 //
 //     it('should create an entirely new database', async () => {
+//       let dbAdapter;
 //       try {
-//         let dbAdapter = await initializeDb();
+//         dbAdapter = await initializeDb();
 //         await dbAdapter.disconnect();
 //       } catch (e) {
 //         console.log(e)
+//         await dbAdapter.disconnect();
 //       }
 //
 //     });
 //
 //   });
-//
+// 
 // });

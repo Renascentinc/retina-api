@@ -4,6 +4,7 @@ const fileUtils = require('./utils/file-utils');
 const { DbAdapter } = require('./db-adapter');
 const { getDropFunctionsQueries, dropAllTables, getAllFunctionNames } = require('./sql/raw-queries');
 const logger = require('./logger');
+const { devData } = require('./data/dev-data');
 
 async function initializeDb() {
 
@@ -21,6 +22,7 @@ async function initializeDb() {
     await loadSchema(dbClient);
     await dropFunctions(dbClient);
     await loadFunctions(dbClient);
+    await seedDb(dbClient);
   } catch (e) {
     logger.error(`Unable to create tables and functions for database`);
     await dbClient.disconnect();
@@ -64,13 +66,6 @@ async function loadFunctions(dbClient) {
   }
 }
 
-async function getFunctionNames(dbClient) {
-  return await dbClient.query({
-    text: getAllFunctionNames,
-    rowMode: 'array'
-  });
-}
-
 async function loadSchema(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
@@ -89,6 +84,30 @@ async function dropSchema(dbClient) {
   } catch (e) {
     logger.error(`Unable to drop schema from database '${dbClient.database}' \n${e}`);
     throw new Error('Unable to drop schema from database');
+  }
+}
+
+async function seedDb(dbClient) {
+  try {
+    for (let tableName in devData) {
+      let tableRows = devData[tableName];
+      for (let rowIndex in tableRows) {
+        let row = tableRows[rowIndex];
+        let keys = Object.keys(row);
+        let values = Object.values(row);
+        let commaDelimitedKeys = keys.join(', ');
+
+        let vars = [];
+        for (var i = 0; i < values.length; i++) {
+          vars.push(`$${i+1}`);
+        }
+        vars = vars.join(', ');
+        await dbClient.queryWithParams(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
+      }
+    }
+  } catch (e) {
+    logger.error(`Unable to seed database \n${e}`);
+    throw new Error('Unable to seed database');
   }
 }
 

@@ -19,3 +19,30 @@
 {"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
 {"message":"Unable to initialize database. TypeError: DbAdapter is not a constructor","level":"\u001b[31merror\u001b[39m"}
 {"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: Client has already been connected. You cannot reuse a client. \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'DROP SCHEMA public CASCADE;\n                          CREATE SCHEMA public;\n                          GRANT ALL ON SCHEMA public TO public;' \nError: This socket has been ended by the other party","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbError: Error executing query 'DROP SCHEMA public CASCADE;\n                          CREATE SCHEMA public;\n                          GRANT ALL ON SCHEMA public TO public;'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: Client has already been connected. You cannot reuse a client. \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'DROP SCHEMA public CASCADE;\n                          CREATE SCHEMA public;\n                          GRANT ALL ON SCHEMA public TO public;' \nError: This socket has been ended by the other party","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbError: Error executing query 'DROP SCHEMA public CASCADE;\n                          CREATE SCHEMA public;\n                          GRANT ALL ON SCHEMA public TO public;'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO devData(0, 1, 2, 3) VALUES (t, o, o, l)' \nerror: syntax error at or near \"0\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO devData(0, 1, 2, 3) VALUES (u, s, e, r)' \nerror: syntax error at or near \"0\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO devData(0, 1, 2, 3) VALUES (t, o, o, l)' \nerror: syntax error at or near \"0\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO devData(0, 1, 2, 3) VALUES (t, o, o, l)'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO tool(0) VALUES (0)' \nerror: syntax error at or near \"0\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO tool(0) VALUES (0)'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO tool(id, type, brand, purchase_date) VALUES (1, Drill, Bosch, 09/09/1998)' \nerror: column \"drill\" does not exist","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO tool(id, type, brand, purchase_date) VALUES (1, Drill, Bosch, 09/09/1998)'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nTypeError: row.length is not a function","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO tool(id, type, brand, purchase_date) VALUES ($0, $1, $2, $3)' with parameters [1,Drill,Bosch,09/09/1998] \nerror: there is no parameter $0","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO tool(id, type, brand, purchase_date) VALUES ($0, $1, $2, $3)' with parameters [1,Drill,Bosch,09/09/1998]'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO user(id, first_name, last_name) VALUES ($1, $2, $3)' with parameters [1,Bob,Thomas] \nerror: syntax error at or near \"user\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO user(id, first_name, last_name) VALUES ($1, $2, $3)' with parameters [1,Bob,Thomas]'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
