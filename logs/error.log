@@ -46,3 +46,9 @@
 {"message":"Error executing query 'INSERT INTO user(id, first_name, last_name) VALUES ($1, $2, $3)' with parameters [1,Bob,Thomas] \nerror: syntax error at or near \"user\"","level":"\u001b[31merror\u001b[39m"}
 {"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO user(id, first_name, last_name) VALUES ($1, $2, $3)' with parameters [1,Bob,Thomas]'","level":"\u001b[31merror\u001b[39m"}
 {"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO public.tool(id,m type,m brand,m purchase_date) VALUES ($1, $2, $3, $4)' with parameters [1,Drill,Bosch,09/09/1998] \nerror: syntax error at or near \"type\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO public.tool(id,m type,m brand,m purchase_date) VALUES ($1, $2, $3, $4)' with parameters [1,Drill,Bosch,09/09/1998]'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error executing query 'INSERT INTO public.tool(id,mtype,mbrand,mpurchase_date) VALUES ($1,$2,$3,$4)' with parameters [1,Drill,Bosch,09/09/1998] \nerror: column \"mtype\" of relation \"tool\" does not exist","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to seed database \nDbError: Error executing query 'INSERT INTO public.tool(id,mtype,mbrand,mpurchase_date) VALUES ($1,$2,$3,$4)' with parameters [1,Drill,Bosch,09/09/1998]'","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
