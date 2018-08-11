@@ -97,8 +97,8 @@ class DbClient {
       throw new ArgumentError('Not enough arguments passed to executeDbFunction');
     }
 
-    if (typeof params != 'object'){
-      logger.warning(`argument 'params' must be an object; instead was of type '${typeof params}`)
+    if (params && typeof params != 'object'){
+      logger.warn(`argument 'params' must be an object; instead was of type '${typeof params}`)
       throw new ArgumentError(`argument 'params' must be an object; instead was of type '${typeof params}'`)
     }
 
@@ -112,7 +112,7 @@ class DbClient {
 
     try {
       let result = await this.client.query(namedQuery);
-      return result.rows[0][functionName];
+      return result.rows;
     } catch (e) {
       logger.error(`Function '${functionName}' with parameters [${namedParams}] failed to execute \n${e}`);
       throw new DbClientError(`Function '${functionName}' with parameters [${namedParams}] failed to execute`);

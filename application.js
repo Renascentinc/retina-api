@@ -2,7 +2,6 @@
 const { initializeDb } = require('./db-initializer');
 const Server = require('./server');
 const logger = require('./logger');
-const devData = require('./dev-data');
 
 class Application {
 
@@ -10,9 +9,8 @@ class Application {
     let dbAdapter;
     try {
       dbAdapter = await initializeDb();
-      // await dbAdapter.seedDb();
     } catch (e) {
-      logger.error(`Unable to initialize database. ${e}`);
+      logger.error(`Unable to initialize database. \n${e}`);
       throw new Error('Unable to initialize database');
     }
 

@@ -1,7 +1,6 @@
 const { ApolloServer } = require('apollo-server');
 const { initializeDb } = require('./db-initializer')
-const graphQlUtils = require('./utils/graphql-utils');
-const appConfig = require('./app-config');
+const { createSchema } = require('./utils/graphql-utils');
 const logger = require('./logger');
 
 class Server {
@@ -11,13 +10,18 @@ class Server {
   }
 
   start() {
-    let apolloServer = new ApolloServer({
-      typeDefs: graphQlUtils.getTypeDefsFromDirectory(appConfig['server.graphql.typeDefDir']),
-      resolvers: graphQlUtils.getResolversFromDirectory(appConfig['server.graphql.resolverDir']),
-      context: this.dbAdapter
-    });
+    try {
+      let apolloServer = new ApolloServer({
+        schema: createSchema(),
+        context: this.dbAdapter
+      });
 
-    apolloServer.listen();
+      apolloServer.listen();
+    } catch (e) {
+      logger.error(`Unable to start server \n${e}`);
+      this.dbAdapter.disconnect();
+      throw new Error('Unable to start server');
+    }
   }
 
   shutdown() {

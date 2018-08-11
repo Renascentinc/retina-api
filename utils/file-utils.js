@@ -36,4 +36,8 @@ function normalizeDirectoryName(dirName) {
   return dirName ? dirName.replace(/\/$/, '') : dirName;
 }
 
-module.exports = { readFilesFromDir }
+function readFileNamesFromDir(dir) {
+  return fs.readdirSync(dir);
+}
+
+module.exports = { readFilesFromDir, readFileNamesFromDir }
