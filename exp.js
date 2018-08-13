@@ -1,11 +1,4 @@
 
-const {getDbClientInstance} = require('./retina-db-client')
+const appConfig = require('./app-config');
 
-const {callIt} = require('./exp2')
-
-let boogie;
-
-boogie = getDbClientInstance();
-boogie = getDbClientInstance();
-
-callIt();
+console.log(appConfig)

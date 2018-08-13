@@ -1,12 +1,17 @@
 
 const logger = require('./logger');
 const Application = require('./application');
+const appConfig = require('./app-config');
 
-async function main() {
-  let app = new Application();
+async function main(args) {
+  if (appConfig['db.refresh']) {
+    await refreshDb();
+  }
+
+  // let app = new Application();
 
   try {
-    await app.start();
+    // await app.start();
   } catch (e) {
     logger.error(`Unable to start application because of error "${e}"`);
   }
@@ -24,4 +29,4 @@ async function main() {
   });
 }
 
-main();
+main(require('minimist')(process.argv.slice(2)));

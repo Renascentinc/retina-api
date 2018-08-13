@@ -328,3 +328,47 @@
 {"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
 {"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
 {"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: connect ECONNREFUSED 104.239.207.44:5432 \nDatabase config: { host: 'coolAwsHost', database: 'coolAwsDb', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbClientError: Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to disconnect from db client session that is not connected","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Unable to initialize database. \nError: Unable to drop schema from database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: connect ECONNREFUSED 104.239.207.44:5432 \nDatabase config: { host: 'coolAwsHost', database: 'coolAwsDb', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbClientError: Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to disconnect from db client session that is not connected","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Unable to initialize database. \nError: Unable to drop schema from database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: connect ECONNREFUSED 104.239.207.44:5432 \nDatabase config: { host: 'coolAwsHost', database: 'coolAwsDb', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbClientError: Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to disconnect from db client session that is not connected","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Unable to initialize database. \nError: Unable to drop schema from database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Error trying to connect to db client \nError: connect ECONNREFUSED 104.239.207.44:5432 \nDatabase config: { host: 'coolAwsHost', database: 'coolAwsDb', port: 5432 }","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to drop schema from database 'undefined' \nDbClientError: Trying to query from db client that is not connected","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to create tables and functions for database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Trying to disconnect from db client session that is not connected","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Unable to initialize database. \nError: Unable to drop schema from database","level":"\u001b[31merror\u001b[39m"}
+{"message":"Unable to start application because of error \"Error: Unable to initialize database\"","level":"\u001b[31merror\u001b[39m"}
+{"message":"Environment variable 'environment=loca' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Environment variable 'environment=loca' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Environment variable 'environment=loca' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment=loca' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Environment variable 'environment=loca' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment=dd' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
