@@ -6,15 +6,15 @@ const logger = require('./logger');
 class Application {
 
   async start() {
-    let dbAdapter;
+    let dbFunctions;
     try {
-      dbAdapter = await initializeDb();
+      dbFunctions = await initializeDb();
     } catch (e) {
       logger.error(`Unable to initialize database. \n${e}`);
       throw new Error('Unable to initialize database');
     }
 
-    this.server = await new Server(dbAdapter);
+    this.server = await new Server(dbFunctions);
 
     try {
       await this.server.start();

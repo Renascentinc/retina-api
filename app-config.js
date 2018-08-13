@@ -15,7 +15,6 @@ let appConfig = {
 if (!configSet) {
   setConfig(require('minimist')(process.argv.slice(2)));
   configSet = true;
-  console.log('indfs');
 }
 
 function setConfig(args) {

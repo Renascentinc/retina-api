@@ -1,4 +1,5 @@
 const winston = require('winston');
+const appConfig = require('./app-config');
 
 //TODO Improve logging: https://stackoverflow.com/questions/11386492/accessing-line-number-in-v8-javascript-chrome-node-js
 const logger = winston.createLogger({
@@ -12,7 +13,7 @@ const logger = winston.createLogger({
   ]
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (appConfig['environment'] !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.simple(), level: 'silly'
   }));

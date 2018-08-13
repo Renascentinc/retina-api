@@ -30,6 +30,7 @@ class DbClient {
       logger.info(`Connected to database \nDatabase config: ${this.loggableDbConfig}`)
     } catch (e) {
       logger.error(`Error trying to connect to db client \n${e} \nDatabase config: ${this.loggableDbConfig}`);
+      throw new DbClientError(`Error trying to connect to db client`);
     }
   }
 

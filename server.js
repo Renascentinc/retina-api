@@ -24,9 +24,7 @@ class Server {
     }
   }
 
-  shutdown() {
-    this.dbAdapter.disconnect();
-  }
+  shutdown() { }
 
 }
 

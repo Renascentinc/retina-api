@@ -2,9 +2,8 @@ const { getDbClientInstance } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
 const { DbAdapter } = require('./db-adapter');
-const { getDropFunctionsQueries, dropAllTables, getAllFunctionNames } = require('./sql/raw-queries');
+const { getDropFunctionsQueries } = require('./sql/raw-queries');
 const logger = require('./logger');
-const { devData } = require('./data/dev-data');
 
 async function initializeDb() {
 
@@ -18,13 +17,10 @@ async function initializeDb() {
   }
 
   try {
-    await dropSchema(dbClient);
-    await loadSchema(dbClient);
     await dropFunctions(dbClient);
     await loadFunctions(dbClient);
-    await seedDb(dbClient);
   } catch (e) {
-    logger.error(`Unable to create tables and functions for database`);
+    logger.error(`Unable to drop and load functions`);
     await dbClient.disconnect();
     throw e;
   }
@@ -38,7 +34,15 @@ async function initializeDb() {
     throw e;
   }
 
-  return await new DbAdapter(dbClient, functionNames);
+  let dbFunctions = {};
+
+  functionNames.forEach(name => {
+    dbFunctions[name] = async params => {
+      return await dbClient.executeDbFunction(name, params);
+    }
+  });
+
+  return dbFunctions;
 }
 
 async function dropFunctions(dbClient) {
@@ -63,50 +67,6 @@ async function loadFunctions(dbClient) {
   } catch (e) {
     logger.error(`Unable to load functions into database '${dbClient.database}'`);
     throw e;
-  }
-}
-
-async function loadSchema(dbClient) {
-  try {
-    let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
-    await dbClient.query(schemas.join(';'));
-  } catch (e) {
-    logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
-    throw e;
-  }
-}
-
-async function dropSchema(dbClient) {
-  try {
-    await dbClient.query(`DROP SCHEMA public CASCADE;
-                          CREATE SCHEMA public;
-                          GRANT ALL ON SCHEMA public TO public;`);
-  } catch (e) {
-    logger.error(`Unable to drop schema from database '${dbClient.database}' \n${e}`);
-    throw new Error('Unable to drop schema from database');
-  }
-}
-
-async function seedDb(dbClient) {
-  try {
-    for (let tableName in devData) {
-      let tableRows = devData[tableName];
-      for (let rowIndex in tableRows) {
-        let keys = Object.keys(tableRows[rowIndex]);
-        let values = Object.values(tableRows[rowIndex]);
-        let commaDelimitedKeys = keys.join(',');
-
-        let vars = [];
-        for (var i = 0; i < values.length; i++) {
-          vars.push(`$${i+1}`);
-        }
-        vars = vars.join(',');
-        await dbClient.queryWithParams(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
-      }
-    }
-  } catch (e) {
-    logger.error(`Unable to seed database \n${e}`);
-    throw new Error('Unable to seed database');
   }
 }
 

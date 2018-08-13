@@ -2,18 +2,25 @@
 const logger = require('./logger');
 const Application = require('./application');
 const appConfig = require('./app-config');
+const { refreshDb } = require('./refresh-db');
 
 async function main(args) {
   if (appConfig['db.refresh']) {
-    await refreshDb();
+    try {
+      await refreshDb();
+    } catch (e) {
+      logger.warn(`Unable to refresh database \n${e}"`);
+      process.exit(1);
+    }
   }
 
-  // let app = new Application();
+  let app = new Application();
 
   try {
-    // await app.start();
+    await app.start();
   } catch (e) {
-    logger.error(`Unable to start application because of error "${e}"`);
+    logger.error(`Unable to start application \n${e}"`);
+    process.exit(1);
   }
 
   process.on('SIGTERM', async () => {
@@ -29,4 +36,4 @@ async function main(args) {
   });
 }
 
-main(require('minimist')(process.argv.slice(2)));
+main();
