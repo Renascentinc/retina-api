@@ -1,7 +1,6 @@
 const { getDbClientInstance } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
-const { DbAdapter } = require('./db-adapter');
 const { getDropFunctionsQueries } = require('./sql/raw-queries');
 const logger = require('./logger');
 

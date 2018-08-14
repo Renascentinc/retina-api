@@ -7,6 +7,8 @@ const { devData } = require('./data/dev-data');
 
 let localDbName = 'local_db';
 
+let postgresDbName = 'postgres';
+
 let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
                            FROM pg_stat_activity
                            WHERE pg_stat_activity.datname = '${localDbName}'
@@ -15,49 +17,23 @@ let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
 let dropDbQuery = `DROP DATABASE IF EXISTS ${localDbName};`;
 let createDbQuery = `CREATE DATABASE ${localDbName};`;
 
-async function refreshDb() {
+async function createDb() {
   if (appConfig['db.database'] != localDbName) {
-    logger.warn(`Tyring to refresh db appConfig['db.database']`);
+    logger.warn(`Trying to create db ${appConfig['db.database']}`);
     return;
   }
 
-  logger.info(`Refreshing Database ...`);
+  logger.info(`Creating Database ...`);
 
-  await recreateDb();
+  await dropAndCreateDb();
+  await loadSchemaAndSeedDb();
 
-  let dbClient = new Client({
-    user: appConfig['db.user'],
-    host: appConfig['db.host'],
-    database: appConfig['db.database'],
-    password: appConfig['db.password'],
-    port: appConfig['db.port']
-  });
-
-  try {
-    await dbClient.connect();
-  } catch (e) {
-    logger.error('Could not connect to database');
-    dbClient.end();
-    throw e;
-  }
-
-  try {
-    await loadSchema(dbClient);
-    await seedDb(dbClient);
-  } catch (e) {
-    logger.warn(`Trouble loading or seeding db \n${e}`);
-    dbClient.end();
-    throw e;
-  }
-
-  dbClient.end();
 }
 
 //TODO Maybe improve logic so that you don't need to drop a whole db...
-async function recreateDb() {
+async function dropAndCreateDb() {
   let postgresDbClient = new Client({
-    user: appConfig['db.user'],
-    database: 'postgres'
+    database: postgresDbName
   });
 
   try {
@@ -72,12 +48,37 @@ async function recreateDb() {
     await postgresDbClient.query(dropDbQuery);
     await postgresDbClient.query(createDbQuery);
   } catch (e) {
-    logger.warn(`Couldn't recreate database \n${e}`);
+    logger.warn(`Couldn't drop and create database \n${e}`);
     throw e;
     await postgresDbClient.end();
   }
 
   await postgresDbClient.end();
+}
+
+async function loadSchemaAndSeedDb() {
+  let dbClient = new Client({
+    database: localDbName
+  });
+
+  try {
+    await dbClient.connect();
+  } catch (e) {
+    logger.error('Could not connect to database');
+    dbClient.end();
+    throw e;
+  }
+
+  try {
+    await loadSchema(dbClient);
+    await seedDb(dbClient);
+  } catch (e) {
+    logger.warn(`Trouble loading schema or seeding db \n${e}`);
+    dbClient.end();
+    throw e;
+  }
+
+  await dbClient.end();
 }
 
 async function loadSchema(dbClient) {
@@ -113,4 +114,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { refreshDb }
+module.exports = { createDb }

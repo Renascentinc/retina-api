@@ -2,14 +2,14 @@
 const logger = require('./logger');
 const Application = require('./application');
 const appConfig = require('./app-config');
-const { refreshDb } = require('./refresh-db');
+const { createDb } = require('./create-db');
 
 async function main(args) {
-  if (appConfig['db.refresh']) {
+  if (appConfig['db.create']) {
     try {
-      await refreshDb();
+      await createDb();
     } catch (e) {
-      logger.warn(`Unable to refresh database \n${e}"`);
+      logger.warn(`Unable to create database \n${e}"`);
       process.exit(1);
     }
   }

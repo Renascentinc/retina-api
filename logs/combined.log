@@ -5,3 +5,26 @@
 {"message":"Refreshing Database ...","level":"\u001b[32minfo\u001b[39m"}
 {"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
 {"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment=blah' is not valid. Using environment=local instead","level":"\u001b[33mwarn\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
