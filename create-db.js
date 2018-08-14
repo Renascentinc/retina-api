@@ -23,14 +23,12 @@ async function createDb() {
     return;
   }
 
-  logger.info(`Creating Database ...`);
-
   await dropAndCreateDb();
   await loadSchemaAndSeedDb();
 
 }
 
-//TODO Maybe improve logic so that you don't need to drop a whole db...
+//TODO Maybe improve logic so that you don't need to drop a whole db
 async function dropAndCreateDb() {
   let postgresDbClient = new Client({
     database: postgresDbName
@@ -44,8 +42,11 @@ async function dropAndCreateDb() {
   }
 
   try {
+    logger.info('Dropping Database');
     await postgresDbClient.query(cutConnectionsQuery);
     await postgresDbClient.query(dropDbQuery);
+
+    logger.info('Creating Database');
     await postgresDbClient.query(createDbQuery);
   } catch (e) {
     logger.warn(`Couldn't drop and create database \n${e}`);
@@ -70,7 +71,10 @@ async function loadSchemaAndSeedDb() {
   }
 
   try {
+    logger.info('Loading Schema');
     await loadSchema(dbClient);
+
+    logger.info('Seeding database');
     await seedDb(dbClient);
   } catch (e) {
     logger.warn(`Trouble loading schema or seeding db \n${e}`);

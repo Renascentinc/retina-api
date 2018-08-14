@@ -6,7 +6,7 @@ let appConfig = {
   'db.port': 5432,
   'db.schemaDir': `${process.env.PWD}/sql/schema` ,
   'db.functionDir': `${process.env.PWD}/sql/functions`,
-  'db.refresh': false,
+  'db.create': false,
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
   'server.graphql.typeDefDir': `${process.env.PWD}/graphql/type_defs`
@@ -26,7 +26,7 @@ function setConfig(args) {
     appConfig['db.host'] = 'localhost';
     appConfig['db.password'] = '';
     appConfig['db.database'] = 'local_db';
-    appConfig['db.refresh'] = true;
+    appConfig['db.create'] = true;
   }
 
   if (environment == 'production') {
