@@ -1,16 +1,19 @@
 BEGIN;
 
-CREATE TABLE public.tool (
-	id 						 serial primary key,
-	class 				 character varying(80),
-	type 					 character varying(80),
-	brand 				 character varying(80),
+CREATE TABLE IF NOT EXISTS public.tool (
+	id serial PRIMARY KEY NOT NULL,
+	"class" character varying(80),
+	"type" character varying(80) NOT NULL,
+	brand character varying(80) NOT NULL,
 	date_purchased date,
 	purchased_from character varying(80),
-	price	  	     integer,
-	model_number   character varying(80),
-	status				 character varying(80),
-	photo					 character varying(200) -- Will we want to have the whole url in here?
+	price integer,
+	model_number character varying(80) NOT NULL,
+	status character varying(80) NOT NULL,
+	photo character varying(200),
+	"year" integer,
+	serial_number character varying(80) NOT NULL,
+	user_id integer NOT NULL
 );
 
 COMMIT;
