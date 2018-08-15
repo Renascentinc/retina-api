@@ -17,18 +17,18 @@ let devData = {
   //     date_purchased: '04/04/1998'
   //   }
   // ],
-  //
-  // user: [
-  //   {
-  //     name: 'Bob Thomas'
-  //   },
-  //   {
-  //     name: 'Fred Jones'
-  //   },
-  //   {
-  //     name: 'Riley Roebuck'
-  //   }
-  // ]
+
+  user: [
+    {
+      name: 'Bob Thomas'
+    },
+    {
+      name: 'Fred Jones'
+    },
+    {
+      name: 'Riley Roebuck'
+    }
+  ]
 }
 
 module.exports = { devData };
