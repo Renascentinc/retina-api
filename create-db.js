@@ -9,11 +9,6 @@ let localDbName = 'local_db';
 
 let postgresDbName = 'postgres';
 
-let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
-                           FROM pg_stat_activity
-                           WHERE pg_stat_activity.datname = '${localDbName}'
-                           AND pid <> pg_backend_pid();`
-
 let dropTablesQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
