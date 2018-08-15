@@ -160,3 +160,27 @@
 {"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
 {"message":"Loading Schema","level":"\u001b[32minfo\u001b[39m"}
 {"message":"Unable to load schema into database 'local_db' \nerror: relation \"user\" already exists","level":"\u001b[31merror\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Dropping Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Loading Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Seeding database","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Dropping Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Loading Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Seeding database","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Dropping Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Loading Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Seeding database","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}
+{"message":"Environment variable 'environment' not passed. Using environment=local","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Dropping Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Loading Schema","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Seeding database","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Connected to database \nDatabase config: { host: 'localhost', database: 'local_db', port: 5432 }","level":"\u001b[32minfo\u001b[39m"}
+{"message":"Shutting down app on signal 'SIGINT'","level":"\u001b[35msilly\u001b[39m"}

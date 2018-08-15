@@ -14,7 +14,9 @@ let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
                            WHERE pg_stat_activity.datname = '${localDbName}'
                            AND pid <> pg_backend_pid();`
 
-let dropDbQuery = `DROP DATABASE IF EXISTS ${localDbName};`;
+let dropTablesQuery = `DROP SCHEMA public CASCADE;
+                       CREATE SCHEMA public;
+                       GRANT ALL ON SCHEMA public TO public;`;
 
 let createDbQuery = `CREATE DATABASE ${localDbName};`;
 
@@ -96,10 +98,10 @@ async function loadSchema(dbClient) {
 
 async function dropSchema(dbClient) {
   try {
-    await dbClient.query(schemas.join(';'));
+    await dbClient.query(dropTablesQuery);
   } catch (e) {
-    logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
-    throw new Error('Unable to load schema into database');
+    logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to drop tables from databse');
   }
 }
 
