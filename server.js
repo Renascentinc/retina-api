@@ -5,15 +5,15 @@ const logger = require('./logger');
 
 class Server {
 
-  constructor(dbFuncitons) {
-    this.dbFuncitons = dbAdapter;
+  constructor(dbFunctions) {
+    this.dbFunctions = dbFunctions;
   }
 
   start() {
     try {
       let apolloServer = new ApolloServer({
         schema: createSchema(),
-        context: this.dbFuncitons
+        context: this.dbFunctions
       });
 
       apolloServer.listen();

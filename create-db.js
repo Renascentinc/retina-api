@@ -15,7 +15,10 @@ let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
                            AND pid <> pg_backend_pid();`
 
 let dropDbQuery = `DROP DATABASE IF EXISTS ${localDbName};`;
+
 let createDbQuery = `CREATE DATABASE ${localDbName};`;
+
+let dbExists = `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${localDbName}')`;
 
 async function createDb() {
   if (appConfig['db.database'] != localDbName) {
@@ -23,13 +26,13 @@ async function createDb() {
     return;
   }
 
-  await dropAndCreateDb();
+  await createDbIfNotExists();
   await loadSchemaAndSeedDb();
 
 }
 
 //TODO Maybe improve logic so that you don't need to drop a whole db
-async function dropAndCreateDb() {
+async function createDbIfNotExists() {
   let postgresDbClient = new Client({
     database: postgresDbName
   });
@@ -41,17 +44,10 @@ async function dropAndCreateDb() {
     throw e;
   }
 
-  try {
-    logger.info('Dropping Database');
-    await postgresDbClient.query(cutConnectionsQuery);
-    await postgresDbClient.query(dropDbQuery);
-
-    logger.info('Creating Database');
+  let existsRowResult = await postgresDbClient.query({text: dbExists, rowMode: 'array'});
+  if (existsRowResult.rows && !existsRowResult.rows[0][0]) {
+    logger.info('Creating databse');
     await postgresDbClient.query(createDbQuery);
-  } catch (e) {
-    logger.warn(`Couldn't drop and create database \n${e}`);
-    throw e;
-    await postgresDbClient.end();
   }
 
   await postgresDbClient.end();
@@ -71,6 +67,9 @@ async function loadSchemaAndSeedDb() {
   }
 
   try {
+    logger.info('Dropping Schema');
+    await dropSchema(dbClient);
+
     logger.info('Loading Schema');
     await loadSchema(dbClient);
 
@@ -88,6 +87,15 @@ async function loadSchemaAndSeedDb() {
 async function loadSchema(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
+    await dbClient.query(schemas.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to load schema into database');
+  }
+}
+
+async function dropSchema(dbClient) {
+  try {
     await dbClient.query(schemas.join(';'));
   } catch (e) {
     logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
