@@ -2,7 +2,7 @@
 var chalk = require('chalk');
 
 function printBoot() {
-  console.log(chalk.red(`
+  console.log(chalk.bold.red(`
 ;;;   ;;;;  ;;;;;  ;;;;;  ;  ;     ;
 ;  ;  ;       ;      ;    ;; ;    ; ;
 ;;;   ;^^^    ;      ;    ; ;;   ;;;;;
