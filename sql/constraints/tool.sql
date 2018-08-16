@@ -1,0 +1,6 @@
+
+ALTER TABLE public.tool
+ADD FOREIGN KEY (user_id)
+  REFERENCES public.user (id)
+  ON DELETE RESTRICT
+  ON UPDATE RESTRICT;
