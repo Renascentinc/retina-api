@@ -70,6 +70,9 @@ async function loadSchemaAndSeedDb() {
     logger.info('Loading Schema');
     await loadSchema(dbClient);
 
+    logger.info('Applying Constraints');
+    await applyConstraints(dbClient);
+
     logger.info('Seeding database');
     await seedDb(dbClient);
   } catch (e) {
@@ -79,6 +82,15 @@ async function loadSchemaAndSeedDb() {
   }
 
   await dbClient.end();
+}
+
+async function dropSchema(dbClient) {
+  try {
+    await dbClient.query(dropTablesQuery);
+  } catch (e) {
+    logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to drop tables from databse');
+  }
 }
 
 async function loadSchema(dbClient) {
@@ -91,12 +103,13 @@ async function loadSchema(dbClient) {
   }
 }
 
-async function dropSchema(dbClient) {
+async function applyConstraints(dbClient) {
   try {
-    await dbClient.query(dropTablesQuery);
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.constraintDir']);
+    await dbClient.query(schemas.join(';'));
   } catch (e) {
-    logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
-    throw new Error('Unable to drop tables from databse');
+    logger.error(`Unable to apply constraints to database '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to apply constraints to database');
   }
 }
 
