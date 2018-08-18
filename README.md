@@ -32,5 +32,18 @@ This is an api that the repo ```Renascentinc/retina-app``` will call.
 
 5. Start app with `npm start`
 
+## Devops Considerations
+
+### Database Management
+- All databases running on aws RDS (prod db, dev db, etc.) will be created manually, i.e. through the aws console.
+- All tables in aws RDS will be created manually
+- All changes to table structure in aws RDS will be done manually. These changes need to somehow be reflected in the schemas in the git repository so that the local development environment will mimic the cloud environment
+- All changes to database sprocs will be made in code. These changes will be automatically made to the db when the application is deployed
+
+### App Deployment
+- The retina Elastic Beanstalk (EB) application will be created manually
+- All environments within the retina application will be created manually
+- All deployments of the application will happen through travis-ci (need to see about restricting deployments from the command line.)
+
 ## Contributing
 If you add npm packages, make sure you use the --save flag, eg. `npm install <package_name> --save`
