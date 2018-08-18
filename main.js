@@ -1,3 +1,6 @@
+const { printBoot } = require('./ascii-art');
+
+printBoot();
 
 const logger = require('./logger');
 const Application = require('./application');

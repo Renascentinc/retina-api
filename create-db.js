@@ -9,13 +9,13 @@ let localDbName = 'local_db';
 
 let postgresDbName = 'postgres';
 
-let cutConnectionsQuery = `SELECT pg_terminate_backend(pg_stat_activity.pid)
-                           FROM pg_stat_activity
-                           WHERE pg_stat_activity.datname = '${localDbName}'
-                           AND pid <> pg_backend_pid();`
+let dropTablesQuery = `DROP SCHEMA public CASCADE;
+                       CREATE SCHEMA public;
+                       GRANT ALL ON SCHEMA public TO public;`;
 
-let dropDbQuery = `DROP DATABASE IF EXISTS ${localDbName};`;
 let createDbQuery = `CREATE DATABASE ${localDbName};`;
+
+let dbExists = `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${localDbName}')`;
 
 async function createDb() {
   if (appConfig['db.database'] != localDbName) {
@@ -23,13 +23,13 @@ async function createDb() {
     return;
   }
 
-  await dropAndCreateDb();
+  await createDbIfNotExists();
   await loadSchemaAndSeedDb();
 
 }
 
 //TODO Maybe improve logic so that you don't need to drop a whole db
-async function dropAndCreateDb() {
+async function createDbIfNotExists() {
   let postgresDbClient = new Client({
     database: postgresDbName
   });
@@ -41,17 +41,10 @@ async function dropAndCreateDb() {
     throw e;
   }
 
-  try {
-    logger.info('Dropping Database');
-    await postgresDbClient.query(cutConnectionsQuery);
-    await postgresDbClient.query(dropDbQuery);
-
-    logger.info('Creating Database');
+  let existsRowResult = await postgresDbClient.query({text: dbExists, rowMode: 'array'});
+  if (existsRowResult.rows && !existsRowResult.rows[0][0]) {
+    logger.info('Creating databse');
     await postgresDbClient.query(createDbQuery);
-  } catch (e) {
-    logger.warn(`Couldn't drop and create database \n${e}`);
-    throw e;
-    await postgresDbClient.end();
   }
 
   await postgresDbClient.end();
@@ -71,8 +64,14 @@ async function loadSchemaAndSeedDb() {
   }
 
   try {
+    logger.info('Dropping Schema');
+    await dropSchema(dbClient);
+
     logger.info('Loading Schema');
     await loadSchema(dbClient);
+
+    logger.info('Applying Constraints');
+    await applyConstraints(dbClient);
 
     logger.info('Seeding database');
     await seedDb(dbClient);
@@ -85,6 +84,15 @@ async function loadSchemaAndSeedDb() {
   await dbClient.end();
 }
 
+async function dropSchema(dbClient) {
+  try {
+    await dbClient.query(dropTablesQuery);
+  } catch (e) {
+    logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to drop tables from databse');
+  }
+}
+
 async function loadSchema(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
@@ -92,6 +100,16 @@ async function loadSchema(dbClient) {
   } catch (e) {
     logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
     throw new Error('Unable to load schema into database');
+  }
+}
+
+async function applyConstraints(dbClient) {
+  try {
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.constraintDir']);
+    await dbClient.query(schemas.join(';'));
+  } catch (e) {
+    logger.error(`Unable to apply constraints to database '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to apply constraints to database');
   }
 }
 

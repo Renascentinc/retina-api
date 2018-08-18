@@ -4,7 +4,8 @@ let configSet = false;
 
 let appConfig = {
   'db.port': 5432,
-  'db.schemaDir': `${process.env.PWD}/sql/schema` ,
+  'db.schemaDir': `${process.env.PWD}/sql/schema`,
+  'db.constraintDir': `${process.env.PWD}/sql/constraints`,
   'db.functionDir': `${process.env.PWD}/sql/functions`,
   'db.create': false,
 

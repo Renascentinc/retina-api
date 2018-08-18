@@ -5,21 +5,20 @@ const logger = require('./logger');
 
 class Server {
 
-  constructor(dbAdapter) {
-    this.dbAdapter = dbAdapter;
+  constructor(dbFunctions) {
+    this.dbFunctions = dbFunctions;
   }
 
   start() {
     try {
       let apolloServer = new ApolloServer({
         schema: createSchema(),
-        context: this.dbAdapter
+        context: this.dbFunctions
       });
 
       apolloServer.listen();
     } catch (e) {
       logger.error(`Unable to start server \n${e}`);
-      this.dbAdapter.disconnect();
       throw new Error('Unable to start server');
     }
   }
