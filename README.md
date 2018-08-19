@@ -43,7 +43,9 @@ This is an api that the repo ```Renascentinc/retina-app``` will call.
 ### App Deployment
 - The retina Elastic Beanstalk (EB) application will be created manually
 - All environments within the retina application will be created manually
+- The configuration for the environments will go in `\*.config` files under the `.ebextensions` directory
 - All deployments of the application will happen through travis-ci (need to see about restricting deployments from the command line.)
+
 
 ## Contributing
 If you add npm packages, make sure you use the --save flag, eg. `npm install <package_name> --save`
