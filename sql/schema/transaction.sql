@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS public."transaction" (
 	to_user_id integer,
 	from_user_id integer,
 	to_location_id integer,
-	from_location_id integer
+	from_location_id integer,
+	organization_id integer
 );
 
 COMMIT;
