@@ -73,7 +73,7 @@ async function loadSchemaAndSeedDb() {
     logger.info('Applying Constraints');
     await applyConstraints(dbClient);
 
-    logger.info('Seeding database');
+    await logger.info('Seeding database');
     await seedDb(dbClient);
   } catch (e) {
     logger.warn(`Trouble loading schema or seeding db \n${e}`);
