@@ -1,6 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const { initializeDb } = require('./db-initializer')
 const { createSchema } = require('./utils/graphql-utils');
+const appConfig = require('./app-config');
 const logger = require('./logger');
 
 class Server {
@@ -16,7 +17,7 @@ class Server {
         context: this.dbFunctions
       });
 
-      apolloServer.listen();
+      apolloServer.listen(appConfig['server.port']);
     } catch (e) {
       logger.error(`Unable to start server \n${e}`);
       throw new Error('Unable to start server');

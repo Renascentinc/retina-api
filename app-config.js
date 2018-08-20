@@ -10,7 +10,8 @@ let appConfig = {
   'db.create': false,
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
-  'server.graphql.typeDefDir': `${process.env.PWD}/graphql/type_defs`
+  'server.graphql.typeDefDir': `${process.env.PWD}/graphql/type_defs`,
+  'server.port': process.env.PORT || 4000
 }
 
 if (!configSet) {
