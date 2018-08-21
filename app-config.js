@@ -51,6 +51,6 @@ appConfig['db.database'] = process.env.DB_NAME;
 //   }
 // }
 
-logger.info(util.inspect(appConfig, false));
+logger.info(`App Config: \n` + util.inspect(appConfig, false));
 
 module.exports = appConfig;
