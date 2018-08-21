@@ -1,10 +1,18 @@
 const { getDbClientInstance } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
-const { getDropFunctionsQueries } = require('./sql/raw-queries');
+const { createDb, loadSchema, seedDb, loadFunctions } = require('./utils/db-utils');
+
 const logger = require('./logger');
 
 async function initializeDb() {
+
+  try {
+    await createDb();
+  } catch (e) {
+    logger.error('Could not create database');
+    throw e;
+  }
 
   let dbClient = getDbClientInstance();
 
@@ -16,20 +24,37 @@ async function initializeDb() {
   }
 
   try {
-    await dropFunctions(dbClient);
+    await loadSchema(dbClient);
+
     await loadFunctions(dbClient);
+
+    if (appConfig['db.seed']) {
+      await seedDb(dbClient);
+    }
   } catch (e) {
-    logger.error(`Unable to drop and load functions`);
+    logger.error(`Unable to initialize database`);
     await dbClient.disconnect();
     throw e;
   }
 
+  let dbFunctions;
+//   try {
+//     let dbFunctions = createDbFunctions(dbClient);
+//   } catch (e) {
+//     logger.error('Could not get database functions');
+//     await dbClient.disconnect();
+//     throw e;
+//   }
+//
+  return { dbClient, dbFunctions }
+}
+
+async function createDbFunctions(dbClient) {
   let functionNames;
   try {
     functionNames = await dbClient.getDbFunctionNames();
   } catch (e) {
-    logger.error(`Unable to get function names for database`);
-    await dbClient.disconnect();
+    logger.error(`Unable to get function names from database`);
     throw e;
   }
 
@@ -44,29 +69,8 @@ async function initializeDb() {
   return dbFunctions;
 }
 
-async function dropFunctions(dbClient) {
-  try {
-    let dropFunctionsQueries = await dbClient.query({
-      text: getDropFunctionsQueries,
-      rowMode: 'array'
-    });
 
-    dropFunctionsQueries = dropFunctionsQueries.rows.map(row => row[0]).join('');
-    await dbClient.query(dropFunctionsQueries);
-  } catch (e) {
-    logger.error(`Unable to drop functions from database '${dbClient.database}'`);
-    throw e;
-  }
-}
 
-async function loadFunctions(dbClient) {
-  try {
-    let functions = fileUtils.readFilesFromDir(appConfig['db.functionDir']);
-    await dbClient.query(functions.join(';'));
-  } catch (e) {
-    logger.error(`Unable to load functions into database '${dbClient.database}'`);
-    throw e;
-  }
-}
+
 
 module.exports = { initializeDb }

@@ -1,11 +1,9 @@
-const appConfig = require('./app-config');
-const { getDbClientInstance } = require('./db-client');
+const appConfig = require('../app-config');
+const { getDropFunctionsQueries } = require('../sql/raw-queries');
 const { Client } = require('pg');
-const logger = require('./logger');
-const fileUtils = require('./utils/file-utils');
-const { devData } = require('./data/dev-data');
-
-let localDbName = 'local_db';
+const logger = require('../logger');
+const fileUtils = require('./file-utils');
+const { devData } = require('../data/dev-data');
 
 let postgresDbName = 'postgres';
 
@@ -13,23 +11,7 @@ let dropTablesQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
 
-let createDbQuery = `CREATE DATABASE ${localDbName};`;
-
-let dbExists = `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${localDbName}')`;
-
-async function createDb() {
-  if (appConfig['db.database'] != localDbName) {
-    logger.warn(`Trying to create db ${appConfig['db.database']}`);
-    return;
-  }
-
-  await createDbIfNotExists();
-  await loadSchemaAndSeedDb();
-
-}
-
-//TODO Maybe improve logic so that you don't need to drop a whole db
-async function createDbIfNotExists() {
+async function createDb(dbClient) {
   let postgresDbClient = new Client({
     database: postgresDbName
   });
@@ -41,50 +23,44 @@ async function createDbIfNotExists() {
     throw e;
   }
 
-  let existsRowResult = await postgresDbClient.query({text: dbExists, rowMode: 'array'});
+  let existsRowResult = await postgresDbClient.query({
+    text: `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${appConfig['db.name']}')`,
+    rowMode: 'array'
+  });
   if (existsRowResult.rows && !existsRowResult.rows[0][0]) {
-    logger.info('Creating databse');
-    await postgresDbClient.query(createDbQuery);
+    logger.info('Creating database');
+    await postgresDbClient.query(`CREATE DATABASE ${appConfig['db.name']};`);
   }
 
   await postgresDbClient.end();
 }
 
-async function loadSchemaAndSeedDb() {
-  let dbClient = new Client({
-    database: localDbName
-  });
-
+async function loadSchema(dbClient) {
   try {
-    await dbClient.connect();
-  } catch (e) {
-    logger.error('Could not connect to database');
-    dbClient.end();
-    throw e;
-  }
 
-  try {
-    logger.info('Dropping Schema');
-    await dropSchema(dbClient);
+    if (appConfig['db.dropSchema']) {
+      logger.info('Dropping Schema');
+      await dropSchema(dbClient);
+    }
 
-    logger.info('Loading Schema');
-    await loadSchema(dbClient);
+    logger.info('Creating Schema');
+    await createSchema(dbClient);
 
     logger.info('Applying Constraints');
     await applyConstraints(dbClient);
-
-    logger.info('Seeding database');
-    await seedDb(dbClient);
   } catch (e) {
-    logger.warn(`Trouble loading schema or seeding db \n${e}`);
+    logger.warn(`Trouble loading schema \n${e}`);
     dbClient.end();
     throw e;
   }
-
-  await dbClient.end();
 }
 
 async function dropSchema(dbClient) {
+  if (appConfig['environment'] !== 'local') {
+    logger.warn('Trying to drop schema in a non-local environment');
+    return;
+  }
+
   try {
     await dbClient.query(dropTablesQuery);
   } catch (e) {
@@ -93,7 +69,7 @@ async function dropSchema(dbClient) {
   }
 }
 
-async function loadSchema(dbClient) {
+async function createSchema(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
     await dbClient.query(schemas.join(';'));
@@ -113,6 +89,40 @@ async function applyConstraints(dbClient) {
   }
 }
 
+async function loadFunctions(dbClient) {
+  logger.info('Loading Functions');
+
+  try {
+    await dropFunctions(dbClient)
+  } catch (e) {
+    logger.error(`Unable to drop functions from '${dbClient.database}'`);
+    throw e;
+  }
+
+  try {
+    let functions = fileUtils.readFilesFromDir(appConfig['db.functionDir']);
+    await dbClient.query(functions.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load functions into database '${dbClient.database}'`);
+    throw e;
+  }
+}
+
+async function dropFunctions(dbClient) {
+  try {
+    let dropFunctionsQueries = await dbClient.query({
+      text: getDropFunctionsQueries,
+      rowMode: 'array'
+    });
+
+    dropFunctionsQueries = dropFunctionsQueries.rows.map(row => row[0]).join('');
+    await dbClient.query(dropFunctionsQueries);
+  } catch (e) {
+    logger.error(`Unable to drop functions from database '${dbClient.database}'`);
+    throw e;
+  }
+}
+
 async function seedDb(dbClient) {
   try {
     for (let tableName in devData) {
@@ -127,6 +137,7 @@ async function seedDb(dbClient) {
           vars.push(`$${i+1}`);
         }
         vars = vars.join(',');
+
         await dbClient.query(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
       }
     }
@@ -136,4 +147,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions }

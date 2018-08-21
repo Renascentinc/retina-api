@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE public.user (
+CREATE TABLE IF NOT EXISTS public.user (
 	id   				 serial primary key,
 	name 				 character varying(80),
 	password 		 character varying(80),

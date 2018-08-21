@@ -8,14 +8,6 @@ const appConfig = require('./app-config');
 const { createDb } = require('./create-db');
 
 async function main(args) {
-  if (appConfig['db.create']) {
-    try {
-      await createDb();
-    } catch (e) {
-      logger.warn(`Unable to create database \n${e}"`);
-      process.exit(1);
-    }
-  }
 
   let app = new Application();
 
