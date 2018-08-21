@@ -39,7 +39,7 @@ async function initializeDb() {
 
   let dbFunctions;
   try {
-    let dbFunctions = createDbFunctions(dbClient);
+    dbFunctions = await createDbFunctions(dbClient);
   } catch (e) {
     logger.error('Could not get database functions');
     await dbClient.disconnect();
