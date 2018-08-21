@@ -73,7 +73,7 @@ async function dropSchema(dbClient) {
   try {
     await dbClient.query(dropTablesQuery);
   } catch (e) {
-    logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
+    logger.error(`Unable to drop tables from databse \n${e}`);
     throw new Error('Unable to drop tables from databse');
   }
 }
@@ -83,7 +83,7 @@ async function createEnums(dbClient) {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.enumDir']);
     await dbClient.query(schemas.join(';'));
   } catch (e) {
-    logger.error(`Unable to load enums into database '${dbClient.database}' \n${e}`);
+    logger.error(`Unable to load enums into database \n${e}`);
     throw new Error('Unable to load enums into database');
   }
 }
@@ -93,7 +93,7 @@ async function createSchema(dbClient) {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
     await dbClient.query(schemas.join(';'));
   } catch (e) {
-    logger.error(`Unable to load schema into database '${dbClient.database}' \n${e}`);
+    logger.error(`Unable to load schema into database  \n${e}`);
     throw new Error('Unable to load schema into database');
   }
 }

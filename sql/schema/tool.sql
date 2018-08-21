@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	purchased_from character varying(80),
 	price integer,
 	model_number character varying(80) NOT NULL,
-	status character varying(80) NOT NULL,
+	status character varying(80) NOT NULL, -- Needs to be of enum type
 	photo character varying(200),
 	"year" integer,
 	serial_number character varying(80) NOT NULL,

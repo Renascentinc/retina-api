@@ -1,22 +1,22 @@
 
 let devData = {
-  // tool: [
-  //   {
-  //     type: 'Drill',
-  //     brand: 'Bosch',
-  //     date_purchased: '09/09/1998'
-  //   },
-  //   {
-  //     type: 'Hammer',
-  //     brand: 'Hitachi',
-  //     date_purchased: '02/06/1990'
-  //   },
-  //   {
-  //     type: 'Sawzall',
-  //     brand: 'Dewalt',
-  //     date_purchased: '04/04/1998'
-  //   }
-  // ],
+  organization: [
+    {
+      name: 'Renascent Inc'
+    }
+  ],
+
+  tool: [
+    {
+      type: 'Drill',
+      brand: 'Bosch',
+      date_purchased: '09/09/1998',
+      model_number: '34jo34fhj98',
+      status: 'In Use',
+      serial_number: '4349jf909',
+      organization_id: 1
+    }
+  ],
 
   user: [
     {
