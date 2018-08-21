@@ -36,12 +36,6 @@ describe('file-utils', function() {
       assert.ok(fileArray.join() !== '');
     });
 
-    it('should safely read empty directory', () => {
-      let fileArray = fileUtils.readFilesFromDir(`${process.env.PWD}/tests/resources/utils/dir_with_no_files`);
-      assert.equal(fileArray.length, 0);
-      assert.ok(fileArray.join() == '');
-    });
-
   });
 
 });
