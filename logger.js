@@ -2,6 +2,7 @@ const winston = require('winston');
 const args = require('minimist')(process.argv.slice(2));
 
 //TODO Improve logging: https://stackoverflow.com/questions/11386492/accessing-line-number-in-v8-javascript-chrome-node-js
+//TODO Stop using passsed in env variables
 const logger = winston.createLogger({
   level: 'silly',
   format: winston.format.combine(
