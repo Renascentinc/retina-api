@@ -43,6 +43,9 @@ async function loadSchema(dbClient) {
       await dropSchema(dbClient);
     }
 
+    logger.info('Creating Enums');
+    await createEnums(dbClient);
+
     logger.info('Creating Schema');
     await createSchema(dbClient);
 
@@ -66,6 +69,16 @@ async function dropSchema(dbClient) {
   } catch (e) {
     logger.error(`Unable to drop tables from databse '${dbClient.database}' \n${e}`);
     throw new Error('Unable to drop tables from databse');
+  }
+}
+
+async function createSchema(dbClient) {
+  try {
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.enumDir']);
+    await dbClient.query(schemas.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load enums into database '${dbClient.database}' \n${e}`);
+    throw new Error('Unable to load enums into database');
   }
 }
 
