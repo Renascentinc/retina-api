@@ -29,7 +29,7 @@ async function initializeDb() {
     await loadFunctions(dbClient);
 
     if (appConfig['db.seed']) {
-      await seedDb(dbClient);
+      // await seedDb(dbClient);
     }
   } catch (e) {
     logger.error(`Unable to initialize database`);

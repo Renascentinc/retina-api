@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	photo character varying(200),
 	"year" integer,
 	serial_number character varying(80) NOT NULL,
-	user_id integer NOT NULL
+	user_id integer,
+	organization_id integer NOT NULL,
+	location_id integer
 );
 
 COMMIT;
