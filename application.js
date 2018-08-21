@@ -8,7 +8,7 @@ class Application {
   async start() {
     let dbFunctions;
     try {
-      dbFunctions = await initializeDb();
+       dbFunctions = await initializeDb();
     } catch (e) {
       logger.error(`Unable to initialize database. \n${e}`);
       throw new Error('Unable to initialize database');

@@ -137,6 +137,8 @@ async function dropFunctions(dbClient) {
 }
 
 async function seedDb(dbClient) {
+  logger.info('Seeding Database');
+
   try {
     for (let tableName in devData) {
       let tableRows = devData[tableName];
@@ -151,7 +153,7 @@ async function seedDb(dbClient) {
         }
         vars = vars.join(',');
 
-        await dbClient.query(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
+        await dbClient.queryWithParams(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
       }
     }
   } catch (e) {

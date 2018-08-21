@@ -29,7 +29,7 @@ async function initializeDb() {
     await loadFunctions(dbClient);
 
     if (appConfig['db.seed']) {
-      // await seedDb(dbClient);
+      await seedDb(dbClient);
     }
   } catch (e) {
     logger.error(`Unable to initialize database`);
@@ -38,15 +38,15 @@ async function initializeDb() {
   }
 
   let dbFunctions;
-//   try {
-//     let dbFunctions = createDbFunctions(dbClient);
-//   } catch (e) {
-//     logger.error('Could not get database functions');
-//     await dbClient.disconnect();
-//     throw e;
-//   }
-//
-  return { dbClient, dbFunctions }
+  try {
+    let dbFunctions = createDbFunctions(dbClient);
+  } catch (e) {
+    logger.error('Could not get database functions');
+    await dbClient.disconnect();
+    throw e;
+  }
+
+  return dbFunctions;
 }
 
 async function createDbFunctions(dbClient) {
@@ -68,9 +68,5 @@ async function createDbFunctions(dbClient) {
 
   return dbFunctions;
 }
-
-
-
-
 
 module.exports = { initializeDb }

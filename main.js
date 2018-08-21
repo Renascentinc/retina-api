@@ -4,8 +4,6 @@ printBoot();
 
 const logger = require('./logger');
 const Application = require('./application');
-const appConfig = require('./app-config');
-const { createDb } = require('./create-db');
 
 async function main(args) {
 
