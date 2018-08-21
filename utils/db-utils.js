@@ -28,13 +28,15 @@ async function createDb(dbClient) {
   }
 
   let existsRowResult = await postgresDbClient.query({
-    text: `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${appConfig['db.name']}')`,
+    text: `SELECT EXISTS (SELECT * FROM pg_database WHERE datname = '${appConfig['db.database']}')`,
     rowMode: 'array'
   });
+
   if (existsRowResult.rows && !existsRowResult.rows[0][0]) {
     logger.info('Creating database');
-    await postgresDbClient.query(`CREATE DATABASE ${appConfig['db.name']};`);
+    await postgresDbClient.query(`CREATE DATABASE ${appConfig['db.database']};`);
   }
+
 
   await postgresDbClient.end();
 }
