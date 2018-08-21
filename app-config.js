@@ -1,4 +1,5 @@
 const logger = require('./logger');
+const util = require('util');
 
 let appConfig = {
   'db.port': 5432,
@@ -49,5 +50,7 @@ appConfig['db.database'] = process.env.DB_NAME;
 //     return 'local';
 //   }
 // }
+
+logger.info(util.inspect(appConfig, false));
 
 module.exports = appConfig;
