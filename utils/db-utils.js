@@ -13,7 +13,11 @@ let dropTablesQuery = `DROP SCHEMA public CASCADE;
 
 async function createDb(dbClient) {
   let postgresDbClient = new Client({
-    database: postgresDbName
+    user: appConfig['db.user'],
+    host: appConfig['db.host'],
+    database: postgresDbName,
+    password: appConfig['db.password'],
+    port: appConfig['db.port']
   });
 
   try {
