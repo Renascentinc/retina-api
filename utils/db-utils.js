@@ -72,7 +72,7 @@ async function dropSchema(dbClient) {
   }
 }
 
-async function createSchema(dbClient) {
+async function createEnums(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.enumDir']);
     await dbClient.query(schemas.join(';'));
