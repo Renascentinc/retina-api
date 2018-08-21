@@ -7,13 +7,12 @@ cache:
     - "node_modules"
 
 deploy:
-  provider: elasticbeanstalk
-  access_key_id: blah
-  secret_access_key:
-    secure: ArA1nGkoG+OEwTjW79FtHHcXBYiQar43t+yZ/EFUEHVGc394MerXgbleKzhzCmDzD/puMWMRpmtkWpMYj48FVf70Hve6tPoGfaGzIVbrCDMf7qd9shj3AlAlb3xdQZwYMKLY3QBbslJ/1dVGlUW8vN4eSsF4zwgwTOWK5LlDMYv2SHCRoemtBWDd00ne469Cjui1rdDj/TUTvXWpbRK4Ud8T/qz3Hkxl+1dKr0QLn6Zb711ol4PZI0jPsrtTrwVS29CEsT0MULOhP1h6bOh6egTOEMG4TgBPCJ1pwnw9KYs7pE3Wqaq95J/WpkNwzvQCV4qNcwdF0Ert0eN3ld57v3K2bKfSxdCS9sNERwsE4u1iK1Jrf85rmgMA8jc8r9fs4rK/KK2n4Clx0VLWX6anD4FKEsUsyoodqrIl15wjmBElxT8av6Sb/Yv7X9UmTyBaDoLjCS1EL8y0clT+INO4uQx1vlcxQzYdnJB4zURqgNYne1FCWkmMh+IpSjGYD1KxHjxDFQS1XRjU8Y56hUf4GAZO/mnv9jutfkDzotX1oWV9ilXDLjLQ0cInNSmWttrSiH/EzbDY0nRBWQrTP33LCORu0pEJyee4e4Oa3ugXVfNnvMiAFTDnBR35bkPLHfrdJ26ZiTOf6QG2BV247UTn0AZoPkfHsJHuRxYg8HwOiFg=
-  region: us-east-1
-  app: retina
-  env: production
-  on:
-    repo: Renascentinc/retina-api
-    branch: retina-api-34
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-1
+    app: retina-api
+    env: develop
+    on:
+      repo: Renascentinc/retina-api
+      branch: retina-api-34
