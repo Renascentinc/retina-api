@@ -44,7 +44,7 @@ async function createDb(dbClient) {
 async function loadSchema(dbClient) {
   try {
 
-    if (appConfig['db.dropSchema']) {
+    if (appConfig['db.refreshSchema']) {
       logger.info('Dropping Schema');
       await dropSchema(dbClient);
     }

@@ -7,8 +7,7 @@ let appConfig = {
   'db.constraintDir': `${process.env.PWD}/sql/constraints`,
   'db.functionDir': `${process.env.PWD}/sql/functions`,
   'db.enumDir': `${process.env.PWD}/sql/enums`,
-  'db.loadSchema': false,
-  'db.dropSchema': false,
+  'db.refreshSchema': false,
   'db.seed': false,
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
@@ -22,10 +21,6 @@ if (process.env.ENVIRONMENT == undefined) {
   process.env['DB_HOST'] = 'localhost';
   process.env['DB_PASSWORD'] = '';
   process.env['DB_NAME'] = 'local_db';
-
-  appConfig['db.loadSchema'] = true;
-  appConfig['db.dropSchema'] = true;
-  appConfig['db.seed'] = true;
 }
 
 appConfig['environment'] = process.env.ENVIRONMENT;
@@ -33,6 +28,16 @@ appConfig['db.user'] = process.env.DB_USER;
 appConfig['db.host'] = process.env.DB_HOST;
 appConfig['db.password'] = process.env.DB_PASSWORD;
 appConfig['db.database'] = process.env.DB_NAME;
+
+if (appConfig['environment'] == 'local') {
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
+}
+
+if (appConfig['environment'] == 'develop') {
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
+}
 
 
 // function getEnvironment(args) {
