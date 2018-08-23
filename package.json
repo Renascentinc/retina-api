@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node main",
-    "test": "mocha --recursive tests",
-    "testdb": "mocha tests/db-initializer"
+    "test": "mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
