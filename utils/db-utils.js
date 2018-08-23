@@ -65,7 +65,7 @@ async function loadSchema(dbClient) {
 }
 
 async function dropSchema(dbClient) {
-  if (appConfig['environment'] !== 'local') {
+  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop') {
     logger.warn('Trying to drop schema in a non-local environment');
     return;
   }
