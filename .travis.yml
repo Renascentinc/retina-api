@@ -18,4 +18,4 @@ deploy:
     on:
       repo: Renascentinc/retina-api
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^retina-api.*$
+      condition: $TRAVIS_BRANCH =~ ^release-.*$
