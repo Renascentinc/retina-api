@@ -5,6 +5,10 @@ const logger = require('../logger');
 const fileUtils = require('./file-utils');
 const { devData } = require('../data/dev-data');
 
+//TODO: Instead of joining all the sql CREATE queries together with ';'
+//      run through each query with the try/catch in the for-loop. This
+//      will help with debugging
+
 let postgresDbName = 'postgres';
 
 let dropTablesQuery = `DROP SCHEMA public CASCADE;
@@ -66,7 +70,7 @@ async function loadSchema(dbClient) {
 
 async function dropSchema(dbClient) {
   if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop') {
-    logger.warn('Trying to drop schema in a non-local environment');
+    logger.warn('Trying to drop schema in a dis-allowed environment');
     return;
   }
 

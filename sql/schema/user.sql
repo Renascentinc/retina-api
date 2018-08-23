@@ -1,5 +1,6 @@
 BEGIN;
 
+-- TODO: Fix this table
 CREATE TABLE IF NOT EXISTS public.user (
 	id   				 serial PRIMARY KEY NOT NULL,
 	name 				 character varying(80),

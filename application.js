@@ -19,7 +19,7 @@ class Application {
     try {
       await this.server.start();
     } catch (e) {
-      logger.error(`Unable to start server. ${e}`);
+      logger.error(`Unable to start server. \n${e}`);
       throw new Error('Unable to start server');
     }
   }

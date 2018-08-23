@@ -1,5 +1,3 @@
--- Note, for inserting, you can do something like:
---    INSERT INTO users(name, email) VALUES($1, $2) RETURNING *
 
 CREATE OR REPLACE FUNCTION public.add_tool (
   class           char varying(80)  = NULL,
