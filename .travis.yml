@@ -17,4 +17,4 @@ deploy:
     bucket_name: elasticbeanstalk-us-east-2-656841825646
     on:
       repo: Renascentinc/retina-api
-    if: branch = ^retina-api.*$
+      condition: branch =~ ^retina-api.*$
