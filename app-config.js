@@ -39,23 +39,6 @@ if (appConfig['environment'] == 'develop') {
   appConfig['db.seed'] = true;
 }
 
-
-// function getEnvironment(args) {
-//   const validEnvs = ['local', 'production', 'develop'];
-//
-//   if (args.environment) {
-//     if (validEnvs.includes(args.environment)) {
-//         return args.environment;
-//     } else {
-//       logger.warn(`Environment variable 'environment=${args.environment}' is not valid. Using environment=local instead`)
-//       return 'local';
-//     }
-//   } else {
-//     logger.info(`Environment variable 'environment' not passed. Using environment=local`)
-//     return 'local';
-//   }
-// }
-
 logger.info(`App Config: \n` + util.inspect(appConfig, false));
 
 module.exports = appConfig;
