@@ -11,7 +11,7 @@ const { devData } = require('../data/dev-data');
 
 let postgresDbName = 'postgres';
 
-let dropTablesQuery = `DROP SCHEMA public CASCADE;
+let dropSchemaQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
 
@@ -75,7 +75,7 @@ async function dropSchema(dbClient) {
   }
 
   try {
-    await dbClient.query(dropTablesQuery);
+    await dbClient.query(dropSchemaQuery);
   } catch (e) {
     logger.error(`Unable to drop tables from databse \n${e}`);
     throw new Error('Unable to drop tables from databse');
