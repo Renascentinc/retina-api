@@ -2,7 +2,6 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool (
 	id serial PRIMARY KEY NOT NULL,
-	"class" character varying(80),
 	type_id integer NOT NULL,
 	brand_id integer NOT NULL,
 	date_purchased date,
