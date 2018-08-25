@@ -1,6 +1,6 @@
 
 CREATE FUNCTION public.get_all_configurable_item (
-	organization_id integer
+	organization_id id_t
 )
  RETURNS SETOF public.configurable_item
 AS $$

@@ -1,6 +1,6 @@
 
 CREATE FUNCTION public.get_configurable_item(
-	id integer
+	id id_t
 )
  RETURNS SETOF public.configurable_item
 AS $$

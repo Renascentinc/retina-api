@@ -1,7 +1,7 @@
 
 
 CREATE FUNCTION public.get_organization(
-	id integer
+	id id_t
 )
  RETURNS SETOF public.organization
 AS $$

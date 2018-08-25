@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION public.update_organization (
 	id integer,
-	name character varying(200)
+	name long_str_t
 )
 RETURNS SETOF public.organization
 AS $$

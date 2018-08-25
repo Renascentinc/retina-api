@@ -3,7 +3,7 @@ const { getDropFunctionsQueries } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
-const { seedData } = require('../data/seed-data');
+const { data } = require('../data/seed-data');
 
 //TODO: Instead of joining all the sql CREATE queries together with ';'
 //      run through each query with the try/catch in the for-loop. This
@@ -53,8 +53,8 @@ async function loadSchema(dbClient) {
       await dropSchema(dbClient);
     }
 
-    logger.info('Creating Enums');
-    await createEnums(dbClient);
+    logger.info('Creating Types');
+    await createTypes(dbClient);
 
     logger.info('Creating Schema');
     await createSchema(dbClient);
@@ -82,9 +82,9 @@ async function dropSchema(dbClient) {
   }
 }
 
-async function createEnums(dbClient) {
+async function createTypes(dbClient) {
   try {
-    let schemas = fileUtils.readFilesFromDir(appConfig['db.enumDir']);
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.typeDir']);
     await dbClient.query(schemas.join(';'));
   } catch (e) {
     logger.error(`Unable to load enums into database \n${e}`);
@@ -150,8 +150,8 @@ async function seedDb(dbClient) {
   logger.info('Seeding Database');
 
   try {
-    for (let tableName in seedData) {
-      let tableRows = seedData[tableName];
+    for (let tableName in data) {
+      let tableRows = data[tableName];
       for (let rowIndex in tableRows) {
         let keys = Object.keys(tableRows[rowIndex]);
         let values = Object.values(tableRows[rowIndex]);

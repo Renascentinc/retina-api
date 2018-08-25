@@ -1,8 +1,8 @@
 CREATE OR REPLACE FUNCTION public.update_configurable_item(
-	id integer,
-	name character varying(80),
+	id id_t,
+	name str_t,
 	sanctioned boolean,
-  organization_id integer
+  organization_id id_t
 )
 RETURNS SETOF public.configurable_item
 AS $$

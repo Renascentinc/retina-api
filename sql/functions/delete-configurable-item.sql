@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION public.delete_configurable_item(
-	id integer,
-  organization_id integer
+	id id_t,
+  organization_id id_t
 )
 RETURNS SETOF public.configurable_item
 AS $$

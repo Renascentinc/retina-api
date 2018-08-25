@@ -1,16 +1,23 @@
-process.env['ENVIRONMENT'] = 'test';
+process.env['ENVIRONMENT'] = process.env.ENVIRONMENT || 'test';
 
 const { initializeDb } = require('../db-initializer');
 const { data } = require('../data/seed-data');
 const dataUtil = require('../utils/data-utils');
 const assert = require('assert');
+const logger = require('../logger');
+
 async function testDb() {
+  logger.info('------------------------------------- Starting DB Tests -------------------------------------');
   let dbFuncs = await initializeDb();
+  assert.ok(dbFuncs);
+  assert.notEqual(dbFuncs.length, 0);
 
   await testCreate(dbFuncs);
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
   await testDelete(dbFuncs);
+
+  logger.info('------------------------------------- All DB Tests Passing -------------------------------------');
 }
 
 async function testGet(dbFuncs) {
@@ -95,6 +102,11 @@ async function testDelete(dbFuncs) {
 }
 
 (async () => {
+  if (process.env.ENVIRONMENT != 'test') {
+    logger.info("Skipping DB Test")
+    return;
+  }
+
   try {
     await testDb()
   } catch (e) {

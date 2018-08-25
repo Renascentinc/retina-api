@@ -2,9 +2,9 @@
 
 CREATE FUNCTION public.create_configurable_item (
 	type configurable_item_type,
-	name character varying(80),
+	name str_t,
 	sanctioned boolean,
-	organization_id integer
+	organization_id id_t
 )
 RETURNS SETOF public.configurable_item
 AS $$

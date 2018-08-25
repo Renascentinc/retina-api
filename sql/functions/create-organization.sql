@@ -1,5 +1,5 @@
 CREATE FUNCTION public.create_organization (
-	name character varying(200)
+	"name" long_str_t
 )
 RETURNS SETOF public.organization
 AS $$
@@ -8,7 +8,7 @@ AS $$
     	INSERT INTO public.organization (
     		name
     	) VALUES (
-    		name
+    		create_organization.name
     	) RETURNING *;
   END;
 $$
