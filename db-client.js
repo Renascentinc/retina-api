@@ -63,8 +63,8 @@ class DbClient {
     try {
       return await this.client.query(queryVal);
     } catch (e) {
-      logger.error(`Error executing query '${queryVal}' \n${e}`);
-      throw new DbError(`Error executing query '${queryVal}'`)
+      logger.error(`Error executing query \n${e}`);
+      throw new DbError(`Error executing query: \n${e}`)
     }
   }
 

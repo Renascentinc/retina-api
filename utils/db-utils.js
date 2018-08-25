@@ -3,7 +3,7 @@ const { getDropFunctionsQueries } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
-const { devData } = require('../data/dev-data');
+const { seedData } = require('../data/seed-data');
 
 //TODO: Instead of joining all the sql CREATE queries together with ';'
 //      run through each query with the try/catch in the for-loop. This
@@ -69,7 +69,7 @@ async function loadSchema(dbClient) {
 }
 
 async function dropSchema(dbClient) {
-  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop') {
+  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop' && appConfig['environment'] != 'test') {
     logger.warn('Trying to drop schema in a dis-allowed environment');
     return;
   }
@@ -150,8 +150,8 @@ async function seedDb(dbClient) {
   logger.info('Seeding Database');
 
   try {
-    for (let tableName in devData) {
-      let tableRows = devData[tableName];
+    for (let tableName in seedData) {
+      let tableRows = seedData[tableName];
       for (let rowIndex in tableRows) {
         let keys = Object.keys(tableRows[rowIndex]);
         let values = Object.values(tableRows[rowIndex]);
