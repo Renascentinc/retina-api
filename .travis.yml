@@ -12,9 +12,33 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     region: us-east-2
-    app: retina-api
+    app: retina
     env: develop
-    bucket_name: elasticbeanstalk-us-east-2-656841825646
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
     on:
       repo: Renascentinc/retina-api
-      branch: retina-api-34
+      branch: develop
+
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-2
+    app: retina
+    env: release
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
+    on:
+      repo: Renascentinc/retina-api
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^release.*$
+
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-2
+    app: retina
+    env: production
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
+    on:
+      repo: Renascentinc/retina-api
+      branch: master
+      condition: $TRAVIS_BRANCH = master

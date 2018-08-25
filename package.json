@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node main",
-    "test": "mocha --recursive tests",
-    "testdb": "mocha tests/db-initializer"
+    "test": "mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
@@ -13,6 +12,8 @@
     "graphql": "^0.13.2",
     "minimist": "^1.2.0",
     "pg": "^7.4.3",
+    "random-datetime": "^1.0.1",
+    "uuid": "^3.3.2",
     "winston": "^3.0.0",
     "yesql": "^3.2.1"
   },

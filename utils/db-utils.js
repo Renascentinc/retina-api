@@ -3,11 +3,15 @@ const { getDropFunctionsQueries } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
-const { devData } = require('../data/dev-data');
+const { seedData } = require('../data/seed-data');
+
+//TODO: Instead of joining all the sql CREATE queries together with ';'
+//      run through each query with the try/catch in the for-loop. This
+//      will help with debugging
 
 let postgresDbName = 'postgres';
 
-let dropTablesQuery = `DROP SCHEMA public CASCADE;
+let dropSchemaQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
 
@@ -44,7 +48,7 @@ async function createDb(dbClient) {
 async function loadSchema(dbClient) {
   try {
 
-    if (appConfig['db.dropSchema']) {
+    if (appConfig['db.refreshSchema']) {
       logger.info('Dropping Schema');
       await dropSchema(dbClient);
     }
@@ -65,13 +69,13 @@ async function loadSchema(dbClient) {
 }
 
 async function dropSchema(dbClient) {
-  if (appConfig['environment'] !== 'local') {
-    logger.warn('Trying to drop schema in a non-local environment');
+  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop' && appConfig['environment'] != 'test') {
+    logger.warn('Trying to drop schema in a dis-allowed environment');
     return;
   }
 
   try {
-    await dbClient.query(dropTablesQuery);
+    await dbClient.query(dropSchemaQuery);
   } catch (e) {
     logger.error(`Unable to drop tables from databse \n${e}`);
     throw new Error('Unable to drop tables from databse');
@@ -146,8 +150,8 @@ async function seedDb(dbClient) {
   logger.info('Seeding Database');
 
   try {
-    for (let tableName in devData) {
-      let tableRows = devData[tableName];
+    for (let tableName in seedData) {
+      let tableRows = seedData[tableName];
       for (let rowIndex in tableRows) {
         let keys = Object.keys(tableRows[rowIndex]);
         let values = Object.values(tableRows[rowIndex]);

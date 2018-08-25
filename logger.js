@@ -1,5 +1,4 @@
 const winston = require('winston');
-const args = require('minimist')(process.argv.slice(2));
 
 //TODO Improve logging: https://stackoverflow.com/questions/11386492/accessing-line-number-in-v8-javascript-chrome-node-js
 const logger = winston.createLogger({
@@ -9,14 +8,9 @@ const logger = winston.createLogger({
     winston.format.json()),
   transports: [
     new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: './logs/combined.log' })
+    new winston.transports.File({ filename: './logs/combined.log' }),
+    new winston.transports.Console({ format: winston.format.simple(), level: 'silly' })
   ]
 });
-
-if (args.environment !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(), level: 'silly'
-  }));
-}
 
 module.exports = logger;
