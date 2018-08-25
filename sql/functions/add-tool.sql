@@ -1,43 +1,87 @@
--- Note, for inserting, you can do something like:
---    INSERT INTO users(name, email) VALUES($1, $2) RETURNING *
-
 CREATE OR REPLACE FUNCTION public.add_tool (
-  class           char varying(80)  = NULL,
-  type            char varying(80)  = NULL,
-  brand           char varying(80)  = NULL,
-  date_purchased  date              = NULL,
-  purchased_from  char varying(80)  = NULL,
-  price           integer           = NULL,
-  model_number    char varying(80)  = NULL,
-  status          char varying(80)  = NULL,
-  photo           char varying(200) = NULL
+	type_id				integer,
+	brand_id			integer	,
+	model_number    	char varying(80),
+	status          	status_type,
+	serial_number		char varying(80),
+	organization_id	integer	,
+	date_purchased		date              = NULL,
+	purchased_from_id	integer				= NULL,
+	price           	integer           = NULL,
+	photo				char varying(200) = NULL,
+	"year"				integer				= NULL,
+	user_id				integer				= NULL,
+	location_id		integer				= NULL
 ) RETURNS SETOF public.tool
-AS
-$function$
+AS $$
+  DECLARE
+  	new_tool public.tool;
+  	new_transaction_id integer;
   BEGIN
-    RETURN QUERY
+  	  INSERT INTO public.transaction (
+  	  	date,
+  	  	to_user_id,
+  	  	from_user_id,
+  	  	to_location_id,
+  	  	from_location_id,
+  	  	organization_id,
+  	  	"type"
+  	  )
+  	  VALUES (
+  	  	now(),
+  	  	user_id,
+  	  	null,
+  	  	location_id,
+  	  	null,
+  	  	organization_id,
+  	  	'add'
+  	  ) RETURNING id INTO new_transaction_id;
+
       INSERT INTO public.tool (
-        class,
-        type,
-        brand,
+        type_id,
+        brand_id,
         date_purchased,
-        purchased_from,
+        purchased_from_id,
         price,
         model_number,
         status,
-        photo
+        photo,
+        "year",
+        serial_number,
+        user_id,
+        organization_id,
+        location_id
       )
       VALUES (
-        class,
-        type,
-        brand,
+        type_id,
+        brand_id,
         date_purchased,
-        purchased_from,
+        purchased_from_id,
         price,
         model_number,
         status,
-        photo
-      ) RETURNING *;
+        photo,
+        "year",
+        serial_number,
+        user_id,
+        organization_id,
+        location_id
+      )
+      RETURNING * INTO new_tool;
+
+      INSERT INTO public.tool_transaction (
+      	transaction_id,
+      	tool_id,
+      	to_status,
+      	from_status
+      )
+      VALUES (
+      	new_transaction_id,
+      	new_tool.id,
+      	status,
+      	null
+      );
+
   END;
-$function$
+$$
 LANGUAGE plpgsql;
