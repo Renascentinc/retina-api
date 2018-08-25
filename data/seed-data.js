@@ -59,7 +59,7 @@ for (var i = 0; i < numConfItems; i++) {
     type: arrayName,
     name: value,
     sanctioned: dataUtil.getRandBool(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization)
+    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1
   })
 }
 
@@ -75,7 +75,7 @@ for (var i = 0; i < numTools; i++) {
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(statuses),
     serial_number: dataUtil.createRandomId(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization)
+    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1
   })
 }
 

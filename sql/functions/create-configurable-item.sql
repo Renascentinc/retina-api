@@ -1,3 +1,5 @@
+
+
 CREATE FUNCTION public.create_configurable_item (
 	type configurable_item_type,
 	name character varying(80),
