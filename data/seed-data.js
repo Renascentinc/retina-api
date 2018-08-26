@@ -86,7 +86,7 @@ data.location = [
     zip:  '46225',
     organization_id: 1,
     address_line_one: '935 W. Troy Ave.',
-    name: "The Office"
+    name: "The Shop"
   },
   {
     city: 'Bloomington',
@@ -100,7 +100,8 @@ data.location = [
     state: 'TN',
     zip:  '29298',
     organization_id: 3,
-    address_line_one: '9183 Working Way'
+    address_line_one: '9183 Working Way',
+    address_line_two: 'Greenfield Tower Room 3456'
   }
 ];
 
