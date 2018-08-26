@@ -59,7 +59,7 @@ for (var i = 0; i < numConfItems; i++) {
     type: arrayName,
     name: value,
     sanctioned: dataUtil.getRandBool(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization)
+    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1
   })
 }
 
@@ -75,8 +75,34 @@ for (var i = 0; i < numTools; i++) {
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(statuses),
     serial_number: dataUtil.createRandomId(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization)
+    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1
   })
 }
+
+data.location = [
+  {
+    city: 'Indianapolis',
+    state: 'IN',
+    zip:  '46225',
+    organization_id: 1,
+    address_line_one: '935 W. Troy Ave.',
+    name: "The Shop"
+  },
+  {
+    city: 'Bloomington',
+    state: 'IN',
+    zip:  '28271',
+    organization_id: 2,
+    address_line_one: '7638 Construction Ln.'
+  },
+  {
+    city: 'Nashville',
+    state: 'TN',
+    zip:  '29298',
+    organization_id: 3,
+    address_line_one: '9183 Working Way',
+    address_line_two: 'Greenfield Tower Room 3456'
+  }
+];
 
 module.exports = { data };

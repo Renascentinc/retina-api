@@ -2,20 +2,12 @@ const uuid = require('uuid');
 var randomDate = require('random-datetime');
 
 class Util {
-  getRandIdFromTable(type) {
-    if (data[type] == undefined) {
-      throw new Error(`Passed in type ${type} isn't a valid type`);
-    }
-
-    if (data[type].length < 1) {
-      throw new Error(`There are no entries for type ${type}`);
-    }
-
-    return Math.floor(Math.random() * data[type].length) + 1;
+  getRandIndexFromArray(array) {
+    return Math.floor(Math.random() * array.length);
   }
 
-  getRandIndexFromArray(array) {
-    return Math.floor(Math.random() * array.length) + 1;
+  getRandIdFromArray(array) {
+    return this.getRandIndexFromArray(array) + 1;
   }
 
   getRandBool() {
