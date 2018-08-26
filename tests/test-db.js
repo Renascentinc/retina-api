@@ -15,7 +15,7 @@ async function testDb() {
   await testCreate(dbFuncs);
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
-  await testDelete(dbFuncs);
+  // await testDelete(dbFuncs);
 
   logger.info('------------------------------------- All DB Tests Passing -------------------------------------');
 }
@@ -87,6 +87,12 @@ async function testCreate(dbFuncs) {
     newLocations.push(await dbFuncs.create_location(location));
   }
   assert.equal(newLocations.length, data.location.length);
+
+  let newTools = [];
+  for (let tool of data.tool) {
+    newTools.push(await dbFuncs.create_tool(tool));
+  }
+  assert.equal(newTools.length, data.tool.length);
 }
 
 async function testUpdate(dbFuncs) {
