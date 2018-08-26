@@ -21,4 +21,8 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'id_t') THEN
   CREATE DOMAIN id_t AS integer;
 END IF;
 
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'state_t') THEN
+  CREATE DOMAIN state_t AS character varying(2);
+END IF;
+
 END $$;

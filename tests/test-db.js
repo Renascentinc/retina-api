@@ -41,10 +41,29 @@ async function testGet(dbFuncs) {
   assert.equal(configurableItems.length, expectedLength);
 
   /// Get configurable item
-  let item = await dbFuncs.get_configurable_item({
-    id: dataUtil.getRandIdFromArray(data.configurable_item)
+  let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
+  let item = data.configurable_item[itemId - 1];
+  let retrievedItem = await dbFuncs.get_configurable_item({
+    id: itemId,
+    organization_id: item.organization_id
   });
-  assert.equal(org.length, 1);
+  assert.equal(retrievedItem.length, 1);
+
+  /// Get locations
+  let locations = await dbFuncs.get_all_location({
+    organization_id: randOrgId
+  });
+  expectedLength = dataUtil.getFromObjectArrayWhere(data.location, 'organization_id', randOrgId).length;
+  assert.equal(locations.length, expectedLength);
+
+  /// Get location
+  let locationId = dataUtil.getRandIdFromArray(data.location);
+  let location = data.location[locationId - 1];
+  let retrievedLocation = await dbFuncs.get_location({
+    id: locationId,
+    organization_id: location.organization_id
+  });
+  assert.equal(retrievedLocation.length, 1);
 }
 
 async function testCreate(dbFuncs) {
@@ -61,6 +80,13 @@ async function testCreate(dbFuncs) {
     newItems.push(await dbFuncs.create_configurable_item(item));
   }
   assert.equal(newItems.length, data.configurable_item.length);
+
+  /// Create locations
+  let newLocations = [];
+  for (let location of data.location) {
+    newLocations.push(await dbFuncs.create_location(location));
+  }
+  assert.equal(newLocations.length, data.location.length);
 }
 
 async function testUpdate(dbFuncs) {
@@ -72,7 +98,6 @@ async function testUpdate(dbFuncs) {
   });
 
   assert.equal(updatedOrg[0].name, newOrgName);
-
 
   /// Update configurable item
   let itemId = dataUtil.getRandIdFromArray(data.configurable_item);

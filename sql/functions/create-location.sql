@@ -1,23 +1,34 @@
 
-/* CREATE FUNCTION public.create_location (
-  id serial PRIMARY KEY
-  "name" character varying(80),
-  address_line_one character varying(200)
-  address_line_two character varying(200),
-  city character varying(80),
-  state character varying(2),
-  zip character varying(10),
-  organization_id
+CREATE FUNCTION public.create_location (
+	city							str_t,
+	state 						state_t,
+	zip 							zip_t,
+	organization_id 	id_t,
+	address_line_one	long_str_t,
+  address_line_two 	long_str_t  = NULL,
+	"name" 						str_t       = NULL
 )
-RETURNS SETOF public.organization
+RETURNS SETOF public.location
 AS $$
   BEGIN
     RETURN QUERY
-    	INSERT INTO public.organization (
-    		name
+    	INSERT INTO public.location (
+    		city,
+        state,
+        zip,
+        organization_id,
+        address_line_one,
+        address_line_two,
+        name
     	) VALUES (
-    		name
+        city,
+        state,
+        zip,
+        organization_id,
+        address_line_one,
+        address_line_two,
+        name
     	) RETURNING *;
   END;
 $$
-LANGUAGE plpgsql; */
+LANGUAGE plpgsql;
