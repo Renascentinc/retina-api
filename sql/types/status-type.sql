@@ -5,7 +5,10 @@ BEGIN
 -- IF NOT EXITS logic pulled from https://levlaz.org/types-and-roles-if-not-exists-in-postgresql
 
 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'status_type') THEN
-    CREATE TYPE status_type AS ENUM ('Available', 'In Use', 'Maintenance', 'Out of Service');
+    CREATE TYPE status_type AS ENUM ('AVAILABLE',
+                                     'IN_USE',
+                                     'MAINTENENCE',
+                                     'OUT_OF_SERVICE');
 END IF;
 
 END $$;

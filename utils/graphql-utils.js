@@ -5,7 +5,7 @@ const appConfig = require('../app-config');
 
 function createSchema() {
   let resolvers = getResolversFromDir(appConfig['server.graphql.resolverDir']);
-  let schemas = getTypeDefSchemasFromDir(appConfig['server.graphql.typeDefDir']);
+  let schemas = getSchemas();
 
   return mergeSchemas({ schemas, resolvers });
 }
@@ -22,8 +22,12 @@ function getResolversFromDir(dir) {
     return resolvers;
 }
 
-function getTypeDefSchemasFromDir(dir) {
-  let typeDefs = fileUtils.readFilesFromDir(dir);
+function getSchemas() {
+  let typeDefs = fileUtils.readFilesFromDir(appConfig['server.graphql.schemaDir']);
+  // typeDefs = typeDefs.concat(fileUtils.readFilesFromDir(appConfig['server.graphql.typesDir']));
+
+  // typeDefs = typeDefs.join('\n');
+
 
   let schemas = [];
   typeDefs.forEach(typeDef => {

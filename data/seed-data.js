@@ -2,19 +2,19 @@
 let dataUtil = require('../utils/data-utils');
 
 let configurable_items = {
-  brand: [
+  BRAND: [
     'Bosch',
     'DeWalt',
     'Milwaukee',
     'Makita',
     'Hilti'
   ],
-  purchased_from: [
+  PURCHASED_FROM: [
     'Lowes',
     'Menards',
     'Home Depot'
   ],
-  type: [
+  TYPE: [
     '12v Drill',
     'Sledgehammer',
     'Chainsaw',
@@ -25,15 +25,15 @@ let configurable_items = {
 }
 
 let statuses = [
-  'Available',
-  'In Use',
-  'Maintenance',
-  'Out of Service'
+  'AVAILABLE',
+  'IN_USE',
+  'MAINTENENCE',
+  'OUT_OF_SERVICE'
 ]
 
 let roles = [
-  'user',
-  'administrator'
+  'USER',
+  'ADMINISTRATOR'
 ]
 
 let data = {};
@@ -68,10 +68,10 @@ let numTools = 20;
 
 for (var i = 0; i < numTools; i++) {
   data.tool.push(  {
-    type_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'type'),
-    brand_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'brand'),
+    type_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'TYPE'),
+    brand_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'BRAND'),
     date_purchased: dataUtil.createRandomDate(),
-    purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'purchased_from'),
+    purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'PURCHASED_FROM'),
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(statuses),
     serial_number: dataUtil.createRandomId(),

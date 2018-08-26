@@ -11,7 +11,8 @@ let appConfig = {
   'db.seed': false,
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
-  'server.graphql.typeDefDir': `${process.env.PWD}/graphql/type_defs`,
+  'server.graphql.schemaDir': `${process.env.PWD}/graphql/schema`,
+  'server.graphql.typesDir': `${process.env.PWD}/graphql/types`,
   'server.port': process.env.PORT || 4000
 }
 
