@@ -25,4 +25,8 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'state_t') THEN
   CREATE DOMAIN state_t AS character varying(2);
 END IF;
 
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'uuid_t') THEN
+  CREATE DOMAIN uuid_t AS uuid;
+END IF;
+
 END $$;

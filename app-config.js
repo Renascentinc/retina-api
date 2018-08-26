@@ -3,6 +3,7 @@ const util = require('util');
 
 let appConfig = {
   'db.port': 5432,
+  'db.extensionDir': `${process.env.PWD}/sql/extensions`,
   'db.schemaDir': `${process.env.PWD}/sql/schema`,
   'db.constraintDir': `${process.env.PWD}/sql/constraints`,
   'db.functionDir': `${process.env.PWD}/sql/functions`,

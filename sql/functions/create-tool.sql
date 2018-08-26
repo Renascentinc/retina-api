@@ -1,42 +1,22 @@
 CREATE OR REPLACE FUNCTION public.create_tool (
-	type_id						integer,
-	brand_id					integer,
-	model_number    	char varying(80),
+	type_id						id_t,
+	brand_id					id_t,
+	model_number    	str_t,
 	status          	status_type,
-	serial_number			char varying(80),
-	organization_id		integer,
-	date_purchased		date              = NULL,
-	purchased_from_id	integer						= NULL,
-	price           	integer           = NULL,
-	photo							char varying(200) = NULL,
-	"year"						integer						= NULL,
-	user_id						integer						= NULL,
-	location_id				integer						= NULL
+	serial_number			str_t,
+	organization_id		id_t,
+	date_purchased		date          = NULL,
+	purchased_from_id	id_t					= NULL,
+	price           	integer       = NULL,
+	photo							long_str_t		= NULL,
+	"year"						integer				= NULL,
+	user_id						id_t					= NULL,
+	location_id				id_t					= NULL
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE
-  	new_tool_id integer;
-  	new_transaction_id integer;
+  	new_tool_id id_t;
   BEGIN
-  	INSERT INTO public.transaction (
-  	  date,
-  	  to_user_id,
-  	  from_user_id,
-  	  to_location_id,
-  	  from_location_id,
-  	  organization_id,
-  	  "type"
-  	)
-  	VALUES (
-  	  now(),
-  	  user_id,
-  	  null,
-  	  location_id,
-  	  null,
-  	  organization_id,
-  	  'add'
-  	) RETURNING id INTO new_transaction_id;
-
     INSERT INTO public.tool (
       type_id,
       brand_id,
@@ -69,18 +49,19 @@ AS $$
     )
     RETURNING id INTO new_tool_id;
 
-    INSERT INTO public.tool_transaction (
-      transaction_id,
-      tool_id,
-      to_status,
-      from_status
-    )
-    VALUES (
-      new_transaction_id,
-      new_tool_id,
-      status,
-      null
-    );
+  	PERFORM create_transaction(
+  		'add',
+  		organization_id,
+  		uuid_generate_v4(),
+  		new_tool_id,
+  		'Available',
+  		null,
+  		user_id,
+  		null,
+  		location_id,
+  		null
+  	);
+
     RETURN QUERY SELECT * FROM public.tool WHERE id = new_tool_id;
   END;
 $$
