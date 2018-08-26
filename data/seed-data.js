@@ -94,10 +94,10 @@ let numTools = 20;
 
 for (var i = 0; i < numTools; i++) {
   data.tool.push(  {
-    type_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'type'),
-    brand_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'brand'),
+    type_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'TYPE'),
+    brand_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'BRAND'),
     date_purchased: dataUtil.createRandomDate(),
-    purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'purchased_from'),
+    purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'PURCHASED_FROM'),
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(statuses),
     serial_number: dataUtil.createRandomId(),

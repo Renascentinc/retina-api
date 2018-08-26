@@ -1,0 +1,33 @@
+enum ConfigurableItemType {
+    BRAND
+    PURCHASED_FROM
+    TYPE
+}
+
+type ConfigurableItem {
+  id: ID!
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input NewConfigurableItem {
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input UpdatedConfigurableItem {
+  id: ID!
+  name: String!
+  sanctioned: Boolean!
+}
+
+type Query {
+  getAllConfigurableItem: [ConfigurableItem]
+}
+
+type Mutation {
+  createConfigurableItem(configurableItem: NewConfigurableItem): ConfigurableItem
+  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem): ConfigurableItem
+}

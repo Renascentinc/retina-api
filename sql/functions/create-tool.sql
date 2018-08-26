@@ -50,11 +50,11 @@ AS $$
     RETURNING id INTO new_tool_id;
 
   	PERFORM create_transaction(
-  		'add',
+  		'ADD',
   		organization_id,
   		uuid_generate_v4(),
   		new_tool_id,
-  		'Available',
+  		'AVAILABLE',
   		null,
   		user_id,
   		null,
