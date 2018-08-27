@@ -50,11 +50,12 @@ AS $$
     RETURNING id INTO new_tool_id;
 
   	PERFORM create_transaction(
-  		'ADD',
+  		'ADD'::transaction_type,
   		organization_id,
   		uuid_generate_v4(),
   		new_tool_id,
-  		'AVAILABLE',
+  		status, -- Jeremy, is this correct? You had 'ADD' in here before, but I think it is
+							-- valid for a user to specify a tool status when creating a tool
   		null,
   		user_id,
   		null,

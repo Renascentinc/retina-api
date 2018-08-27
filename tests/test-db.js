@@ -15,7 +15,7 @@ async function testDb() {
   await testCreate(dbFuncs);
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
-  // await testDelete(dbFuncs);
+  await testDelete(dbFuncs);
 
   logger.info('------------------------------------- All DB Tests Passing -------------------------------------');
 }
@@ -122,14 +122,15 @@ async function testUpdate(dbFuncs) {
 
 async function testDelete(dbFuncs) {
   /// Delete configurable item
-  let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
-  let item = data.configurable_item[itemId-1];
+  let newItem = await dbFuncs.create_configurable_item(dataUtil.getRandFromArray(data.configurable_item));
+  newItem = newItem[0];
   let deletedItem = await dbFuncs.delete_configurable_item({
-    id: itemId,
-    organization_id: item.organization_id
+    id: newItem.id,
+    organization_id: newItem.organization_id
   });
 
-  assert.equal(itemId, deletedItem[0].id)
+  assert.equal(deletedItem.length, 1);
+  assert.equal(newItem.id, deletedItem[0].id);
 }
 
 (async () => {

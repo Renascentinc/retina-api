@@ -1,32 +1,56 @@
-CREATE FUNCTION public.update_tool(
-  id              int,
-  class           char varying(80)  = NULL,
-  type            char varying(80)  = NULL,
-  brand           char varying(80)  = NULL,
-  date_purchased  date              = NULL,
-  purchased_from  char varying(80)  = NULL,
-  price           integer           = NULL,
-  model_number    char varying(80)  = NULL,
-  status          char varying(80)  = NULL,
-  photo           char varying(200) = NULL
-)
- RETURNS SETOF public.tool
+/* CREATE OR REPLACE FUNCTION public.update_tool (
+  id                id_t,
+	type_id						id_t,
+	brand_id					id_t,
+	model_number    	str_t,
+	status          	status_type,
+	serial_number			str_t,
+	organization_id		id_t,
+	date_purchased		date,
+	purchased_from_id	id_t,
+	price           	integer,
+	photo							long_str_t,
+	"year"						integer,
+	user_id						id_t,
+	location_id				id_t
+) RETURNS SETOF public.tool
 AS $$
+  DECLARE
+  	updated_tool_id id_t;
   BEGIN
-    RETURN QUERY
     UPDATE public.tool
       SET
-        class = update_tool.class,
-        type = update_tool.type,
-        brand = update_tool.brand,
-        date_purchased = update_tool.date_purchased,
-        purchased_from = update_tool.purchased_from,
-        price = update_tool.price,
-        model_number = update_tool.model_number,
-        status = update_tool.status,
-        photo = update_tool.photo
+        type_id,
+        brand_id,
+        date_purchased,
+        purchased_from_id,
+        price,
+        model_number,
+        status,
+        photo,
+        "year",
+        serial_number,
+        user_id,
+        organization_id,
+        location_id
       WHERE public.tool.id = update_tool.id
-    RETURNING *;
+    RETURNING id INTO updated_tool_id;
+
+  	PERFORM create_transaction(
+  		'UPDATE'::transaction_type,
+  		organization_id,
+  		uuid_generate_v4(),
+  		updated_tool_id,
+  		status, -- Jeremy, is this correct? You had 'ADD' in here before, but I think it is
+							-- valid for a user to specify a tool status when creating a tool
+  		null,
+  		user_id,
+  		null,
+  		location_id,
+  		null
+  	);
+
+    RETURN QUERY SELECT * FROM public.tool WHERE id = new_tool_id;
   END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql; */
