@@ -2,40 +2,33 @@
 const { makeExecutableSchema, mergeSchemas } = require('graphql-tools');
 const fileUtils = require('./file-utils');
 const appConfig = require('../app-config');
+const { fileLoader, mergeTypes, mergeResolvers } = require('merge-graphql-schemas');
 
 function createSchema() {
-  let resolvers = getResolversFromDir(appConfig['server.graphql.resolverDir']);
-  let schemas = getSchemas();
+  let resolvers = getResolvers();
+  let typeDefs = getTypeDefs();
 
-  return mergeSchemas({ schemas, resolvers });
+  return makeExecutableSchema({
+    typeDefs: typeDefs,
+    resolvers: resolvers
+  });
 }
 
-function getResolversFromDir(dir) {
-    let resolvers = [];
-
-    let resolverFiles = fileUtils.readFileNamesFromDir(dir);
-
-    resolverFiles.forEach(file => {
-      resolvers.push(require(`${dir}/${file}`));
-    });
+function getResolvers() {
+    let resolvers = fileLoader(appConfig['server.graphql.resolverDir']);
+    resolvers = mergeResolvers(resolvers);
 
     return resolvers;
 }
 
-function getSchemas() {
-  let typeDefs = fileUtils.readFilesFromDir(appConfig['server.graphql.schemaDir']);
-  // typeDefs = typeDefs.concat(fileUtils.readFilesFromDir(appConfig['server.graphql.typesDir']));
+function getTypeDefs() {
+  let schemaArray = fileLoader(appConfig['server.graphql.schemaDir']);
+  let typesArray = fileLoader(appConfig['server.graphql.typeDir']);
 
-  // typeDefs = typeDefs.join('\n');
+  let gqlArray = schemaArray.concat(typesArray);
+  let gql = mergeTypes(gqlArray, { all: true });
 
-
-  let schemas = [];
-  typeDefs.forEach(typeDef => {
-    let schema = makeExecutableSchema({ typeDefs: typeDef });
-    schemas.push(schema);
-  });
-
-  return schemas;
+  return gql;
 }
 
 module.exports = {

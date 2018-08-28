@@ -13,7 +13,7 @@ let appConfig = {
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
   'server.graphql.schemaDir': `${process.env.PWD}/graphql/schema`,
-  'server.graphql.typesDir': `${process.env.PWD}/graphql/types`,
+  'server.graphql.typeDir': `${process.env.PWD}/graphql/types`,
   'server.port': process.env.PORT || 4000
 }
 
