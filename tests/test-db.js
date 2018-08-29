@@ -16,8 +16,52 @@ async function testDb() {
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
   await testDelete(dbFuncs);
+  await testOtherFunctions(dbFuncs);
 
   logger.info('------------------------------------- All DB Tests Passing -------------------------------------');
+}
+
+async function testCreate(dbFuncs) {
+  // Create organization
+  let newOrgs = []
+  for (let org of data.organization) {
+    newOrgs.push(await dbFuncs.create_organization(org));
+  }
+  assert.equal(newOrgs.length, data.organization.length);
+
+  // Create configurable item
+  let newItems = [];
+  for (let item of data.configurable_item) {
+    newItems.push(await dbFuncs.create_configurable_item(item));
+  }
+  assert.equal(newItems.length, data.configurable_item.length);
+
+  /// Create locations
+  let newLocations = [];
+  for (let location of data.location) {
+    newLocations.push(await dbFuncs.create_location(location));
+  }
+  assert.equal(newLocations.length, data.location.length);
+
+  let newTools = [];
+  for (let tool of data.tool) {
+    newTools.push(await dbFuncs.create_tool(tool));
+  }
+  assert.equal(newTools.length, data.tool.length);
+
+  /// Create users
+  let newUsers = [];
+  for (let user of data.user) {
+    newUsers.push(await dbFuncs.create_user());
+  }
+  assert.equal(newUsers.length, data.user.length);
+
+  /// Create tokens
+  let newTokens = [];
+  for (let token of data.token) {
+    newTokens.push(await dbFuncs.create_token(token));
+  }
+  assert.equal(newTokens.length, data.token.length);
 }
 
 async function testGet(dbFuncs) {
@@ -64,35 +108,7 @@ async function testGet(dbFuncs) {
     organization_id: location.organization_id
   });
   assert.equal(retrievedLocation.length, 1);
-}
 
-async function testCreate(dbFuncs) {
-  // Create organization
-  let newOrgs = []
-  for (let org of data.organization) {
-    newOrgs.push(await dbFuncs.create_organization(org));
-  }
-  assert.equal(newOrgs.length, data.organization.length);
-
-  // Create configurable item
-  let newItems = [];
-  for (let item of data.configurable_item) {
-    newItems.push(await dbFuncs.create_configurable_item(item));
-  }
-  assert.equal(newItems.length, data.configurable_item.length);
-
-  /// Create locations
-  let newLocations = [];
-  for (let location of data.location) {
-    newLocations.push(await dbFuncs.create_location(location));
-  }
-  assert.equal(newLocations.length, data.location.length);
-
-  let newTools = [];
-  for (let tool of data.tool) {
-    newTools.push(await dbFuncs.create_tool(tool));
-  }
-  assert.equal(newTools.length, data.tool.length);
 }
 
 async function testUpdate(dbFuncs) {
@@ -120,6 +136,10 @@ async function testUpdate(dbFuncs) {
   assert.equal(newItem[0].sanctioned, updatedItem.sanctioned);
 }
 
+/*
+ * These tests don't currently test that the item is actually deleted but rather
+ * that the correct purportedly deleted item is returned
+ */
 async function testDelete(dbFuncs) {
   /// Delete configurable item
   let newItem = await dbFuncs.create_configurable_item(dataUtil.getRandFromArray(data.configurable_item));
@@ -131,6 +151,34 @@ async function testDelete(dbFuncs) {
 
   assert.equal(deletedItem.length, 1);
   assert.equal(newItem.id, deletedItem[0].id);
+
+  /// Delete token
+  let newToken = dataUtil.getRandFromArray(data.token);
+  newToken['token'] = dataUtil.createRandomId();
+
+  newToken = await dbFuncs.create_token(newToken);
+  newToken = newToken[0];
+  let deletedToken = await dbFuncs.delete_token(newToken);
+
+  assert.equal(deletedToken.length, 1);
+  assert.equal(newToken.token, deletedToken[0].token);
+}
+
+async function testOtherFunctions(dbFuncs) {
+  /// Token Exists
+  let tokenIndex = dataUtil.getRandIndexFromArray(data.token);
+  let token = data.token[tokenIndex];
+  let tokenExists = await dbFuncs.token_exists(token);
+  assert.equal(tokenExists.length, 1);
+  assert.ok(tokenExists[0]);
+  assert.ok(tokenExists[0].token_exists);
+
+  /// Token does not Exist
+  token['user_id'] = 100000;
+  tokenExists = await dbFuncs.token_exists(token);
+  assert.equal(tokenExists.length, 1);
+  assert.ok(tokenExists[0]);
+  assert.ok(!tokenExists[0].token_exists);
 }
 
 (async () => {

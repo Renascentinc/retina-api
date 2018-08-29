@@ -1,0 +1,17 @@
+
+type Token {
+  token: String!
+  user_id: ID!
+  organization_id: ID!
+}
+
+input AuthToken {
+  token: String!
+  user_id: ID!
+  organization_id: ID!
+}
+
+type Mutation {
+  login(organization_name: String!, username: String!, password: String!): Token
+  logout(token: AuthToken!): Boolean
+}

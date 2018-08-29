@@ -106,4 +106,18 @@ for (var i = 0; i < numTools; i++) {
   })
 }
 
+data.user = Array.from({length:20},(v,k)=> ({id:k+1}));
+
+data.token = [];
+let numTokens = 5;
+
+for (var i = 0; i < numTokens; i++) {
+  data.token.push({
+    token: dataUtil.createRandomId(),
+    user_id: dataUtil.getRandIdFromArray(data.user),
+    organization_id: dataUtil.getRandIdFromArray(data.organization)
+  });
+}
+
+
 module.exports = { data };
