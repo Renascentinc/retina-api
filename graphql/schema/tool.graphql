@@ -1,47 +1,57 @@
 
 type Tool {
-  id: ID
-  class: String
-  type: String
-  brand: String
-  date_purchased: String
-  purchased_from: String
-  price: Int
-  model_number: String
-  status: String
-  photo: String
+  id: ID!
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
 }
 
+# TODO: Create directive for New Tool to have at least a user or location id
 input NewTool {
-  class: String
-  type: String
-  brand: String
-  date_purchased: String
-  purchased_from: String
-  price: Int
-  model_number: String
-  status: String
-  photo: String
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
 }
 
 input UpdatedTool {
-  id: ID
-  class: String
-  type: String
-  brand: String
-  date_purchased: String
-  purchased_from: String
-  price: Int
-  model_number: String
-  status: String
-  photo: String
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
 }
 
 type Query {
-  tools: [Tool]
+  getAllTool: [Tool]!
+  getTool(id: ID): Tool!
 }
 
 type Mutation {
-  addTool(tool: NewTool): Tool
+  createTool(newTool: NewTool): Tool
   updateTool(tool: UpdatedTool): Tool
 }

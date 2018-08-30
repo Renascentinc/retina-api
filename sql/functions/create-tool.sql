@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION public.create_tool (
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,
-	status          	status_type,
+	status          	tool_status_type,
 	serial_number			str_t,
 	organization_id		id_t,
 	date_purchased		date          = NULL,

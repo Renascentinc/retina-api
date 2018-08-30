@@ -3,12 +3,12 @@ CREATE OR REPLACE FUNCTION public.create_transaction (
 	organization_id	   id_t,
 	transaction_id     uuid_t,
 	tool_id            id_t,
-	to_status			     status_type	= NULL,
-	from_status        status_type	= NULL,
-	to_user_id         id_t 				= NULL,
-	from_user_id       id_t 				= NULL,
-	to_location_id     id_t 				= NULL,
-	from_location_id   id_t 				= NULL
+	to_status			     tool_status_type	= NULL,
+	from_status        tool_status_type	= NULL,
+	to_user_id         id_t 						= NULL,
+	from_user_id       id_t 						= NULL,
+	to_location_id     id_t 						= NULL,
+	from_location_id   id_t 						= NULL
 ) RETURNS void
 AS $$
   BEGIN

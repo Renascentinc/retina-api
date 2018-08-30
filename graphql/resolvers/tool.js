@@ -2,15 +2,24 @@
 
 module.exports = {
   Query: {
-     tools: async (_, args, db) => {
-       let result = await db.get_tools();
+     getAllTool: async (_1, _2, db) => {
+       let result = await db.get_all_tool({organization_id: 1});
        return result;
+     },
+
+     getTool: async (_, { id }, db) => {
+       let tool = await db.get_tool({
+         id,
+         organization_id: 1
+       });
+       return tool[0];
      }
   },
 
   Mutation: {
-     addTool: async (_, {tool}, db) => {
-       let result = await db.add_tool(tool);
+     createTool: async (_, {newTool}, db) => {
+       newTool['organization_id'] = 1;
+       let result = await db.create_tool(newTool);
        return result[0];
      },
 

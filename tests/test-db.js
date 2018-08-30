@@ -65,6 +65,8 @@ async function testCreate(dbFuncs) {
 }
 
 async function testGet(dbFuncs) {
+  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+
   /// Get organizations
   let expectedNumOrgs = data.organization.length;
   let orgs = await dbFuncs.get_all_organization();
@@ -72,12 +74,11 @@ async function testGet(dbFuncs) {
 
   /// Get organization
   let org = await dbFuncs.get_organization({
-    id: dataUtil.getRandIdFromArray(data.organization)
+    id: randOrgId
   });
   assert.equal(org.length, 1);
 
   /// Get configurable items
-  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
   let configurableItems = await dbFuncs.get_all_configurable_item({
     organization_id: randOrgId
   });
@@ -109,6 +110,12 @@ async function testGet(dbFuncs) {
   });
   assert.equal(retrievedLocation.length, 1);
 
+  /// Get tools
+  let tools = await dbFuncs.get_all_tool({
+    organization_id: randOrgId
+  });
+  expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).length;
+  assert.equal(tools.length, expectedLength);
 }
 
 async function testUpdate(dbFuncs) {
