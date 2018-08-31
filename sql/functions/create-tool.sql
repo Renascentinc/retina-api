@@ -49,19 +49,19 @@ AS $$
     )
     RETURNING id INTO new_tool_id;
 
-  	PERFORM create_transaction(
+  	/* PERFORM create_transaction(
   		'ADD'::transaction_type,
   		organization_id,
   		uuid_generate_v4(),
   		new_tool_id,
-  		status, -- Jeremy, is this correct? You had 'ADD' in here before, but I think it is
+  		status, -- Jeremy, is this correct? You had 'AVAILABLE' in here before, but I think it is
 							-- valid for a user to specify a tool status when creating a tool
   		null,
   		user_id,
   		null,
   		location_id,
   		null
-  	);
+  	); */
 
     RETURN QUERY SELECT * FROM public.tool WHERE id = new_tool_id;
   END;

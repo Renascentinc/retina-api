@@ -1,5 +1,5 @@
-/* CREATE OR REPLACE FUNCTION public.update_tool (
-  id                id_t,
+CREATE OR REPLACE FUNCTION public.update_tool (
+  tool_id           id_t,
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,
@@ -20,37 +20,25 @@ AS $$
   BEGIN
     UPDATE public.tool
       SET
-        type_id,
-        brand_id,
-        date_purchased,
-        purchased_from_id,
-        price,
-        model_number,
-        status,
-        photo,
-        "year",
-        serial_number,
-        user_id,
-        organization_id,
-        location_id
-      WHERE public.tool.id = update_tool.id
+        type_id           = update_tool.type_id,
+        brand_id          = update_tool.brand_id,
+        date_purchased    = update_tool.date_purchased,
+        purchased_from_id = update_tool.purchased_from_id,
+        price             = update_tool.price,
+        model_number      = update_tool.model_number,
+        status            = update_tool.status,
+        photo             = update_tool.photo,
+        "year"            = update_tool.year,
+        serial_number     = update_tool.serial_number,
+        user_id           = update_tool.user_id,
+        location_id       = update_tool.location_id
+      WHERE public.tool.id = update_tool.tool_id
+        AND public.tool.organization_id = update_tool.organization_id
     RETURNING id INTO updated_tool_id;
 
-  	PERFORM create_transaction(
-  		'UPDATE'::transaction_type,
-  		organization_id,
-  		uuid_generate_v4(),
-  		updated_tool_id,
-  		status, -- Jeremy, is this correct? You had 'ADD' in here before, but I think it is
-							-- valid for a user to specify a tool status when creating a tool
-  		null,
-  		user_id,
-  		null,
-  		location_id,
-  		null
-  	);
+    -- TODO: Create a transaction
 
     RETURN QUERY SELECT * FROM public.tool WHERE id = new_tool_id;
   END;
 $$
-LANGUAGE plpgsql; */
+LANGUAGE plpgsql;

@@ -116,7 +116,7 @@ class DbClient {
       return result.rows;
     } catch (e) {
       logger.error(`Function '${functionName}' failed to execute with parameters \n[${util.inspect(params)}] \n${e}`);
-      throw new DbClientError(`Function '${functionName}' with parameters [${params}] failed to execute`);
+      throw new DbClientError(`Function '${functionName}' with parameters [${util.inspect(params)}] failed to execute`);
     }
   }
 

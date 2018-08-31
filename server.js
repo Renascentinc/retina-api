@@ -17,7 +17,7 @@ class Server {
     this.dbFunctions = dbFunctions;
   }
 
-  start() {
+  async start() {
     let schema;
     try {
       schema = createSchema();
@@ -37,8 +37,9 @@ class Server {
       });
 
       apolloServer.applyMiddleware({app, path: '/graphql'});
-      app.listen(appConfig['server.port']);
+      await app.listen(appConfig['server.port']);
 
+      logger.info(`Started server on port ${appConfig['server.port']}`);
     } catch (e) {
       logger.error(`Unable to start server \n${e}`);
       throw new Error('Unable to start server');

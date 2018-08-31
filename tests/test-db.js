@@ -74,7 +74,7 @@ async function testGet(dbFuncs) {
 
   /// Get organization
   let org = await dbFuncs.get_organization({
-    id: randOrgId
+    organization_id: randOrgId
   });
   assert.equal(org.length, 1);
 
@@ -89,7 +89,7 @@ async function testGet(dbFuncs) {
   let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
   let item = data.configurable_item[itemId - 1];
   let retrievedItem = await dbFuncs.get_configurable_item({
-    id: itemId,
+    configurable_item_id: itemId,
     organization_id: item.organization_id
   });
   assert.equal(retrievedItem.length, 1);
@@ -105,7 +105,7 @@ async function testGet(dbFuncs) {
   let locationId = dataUtil.getRandIdFromArray(data.location);
   let location = data.location[locationId - 1];
   let retrievedLocation = await dbFuncs.get_location({
-    id: locationId,
+    location_id: locationId,
     organization_id: location.organization_id
   });
   assert.equal(retrievedLocation.length, 1);
@@ -116,13 +116,22 @@ async function testGet(dbFuncs) {
   });
   expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).length;
   assert.equal(tools.length, expectedLength);
+
+  /// Get tool
+  let toolId = dataUtil.getRandIdFromArray(data.tool);
+  let tool = data.tool[toolId - 1];
+  let retrievedTool = await dbFuncs.get_tool({
+    tool_id: toolId,
+    organization_id: tool.organization_id
+  });
+  assert.equal(retrievedTool.length, 1);
 }
 
 async function testUpdate(dbFuncs) {
   /// Update organization
   let newOrgName = "New Organization";
   let updatedOrg = await dbFuncs.update_organization({
-    id: dataUtil.getRandIdFromArray(data.organization),
+    organization_id: dataUtil.getRandIdFromArray(data.organization),
     name: newOrgName
   });
 
@@ -131,16 +140,32 @@ async function testUpdate(dbFuncs) {
   /// Update configurable item
   let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
   let item = data.configurable_item[itemId - 1];
-  let updatedItem = {
-    id: itemId,
+  let updatedItemObject = {
+    configurable_item_id: itemId,
     name: 'New Item Name',
     sanctioned: true,
     organization_id: item.organization_id
   };
-  let newItem = await dbFuncs.update_configurable_item(updatedItem);
+  let updatedItem = await dbFuncs.update_configurable_item(updatedItemObject);
 
-  assert.equal(newItem[0].name, updatedItem.name);
-  assert.equal(newItem[0].sanctioned, updatedItem.sanctioned);
+  assert.equal(updatedItem[0].name, updatedItemObject.name);
+  assert.equal(updatedItem[0].sanctioned, updatedItemObject.sanctioned);
+
+  /// Update tool
+  // let toolId = dataUtil.getRandIdFromArray(data.tool);
+  // let tool = data.tool[toolId - 1];
+  // tool['tool_id'] = toolId;
+  // delete tool.id;
+  // let updatedToolObject = {...tool,
+  //   ...{
+  //     model_number: dataUtil.createRandomId(),
+  //     status: 'OUT_OF_SERVICE'
+  //   }
+  // };
+  // let updatedTool = await dbFuncs.update_tool(updatedToolObject);
+  //
+  // assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
+  // assert.equal(updatedTool[0].status, updatedToolObject.status);
 }
 
 /*
@@ -152,7 +177,7 @@ async function testDelete(dbFuncs) {
   let newItem = await dbFuncs.create_configurable_item(dataUtil.getRandFromArray(data.configurable_item));
   newItem = newItem[0];
   let deletedItem = await dbFuncs.delete_configurable_item({
-    id: newItem.id,
+    configurable_item_id: newItem.id,
     organization_id: newItem.organization_id
   });
 
