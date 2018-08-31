@@ -24,11 +24,16 @@ let configurable_items = {
   ]
 }
 
-let statuses = [
+let tool_statuses = [
   'AVAILABLE',
   'IN_USE',
   'MAINTENENCE',
   'OUT_OF_SERVICE'
+]
+
+let user_statuses = [
+  'ACTIVE',
+  'INACTIVE'
 ]
 
 let roles = [
@@ -59,7 +64,7 @@ for (var i = 0; i < numConfItems; i++) {
     type: arrayName,
     name: value,
     sanctioned: dataUtil.getRandBool(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1
+    organization_id: dataUtil.getRandIdFromArray(data.organization)
   })
 }
 
@@ -99,9 +104,9 @@ for (var i = 0; i < numTools; i++) {
     date_purchased: dataUtil.createRandomDate(),
     purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'PURCHASED_FROM'),
     model_number: dataUtil.createRandomId(),
-    status: dataUtil.getRandFromArray(statuses),
+    status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
-    organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1,
+    organization_id: dataUtil.getRandIdFromArray(data.organization),
     location_id: dataUtil.getRandIdFromArray(data.location),
     price: null,
     photo: null,
@@ -110,7 +115,16 @@ for (var i = 0; i < numTools; i++) {
   })
 }
 
-data.user = Array.from({length:20},(v,k)=> ({id:k+1}));
+data.user = [];
+let numUsers = 20;
+
+for (var i = 0; i < numUsers; i++) {
+  data.user.push({
+    role: dataUtil.getRandFromArray(roles),
+    status: dataUtil.getRandFromArray(user_statuses),
+    organization_id: dataUtil.getRandIdFromArray(data.organization)
+  });
+}
 
 data.token = [];
 let numTokens = 5;

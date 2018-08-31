@@ -52,7 +52,7 @@ async function testCreate(dbFuncs) {
   /// Create users
   let newUsers = [];
   for (let user of data.user) {
-    newUsers.push(await dbFuncs.create_user());
+    newUsers.push(await dbFuncs.create_user(user));
   }
   assert.equal(newUsers.length, data.user.length);
 
@@ -125,6 +125,22 @@ async function testGet(dbFuncs) {
     organization_id: tool.organization_id
   });
   assert.equal(retrievedTool.length, 1);
+
+  /// Get users
+  let users = await dbFuncs.get_all_user({
+    organization_id: randOrgId
+  });
+  expectedLength = dataUtil.getFromObjectArrayWhere(data.user, 'organization_id', randOrgId).length;
+  assert.equal(users.length, expectedLength);
+
+  // Get user
+  let userId = dataUtil.getRandIdFromArray(data.user);
+  let user = data.user[userId - 1];
+  let retrievedUser = await dbFuncs.get_user({
+    user_id: userId,
+    organization_id: user.organization_id
+  });
+  assert.equal(retrievedUser.length, 1);
 }
 
 async function testUpdate(dbFuncs) {
@@ -135,6 +151,7 @@ async function testUpdate(dbFuncs) {
     name: newOrgName
   });
 
+  assert.equal(updatedOrg.length, 1);
   assert.equal(updatedOrg[0].name, newOrgName);
 
   /// Update configurable item
@@ -148,6 +165,7 @@ async function testUpdate(dbFuncs) {
   };
   let updatedItem = await dbFuncs.update_configurable_item(updatedItemObject);
 
+  assert.equal(updatedItem.length, 1);
   assert.equal(updatedItem[0].name, updatedItemObject.name);
   assert.equal(updatedItem[0].sanctioned, updatedItemObject.sanctioned);
 
@@ -164,8 +182,26 @@ async function testUpdate(dbFuncs) {
   };
   let updatedTool = await dbFuncs.update_tool(updatedToolObject);
 
+  assert.equal(updatedTool.length, 1);
   assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
   assert.equal(updatedTool[0].status, updatedToolObject.status);
+
+  // Update User
+  let userId = dataUtil.getRandIdFromArray(data.user);
+  let user = data.user[userId - 1];
+  user['user_id'] = userId;
+  delete user.id;
+  let updatedUserObject = {...user,
+    ...{
+      role: 'ADMINISTRATOR',
+      status: 'ACTIVE'
+    }
+  };
+  let updatedUser = await dbFuncs.update_user(updatedUserObject);
+
+  assert.equal(updatedUser.length, 1);
+  assert.equal(updatedUser[0].role, updatedUserObject.role);
+  assert.equal(updatedUser[0].status, updatedUserObject.status);
 }
 
 /*
