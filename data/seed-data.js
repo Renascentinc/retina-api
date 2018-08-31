@@ -102,7 +102,11 @@ for (var i = 0; i < numTools; i++) {
     status: dataUtil.getRandFromArray(statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: dataUtil.getRandIndexFromArray(data.organization) + 1,
-    location_id: dataUtil.getRandIdFromArray(data.location)
+    location_id: dataUtil.getRandIdFromArray(data.location),
+    price: null,
+    photo: null,
+    year: null,
+    user_id: null
   })
 }
 

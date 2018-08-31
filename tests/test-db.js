@@ -151,21 +151,21 @@ async function testUpdate(dbFuncs) {
   assert.equal(updatedItem[0].name, updatedItemObject.name);
   assert.equal(updatedItem[0].sanctioned, updatedItemObject.sanctioned);
 
-  /// Update tool
-  // let toolId = dataUtil.getRandIdFromArray(data.tool);
-  // let tool = data.tool[toolId - 1];
-  // tool['tool_id'] = toolId;
-  // delete tool.id;
-  // let updatedToolObject = {...tool,
-  //   ...{
-  //     model_number: dataUtil.createRandomId(),
-  //     status: 'OUT_OF_SERVICE'
-  //   }
-  // };
-  // let updatedTool = await dbFuncs.update_tool(updatedToolObject);
-  //
-  // assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
-  // assert.equal(updatedTool[0].status, updatedToolObject.status);
+  // Update tool
+  let toolId = dataUtil.getRandIdFromArray(data.tool);
+  let tool = data.tool[toolId - 1];
+  tool['tool_id'] = toolId;
+  delete tool.id;
+  let updatedToolObject = {...tool,
+    ...{
+      model_number: dataUtil.createRandomId(),
+      status: 'OUT_OF_SERVICE'
+    }
+  };
+  let updatedTool = await dbFuncs.update_tool(updatedToolObject);
+
+  assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
+  assert.equal(updatedTool[0].status, updatedToolObject.status);
 }
 
 /*

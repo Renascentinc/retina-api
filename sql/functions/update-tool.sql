@@ -38,7 +38,7 @@ AS $$
 
     -- TODO: Create a transaction
 
-    RETURN QUERY SELECT * FROM public.tool WHERE id = new_tool_id;
+    RETURN QUERY SELECT * FROM public.tool WHERE id = updated_tool_id;
   END;
 $$
 LANGUAGE plpgsql;
