@@ -1,5 +1,7 @@
 
-CREATE FUNCTION public.get_all_tool (organization_id id_t) RETURNS SETOF public.tool
+CREATE FUNCTION public.get_all_tool (
+  organization_id id_t
+) RETURNS SETOF public.tool
 AS $$
   BEGIN
     RETURN QUERY

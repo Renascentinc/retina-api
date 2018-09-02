@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION public.update_tool (
-  tool_id           id_t,
+  id                id_t,
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,
@@ -32,13 +32,13 @@ AS $$
         serial_number     = update_tool.serial_number,
         user_id           = update_tool.user_id,
         location_id       = update_tool.location_id
-      WHERE public.tool.id = update_tool.tool_id
+      WHERE public.tool.id = update_tool.id
         AND public.tool.organization_id = update_tool.organization_id
-    RETURNING id INTO updated_tool_id;
+    RETURNING public.tool.id INTO updated_tool_id;
 
     -- TODO: Create a transaction
 
-    RETURN QUERY SELECT * FROM public.tool WHERE id = updated_tool_id;
+    RETURN QUERY SELECT * FROM public.tool WHERE public.tool.id = updated_tool_id;
   END;
 $$
 LANGUAGE plpgsql;

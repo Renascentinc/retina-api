@@ -1,5 +1,7 @@
 
-CREATE FUNCTION public.get_all_user(organization_id id_t) RETURNS SETOF public.user
+CREATE FUNCTION public.get_all_user(
+  organization_id id_t
+) RETURNS SETOF public.user
 AS $$
   BEGIN
     RETURN QUERY

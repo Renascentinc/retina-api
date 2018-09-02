@@ -147,7 +147,7 @@ async function testUpdate(dbFuncs) {
   /// Update organization
   let newOrgName = "New Organization";
   let updatedOrg = await dbFuncs.update_organization({
-    organization_id: dataUtil.getRandIdFromArray(data.organization),
+    id: dataUtil.getRandIdFromArray(data.organization),
     name: newOrgName
   });
 
@@ -158,7 +158,7 @@ async function testUpdate(dbFuncs) {
   let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
   let item = data.configurable_item[itemId - 1];
   let updatedItemObject = {
-    configurable_item_id: itemId,
+    id: itemId,
     name: 'New Item Name',
     sanctioned: true,
     organization_id: item.organization_id
@@ -172,8 +172,7 @@ async function testUpdate(dbFuncs) {
   // Update tool
   let toolId = dataUtil.getRandIdFromArray(data.tool);
   let tool = data.tool[toolId - 1];
-  tool['tool_id'] = toolId;
-  delete tool.id;
+  tool['id'] = toolId;
   let updatedToolObject = {...tool,
     ...{
       model_number: dataUtil.createRandomId(),
@@ -189,8 +188,7 @@ async function testUpdate(dbFuncs) {
   // Update User
   let userId = dataUtil.getRandIdFromArray(data.user);
   let user = data.user[userId - 1];
-  user['user_id'] = userId;
-  delete user.id;
+  user['id'] = userId;
   let updatedUserObject = {...user,
     ...{
       role: 'ADMINISTRATOR',
@@ -202,6 +200,22 @@ async function testUpdate(dbFuncs) {
   assert.equal(updatedUser.length, 1);
   assert.equal(updatedUser[0].role, updatedUserObject.role);
   assert.equal(updatedUser[0].status, updatedUserObject.status);
+
+  // Update location
+  let locationId = dataUtil.getRandIdFromArray(data.location);
+  let location = data.location[locationId - 1];
+  location['id'] = locationId;
+  let updatedLocationObject = {...location,
+    ...{
+      state: 'NY',
+      name: 'New Location'
+    }
+  };
+  let updatedLocation = await dbFuncs.update_location(updatedLocationObject);
+
+  assert.equal(updatedLocation.length, 1);
+  assert.equal(updatedLocation[0].state, updatedLocationObject.state);
+  assert.equal(updatedLocation[0].name, updatedLocationObject.name);
 }
 
 /*

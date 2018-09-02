@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION public.update_configurable_item(
-	configurable_item_id 	id_t,
+	id 	                  id_t,
 	name 									str_t,
 	sanctioned 						boolean,
   organization_id 			id_t
@@ -12,7 +12,7 @@ AS $$
     	SET
     		name 			 = update_configurable_item.name,
     		sanctioned = update_configurable_item.sanctioned
-    	WHERE public.configurable_item.id = update_configurable_item.configurable_item_id
+    	WHERE public.configurable_item.id = update_configurable_item.id
         AND public.configurable_item.organization_id = update_configurable_item.organization_id
     RETURNING *;
   END;
