@@ -2,7 +2,7 @@
 
 module.exports = {
   Query: {
-     getAllTool: async (_1, _2, db) => {
+     getAllTool: async (_0, _1, db) => {
        let result = await db.get_all_tool({organization_id: 1});
        return result;
      },
