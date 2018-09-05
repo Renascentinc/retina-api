@@ -9,8 +9,10 @@
   "dependencies": {
     "apollo-server": "^2.0.0",
     "apollo-server-express": "^2.0.4",
+    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
     "merge-graphql-schemas": "^1.5.3",
     "minimist": "^1.2.0",
     "pg": "^7.4.3",

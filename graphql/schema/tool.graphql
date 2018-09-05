@@ -47,8 +47,8 @@ input UpdatedTool {
 }
 
 type Query {
-  getAllTool: [Tool]!
-  getTool(id: ID): Tool!
+  getAllTool: [Tool]
+  getTool(tool_id: ID): Tool
 }
 
 type Mutation {
