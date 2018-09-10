@@ -41,6 +41,29 @@ let roles = [
   'ADMINISTRATOR'
 ]
 
+let user_names = [
+  {
+    first_name: 'Bob',
+    last_name: 'Thompson'
+  },
+  {
+    first_name: 'Bill',
+    last_name: 'Hathaway'
+  },
+  {
+    first_name: 'Fred',
+    last_name: 'Richardson'
+  },
+  {
+    first_name: 'Sam',
+    last_name: 'Smith'
+  },
+  {
+    first_name: 'Rick',
+    last_name: 'Dickson'
+  }
+];
+
 let data = {};
 
 data.organization = [
@@ -119,11 +142,14 @@ for (var i = 0; i < numTools; i++) {
   })
 }
 
-data.user = [];
-let numUsers = 20;
-
-for (var i = 0; i < numUsers; i++) {
+data.user = []
+for (let user_name of user_names) {
   data.user.push({
+    first_name: user_name.first_name,
+    last_name: user_name.last_name,
+    email: `${user_name.first_name.toLowerCase()}.${user_name.last_name.toLowerCase()}@somecompany.com`,
+    phone_number: dataUtil.getRandPhoneNumber(),
+    password: dataUtil.getRandPassword(),
     role: dataUtil.getRandFromArray(roles),
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: dataUtil.getRandIdFromArray(data.organization)

@@ -1,5 +1,7 @@
 const uuid = require('uuid');
-var randomDate = require('random-datetime');
+const randomDate = require('random-datetime');
+const faker = require('faker');
+
 
 class Util {
   getRandIndexFromArray(array) {
@@ -54,6 +56,14 @@ class Util {
 
  createRandomDate() {
    return randomDate();
+ }
+
+ getRandPhoneNumber() {
+   return faker.phone.phoneNumber('(###) ###-####');
+ }
+
+ getRandPassword() {
+   return faker.internet.password();
  }
 }
 
