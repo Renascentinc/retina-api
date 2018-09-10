@@ -1,0 +1,7 @@
+DO $$
+
+BEGIN
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+END $$
