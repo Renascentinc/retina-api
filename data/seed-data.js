@@ -156,11 +156,11 @@ for (let user_name of user_names) {
   });
 }
 
-data.token = [];
-let numTokens = 5;
+data.session = [];
+let numSessions = 5;
 
-for (var i = 0; i < numTokens; i++) {
-  data.token.push({
+for (var i = 0; i < numSessions; i++) {
+  data.session.push({
     token: dataUtil.createRandomId(),
     user_id: dataUtil.getRandIdFromArray(data.user),
     organization_id: dataUtil.getRandIdFromArray(data.organization)

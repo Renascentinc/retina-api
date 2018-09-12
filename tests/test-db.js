@@ -56,12 +56,12 @@ async function testCreate(dbFuncs) {
   }
   assert.equal(newUsers.length, data.user.length);
 
-  /// Create tokens
-  let newTokens = [];
-  for (let token of data.token) {
-    newTokens.push(await dbFuncs.create_token(token));
+  /// Create sessions
+  let newSessions = [];
+  for (let session of data.session) {
+    newSessions.push(await dbFuncs.create_session(session));
   }
-  assert.equal(newTokens.length, data.token.length);
+  assert.equal(newSessions.length, data.session.length);
 }
 
 async function testGet(dbFuncs) {
@@ -234,33 +234,32 @@ async function testDelete(dbFuncs) {
   assert.equal(deletedItem.length, 1);
   assert.equal(newItem.id, deletedItem[0].id);
 
-  /// Delete token
-  let newToken = dataUtil.getRandFromArray(data.token);
-  newToken['token'] = dataUtil.createRandomId();
+  /// Delete session
+  let newSession = dataUtil.getRandFromArray(data.session);
+  newSession['token'] = dataUtil.createRandomId();
 
-  newToken = await dbFuncs.create_token(newToken);
-  newToken = newToken[0];
-  let deletedToken = await dbFuncs.delete_token(newToken);
+  newSession = await dbFuncs.create_session(newSession);
+  newSession = newSession[0];
+  let deletedSession = await dbFuncs.delete_session(newSession);
 
-  assert.equal(deletedToken.length, 1);
-  assert.equal(newToken.token, deletedToken[0].token);
+  assert.equal(deletedSession.length, 1);
+  assert.equal(newSession.token, deletedSession[0].token);
 }
 
 async function testOtherFunctions(dbFuncs) {
-  /// Token Exists
-  let tokenIndex = dataUtil.getRandIndexFromArray(data.token);
-  let token = data.token[tokenIndex];
-  let tokenExists = await dbFuncs.token_exists(token);
-  assert.equal(tokenExists.length, 1);
-  assert.ok(tokenExists[0]);
-  assert.ok(tokenExists[0].token_exists);
+  /// Session token Exists
+  let sessionIndex = dataUtil.getRandIndexFromArray(data.session);
+  let session = data.session[sessionIndex];
+  let sessionExists = await dbFuncs.session_token_exists({token: session.token});
+  assert.equal(sessionExists.length, 1);
+  assert.ok(sessionExists[0]);
+  assert.ok(sessionExists[0].session_token_exists);
 
   /// Token does not Exist
-  token['user_id'] = 100000;
-  tokenExists = await dbFuncs.token_exists(token);
-  assert.equal(tokenExists.length, 1);
-  assert.ok(tokenExists[0]);
-  assert.ok(!tokenExists[0].token_exists);
+  sessionExists = await dbFuncs.session_token_exists({token: dataUtil.createRandomId()});
+  assert.ok(sessionExists[0]);
+  assert.ok(!sessionExists[0].session_token_exists);
+
 }
 
 (async () => {
