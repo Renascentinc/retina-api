@@ -15,7 +15,6 @@
     "merge-graphql-schemas": "^1.5.3",
     "minimist": "^1.2.0",
     "pg": "^7.4.3",
-    "random-datetime": "^1.0.1",
     "uuid": "^3.3.2",
     "winston": "^3.0.0",
     "yesql": "^3.2.1"
