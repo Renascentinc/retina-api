@@ -32,8 +32,8 @@ appConfig['db.password'] = process.env.DB_PASSWORD;
 appConfig['db.database'] = process.env.DB_NAME;
 
 if (appConfig['environment'] == 'local') {
-  appConfig['db.refreshSchema'] = true;
-  appConfig['db.seed'] = true;
+  // appConfig['db.refreshSchema'] = true;
+  // appConfig['db.seed'] = true;
 }
 
 if (appConfig['environment'] == 'test') {

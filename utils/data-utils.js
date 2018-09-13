@@ -54,6 +54,10 @@ class Util {
    return uuid().replace(/-/g,'').substr(0,15);
  }
 
+ createRandomUuid() {
+   return uuid();
+ }
+
  createRandomDate() {
    return randomDate();
  }

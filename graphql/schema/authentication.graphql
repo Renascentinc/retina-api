@@ -1,11 +1,10 @@
 
-type Session {
+type LoginResponse {
   token: String!
-  user_id: ID!
-  organization_id: ID!
+  user: User!
 }
 
 type Mutation {
-  login(organization_name: String!, username: String!, password: String!): Session
+  login(organization_name: String!, email: String!, password: String!): LoginResponse
   logout(token: String!): Boolean
 }

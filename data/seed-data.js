@@ -157,13 +157,11 @@ for (let user_name of user_names) {
 }
 
 data.session = [];
-let numSessions = 5;
 
-for (var i = 0; i < numSessions; i++) {
+for (let i = 0; i < data.user.length; i++) {
   data.session.push({
-    token: dataUtil.createRandomId(),
-    user_id: dataUtil.getRandIdFromArray(data.user),
-    organization_id: dataUtil.getRandIdFromArray(data.organization)
+    user_id: i + 1,
+    organization_id: data.user[i].organization_id
   });
 }
 

@@ -236,11 +236,12 @@ async function testDelete(dbFuncs) {
 
   /// Delete session
   let newSession = dataUtil.getRandFromArray(data.session);
-  newSession['token'] = dataUtil.createRandomId();
-
   newSession = await dbFuncs.create_session(newSession);
   newSession = newSession[0];
-  let deletedSession = await dbFuncs.delete_session(newSession);
+
+  let deletedSession = await dbFuncs.delete_session({
+    token: newSession.token
+  });
 
   assert.equal(deletedSession.length, 1);
   assert.equal(newSession.token, deletedSession[0].token);
@@ -248,18 +249,50 @@ async function testDelete(dbFuncs) {
 
 async function testOtherFunctions(dbFuncs) {
   /// Session token Exists
-  let sessionIndex = dataUtil.getRandIndexFromArray(data.session);
-  let session = data.session[sessionIndex];
-  let sessionExists = await dbFuncs.session_token_exists({token: session.token});
-  assert.equal(sessionExists.length, 1);
-  assert.ok(sessionExists[0]);
-  assert.ok(sessionExists[0].session_token_exists);
+  let newSession = dataUtil.getRandFromArray(data.session);
+  newSession = await dbFuncs.create_session(newSession);
+  newSession = newSession[0];
+
+  let session = await dbFuncs.get_session_by_token({token: newSession.token});
+  assert.equal(session.length, 1);
+  assert.equal(session[0].user_id, newSession.user_id);
 
   /// Token does not Exist
-  sessionExists = await dbFuncs.session_token_exists({token: dataUtil.createRandomId()});
-  assert.ok(sessionExists[0]);
-  assert.ok(!sessionExists[0].session_token_exists);
+  session = await dbFuncs.get_session_by_token({token: dataUtil.createRandomUuid()});
+  assert.equal(session.length, 0);
 
+  /// Get session by user id
+  let existingSession = await dbFuncs.get_session_by_user_id({
+    user_id: dataUtil.getRandIdFromArray(data.user)
+  });
+
+  assert.ok(existingSession.length >= 1);
+
+  // Test get organization by name
+  let newOrganization = await dbFuncs.create_organization(
+  {
+    name: 'New Organization With Name'
+  });
+
+  newOrganization = newOrganization[0];
+
+  let organization = await dbFuncs.get_organization_by_name({
+    organization_name: newOrganization.name
+  });
+  assert.equal(organization.length, 1);
+  assert.equal(organization[0].id, newOrganization.id);
+
+  /// Get user by credentials
+  let randomUserId = dataUtil.getRandIdFromArray(data.user);
+  let randomUser = data.user[randomUserId - 1];
+  let validUser = await dbFuncs.get_user_by_credentials({
+    email: randomUser.email,
+    password: randomUser.password,
+    organization_id: randomUser.organization_id
+  });
+
+  assert.equal(validUser.length, 1);
+  assert.equal(validUser[0].id, randomUserId);
 }
 
 (async () => {
