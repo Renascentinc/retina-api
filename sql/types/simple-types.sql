@@ -17,6 +17,10 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'str_t') THEN
   CREATE DOMAIN str_t AS character varying(80);
 END IF;
 
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'short_str_t') THEN
+  CREATE DOMAIN short_str_t AS character varying(20);
+END IF;
+
 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'id_t') THEN
   CREATE DOMAIN id_t AS integer;
 END IF;

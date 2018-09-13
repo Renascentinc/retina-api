@@ -115,8 +115,8 @@ class DbClient {
       let result = await this.client.query(namedQuery);
       return result.rows;
     } catch (e) {
-      logger.error(`Function '${functionName}' failed to execute with parameters \n[${util.inspect(params)}] \n${e}`);
-      throw new DbClientError(`Function '${functionName}' with parameters \n[${util.inspect(params)}] failed to execute`);
+      logger.error(`Function '${functionName}' failed to execute with parameters \n[${util.inspect(params)}] \nCause: ${e}`);
+      throw new DbClientError(`Function '${functionName}' with parameters \n[${util.inspect(params)}] failed to execute \nCause: ${e}`);
     }
   }
 
