@@ -12,7 +12,7 @@ async function testDb() {
   assert.ok(dbFuncs);
   assert.notEqual(dbFuncs.length, 0);
 
-  await testCreate(dbFuncs);
+  // await testCreate(dbFuncs);
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
   await testDelete(dbFuncs);
