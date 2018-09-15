@@ -1,0 +1,57 @@
+
+type Tool {
+  id: ID!
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
+}
+
+# TODO: Create directive for New Tool to have at least a user or location id
+input NewTool {
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
+}
+
+input UpdatedTool {
+  type_id: ID!
+	brand_id: ID!
+	model_number: String!
+	status: ToolStatus!
+	serial_number: String!
+	date_purchased: String # TODO: Make this a user defined type with directives
+	purchased_from_id: ID
+	price: Int
+	photo: String
+	year: Int
+	user_id: ID
+	location_id: ID
+}
+
+type Query {
+  getAllTool: [Tool]!
+  getTool(tool_id: ID): Tool
+}
+
+type Mutation {
+  createTool(newTool: NewTool): Tool
+  updateTool(tool: UpdatedTool): Tool
+}

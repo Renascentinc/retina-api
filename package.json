@@ -4,14 +4,18 @@
   "private": true,
   "scripts": {
     "start": "node main",
-    "test": "mocha --recursive tests"
+    "test": "ENVIRONMENT=test mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
+    "apollo-server-express": "^2.0.4",
     "chalk": "^2.4.1",
+    "faker": "^4.1.0",
     "graphql": "^0.13.2",
+    "merge-graphql-schemas": "^1.5.3",
     "minimist": "^1.2.0",
     "pg": "^7.4.3",
+    "uuid": "^3.3.2",
     "winston": "^3.0.0",
     "yesql": "^3.2.1"
   },

@@ -1,0 +1,6 @@
+
+enum ConfigurableItemType {
+    BRAND
+    PURCHASED_FROM
+    TYPE
+}

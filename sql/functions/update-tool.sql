@@ -1,32 +1,44 @@
-CREATE FUNCTION public.update_tool(
-  id              int,
-  class           char varying(80)  = NULL,
-  type            char varying(80)  = NULL,
-  brand           char varying(80)  = NULL,
-  date_purchased  date              = NULL,
-  purchased_from  char varying(80)  = NULL,
-  price           integer           = NULL,
-  model_number    char varying(80)  = NULL,
-  status          char varying(80)  = NULL,
-  photo           char varying(200) = NULL
-)
- RETURNS SETOF public.tool
+CREATE OR REPLACE FUNCTION public.update_tool (
+  id                id_t,
+	type_id						id_t,
+	brand_id					id_t,
+	model_number    	str_t,
+	status          	tool_status_type,
+	serial_number			str_t,
+	organization_id		id_t,
+	date_purchased		date,
+	purchased_from_id	id_t,
+	price           	integer,
+	photo							long_str_t,
+	"year"						integer,
+	user_id						id_t,
+	location_id				id_t
+) RETURNS SETOF public.tool
 AS $$
+  DECLARE
+  	updated_tool_id id_t;
   BEGIN
-    RETURN QUERY
     UPDATE public.tool
       SET
-        class = update_tool.class,
-        type = update_tool.type,
-        brand = update_tool.brand,
-        date_purchased = update_tool.date_purchased,
-        purchased_from = update_tool.purchased_from,
-        price = update_tool.price,
-        model_number = update_tool.model_number,
-        status = update_tool.status,
-        photo = update_tool.photo
+        type_id           = update_tool.type_id,
+        brand_id          = update_tool.brand_id,
+        date_purchased    = update_tool.date_purchased,
+        purchased_from_id = update_tool.purchased_from_id,
+        price             = update_tool.price,
+        model_number      = update_tool.model_number,
+        status            = update_tool.status,
+        photo             = update_tool.photo,
+        "year"            = update_tool.year,
+        serial_number     = update_tool.serial_number,
+        user_id           = update_tool.user_id,
+        location_id       = update_tool.location_id
       WHERE public.tool.id = update_tool.id
-    RETURNING *;
+        AND public.tool.organization_id = update_tool.organization_id
+    RETURNING public.tool.id INTO updated_tool_id;
+
+    -- TODO: Create a transaction
+
+    RETURN QUERY SELECT * FROM public.tool WHERE public.tool.id = updated_tool_id;
   END;
 $$
 LANGUAGE plpgsql;

@@ -20,4 +20,11 @@ class DbError extends Error {
   }
 }
 
-module.exports = { ArgumentError, DbClientError, DbError }
+class GraphQlError extends Error {
+  constructor(...args) {
+    super(args);
+    this.name = 'GraphQlError';
+  }
+}
+
+module.exports = { ArgumentError, DbClientError, DbError, GraphQlError }

@@ -3,27 +3,29 @@ const util = require('util');
 
 let appConfig = {
   'db.port': 5432,
+  'db.extensionDir': `${process.env.PWD}/sql/extensions`,
   'db.schemaDir': `${process.env.PWD}/sql/schema`,
   'db.constraintDir': `${process.env.PWD}/sql/constraints`,
   'db.functionDir': `${process.env.PWD}/sql/functions`,
-  'db.enumDir': `${process.env.PWD}/sql/enums`,
+  'db.typeDir': `${process.env.PWD}/sql/types`,
   'db.refreshSchema': false,
   'db.seed': false,
 
   'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
-  'server.graphql.typeDefDir': `${process.env.PWD}/graphql/type_defs`,
+  'server.graphql.schemaDir': `${process.env.PWD}/graphql/schema`,
+  'server.graphql.typeDir': `${process.env.PWD}/graphql/types`,
   'server.port': process.env.PORT || 4000
 }
 
-if (process.env.ENVIRONMENT == undefined) {
-  process.env['ENVIRONMENT'] = 'local';
+appConfig['environment'] = process.env.ENVIRONMENT || 'local';
+
+if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
   process.env['DB_USER'] = process.env.USER;
   process.env['DB_HOST'] = 'localhost';
   process.env['DB_PASSWORD'] = '';
   process.env['DB_NAME'] = 'local_db';
 }
 
-appConfig['environment'] = process.env.ENVIRONMENT;
 appConfig['db.user'] = process.env.DB_USER;
 appConfig['db.host'] = process.env.DB_HOST;
 appConfig['db.password'] = process.env.DB_PASSWORD;
@@ -32,6 +34,10 @@ appConfig['db.database'] = process.env.DB_NAME;
 if (appConfig['environment'] == 'local') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
+}
+
+if (appConfig['environment'] == 'test') {
+  appConfig['db.refreshSchema'] = true;
 }
 
 if (appConfig['environment'] == 'develop') {

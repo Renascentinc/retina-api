@@ -63,8 +63,8 @@ class DbClient {
     try {
       return await this.client.query(queryVal);
     } catch (e) {
-      logger.error(`Error executing query '${queryVal}' \n${e}`);
-      throw new DbError(`Error executing query '${queryVal}'`)
+      logger.error(`Error executing query \n${e}`);
+      throw new DbError(`Error executing query: \n${e}`)
     }
   }
 
@@ -105,7 +105,7 @@ class DbClient {
 
     let namedParams = [];
     for (let key in params) {
-      namedParams.push(`${key} => :${[key]}`);
+      namedParams.push(`${key} := :${[key]}`);
     }
     namedParams = namedParams.join(', ');
 
@@ -115,8 +115,8 @@ class DbClient {
       let result = await this.client.query(namedQuery);
       return result.rows;
     } catch (e) {
-      logger.error(`Function '${functionName}' with parameters [${namedParams}] failed to execute \n${e}`);
-      throw new DbClientError(`Function '${functionName}' with parameters [${namedParams}] failed to execute`);
+      logger.error(`Function '${functionName}' failed to execute with parameters \n[${util.inspect(params)}] \nCause: ${e}`);
+      throw new DbClientError(`Function '${functionName}' with parameters \n[${util.inspect(params)}] failed to execute \nCause: ${e}`);
     }
   }
 
@@ -145,17 +145,8 @@ class DbClient {
 }
 
 /**
- * Employ singleton pattern. The only accessor to an instance of DbClient
- * is through the function getDbClientInstance
+ * Employ singleton pattern. The instance of DbClient is dbClient;
  */
-let dbClientInstance;
+let dbClient = new DbClient();
 
-function getDbClientInstance() {
-  if (!dbClientInstance) {
-    dbClientInstance = new DbClient();
-  }
-
-  return dbClientInstance;
-}
-
-module.exports = { getDbClientInstance };
+module.exports = { dbClient };
