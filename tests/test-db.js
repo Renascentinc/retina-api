@@ -354,9 +354,13 @@ describe('Database creation and usage', async function() {
   describe('session_token_exists()', () => {
 
     it('successfully verifies that a token exists', async () => {
-      let sessionIndex = dataUtil.getRandIndexFromArray(data.session);
-      let session = data.session[sessionIndex];
-      let sessionExists = await dbFuncs.session_token_exists({token: session.token});
+      let newSession = await dbFuncs.create_session({
+        token: dataUtil.createRandomId(),
+        user_id: dataUtil.getRandIdFromArray(data.user),
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
+
+      let sessionExists = await dbFuncs.session_token_exists({token: newSession[0].token});
       assert.equal(sessionExists.length, 1);
       assert.ok(sessionExists[0]);
       assert.ok(sessionExists[0].session_token_exists);
