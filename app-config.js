@@ -39,6 +39,11 @@ if (appConfig['environment'] == 'develop') {
   appConfig['db.seed'] = true;
 }
 
+if (appConfig['environment'] == 'release') {
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
+}
+
 logger.info(`App Config: \n` + util.inspect(appConfig, false));
 
 module.exports = appConfig;
