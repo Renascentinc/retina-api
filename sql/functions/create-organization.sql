@@ -6,9 +6,9 @@ AS $$
   BEGIN
     RETURN QUERY
     	INSERT INTO public.organization (
-    		name
+    		ff
     	) VALUES (
-    		create_organization.dd
+    		create_organization.xx
     	) RETURNING *;
   END;
 $$

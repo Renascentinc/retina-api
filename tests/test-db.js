@@ -26,7 +26,7 @@ async function testCreate(dbFuncs) {
   let newOrgs = []
   for (let org of data.organization) {
     logger.info("Running create org test");
-    newOrgs.push(await dbFuncs.create_organization({dd:org.name}));
+    newOrgs.push(await dbFuncs.create_organization({yy:org.name}));
   }
   assert.equal(newOrgs.length, data.organization.length);
 
