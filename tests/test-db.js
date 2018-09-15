@@ -12,7 +12,7 @@ async function testDb() {
   assert.ok(dbFuncs);
   assert.notEqual(dbFuncs.length, 0);
 
-  // await testCreate(dbFuncs);
+  await testCreate(dbFuncs);
   await testGet(dbFuncs);
   await testUpdate(dbFuncs);
   await testDelete(dbFuncs);
@@ -25,7 +25,8 @@ async function testCreate(dbFuncs) {
   // Create organization
   let newOrgs = []
   for (let org of data.organization) {
-    newOrgs.push(await dbFuncs.create_organization(org));
+    logger.info("Running create org test");
+    newOrgs.push(await dbFuncs.create_organization({dd:org.name}));
   }
   assert.equal(newOrgs.length, data.organization.length);
 
@@ -271,8 +272,8 @@ async function testOtherFunctions(dbFuncs) {
   try {
     await testDb()
   } catch (e) {
-    console.log(`Error while running test`);
-    console.log(e);
+    logger.error(`Error while running test`);
+    logger.error(e);
     process.exit(1)
   }
   process.exit(0)
