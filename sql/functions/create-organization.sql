@@ -6,7 +6,7 @@ AS $$
   BEGIN
     RETURN QUERY
     	INSERT INTO public.organization (
-    		name
+    		public.name
     	) VALUES (
     		create_organization.name
     	) RETURNING *;
