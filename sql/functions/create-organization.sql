@@ -1,5 +1,5 @@
 CREATE FUNCTION public.create_organization (
-	"name" long_str_t
+	name long_str_t
 )
 RETURNS SETOF public.organization
 AS $$

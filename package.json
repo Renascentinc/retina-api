@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node main",
-    "test": "mocha --recursive tests"
+    "test": "ENVIRONMENT=test mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",

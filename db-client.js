@@ -105,7 +105,7 @@ class DbClient {
 
     let namedParams = [];
     for (let key in params) {
-      namedParams.push(`${key} => :${[key]}`);
+      namedParams.push(`${key} := :${[key]}`);
     }
     namedParams = namedParams.join(', ');
 
@@ -145,17 +145,8 @@ class DbClient {
 }
 
 /**
- * Employ singleton pattern. The only accessor to an instance of DbClient
- * is through the function getDbClientInstance
+ * Employ singleton pattern. The instance of DbClient is dbClient;
  */
-let dbClientInstance;
+let dbClient = new DbClient();
 
-function getDbClientInstance() {
-  if (!dbClientInstance) {
-    dbClientInstance = new DbClient();
-  }
-
-  return dbClientInstance;
-}
-
-module.exports = { getDbClientInstance };
+module.exports = { dbClient };

@@ -47,7 +47,7 @@ input UpdatedTool {
 }
 
 type Query {
-  getAllTool: [Tool]
+  getAllTool: [Tool]!
   getTool(tool_id: ID): Tool
 }
 

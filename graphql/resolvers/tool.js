@@ -9,7 +9,7 @@ module.exports = {
 
      getTool: async (_, { tool_id }, db) => {
        let tool = await db.get_tool({
-         tool_id: tool_id,
+         tool_id,
          organization_id: 1
        });
        return tool[0];
