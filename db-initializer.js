@@ -1,7 +1,7 @@
-const { getDbClientInstance } = require('./db-client');
+const { dbClient } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
-const { createDb, loadSchema, seedDb, loadFunctions } = require('./utils/db-utils');
+const { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions } = require('./utils/db-utils');
 
 const logger = require('./logger');
 
@@ -13,9 +13,7 @@ async function initializeDb() {
     logger.error('Could not create database');
     throw e;
   }
-
-  let dbClient = getDbClientInstance();
-
+  
   try {
     await dbClient.connect();
   } catch (e) {
@@ -24,6 +22,10 @@ async function initializeDb() {
   }
 
   try {
+    await dropExtensions(dbClient);
+
+    await dropFunctions(dbClient);
+
     await loadSchema(dbClient);
 
     await loadFunctions(dbClient);

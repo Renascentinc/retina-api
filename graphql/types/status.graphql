@@ -1,0 +1,6 @@
+enum ToolStatus {
+  AVAILABLE
+  IN_USE
+  MAINTENENCE
+  OUT_OF_SERVICE
+}

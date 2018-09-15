@@ -1,9 +1,9 @@
 const appConfig = require('../app-config');
-const { getDropFunctionsQueries } = require('../sql/raw-queries');
+const { getDropFunctionsQueries, getDropExtensionsQueries } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
-const { devData } = require('../data/dev-data');
+const { data } = require('../data/seed-data');
 
 //TODO: Instead of joining all the sql CREATE queries together with ';'
 //      run through each query with the try/catch in the for-loop. This
@@ -11,7 +11,7 @@ const { devData } = require('../data/dev-data');
 
 let postgresDbName = 'postgres';
 
-let dropTablesQuery = `DROP SCHEMA public CASCADE;
+let dropSchemaQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
 
@@ -53,8 +53,11 @@ async function loadSchema(dbClient) {
       await dropSchema(dbClient);
     }
 
-    logger.info('Creating Enums');
-    await createEnums(dbClient);
+    logger.info('Creating Extensions');
+    await createExtensions(dbClient);
+
+    logger.info('Creating Types');
+    await createTypes(dbClient);
 
     logger.info('Creating Schema');
     await createSchema(dbClient);
@@ -69,26 +72,36 @@ async function loadSchema(dbClient) {
 }
 
 async function dropSchema(dbClient) {
-  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop') {
+  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop' && appConfig['environment'] != 'test') {
     logger.warn('Trying to drop schema in a dis-allowed environment');
     return;
   }
 
   try {
-    await dbClient.query(dropTablesQuery);
+    await dbClient.query(dropSchemaQuery);
   } catch (e) {
     logger.error(`Unable to drop tables from databse \n${e}`);
     throw new Error('Unable to drop tables from databse');
   }
 }
 
-async function createEnums(dbClient) {
+async function createExtensions(dbClient) {
   try {
-    let schemas = fileUtils.readFilesFromDir(appConfig['db.enumDir']);
-    await dbClient.query(schemas.join(';'));
+    let extensions = fileUtils.readFilesFromDir(appConfig['db.extensionDir']);
+    await dbClient.query(extensions.join(';'));
   } catch (e) {
-    logger.error(`Unable to load enums into database \n${e}`);
-    throw new Error('Unable to load enums into database');
+    logger.error(`Unable to load extensions into database \n${e}`);
+    throw new Error('Unable to load extensions into database');
+  }
+}
+
+async function createTypes(dbClient) {
+  try {
+    let types = fileUtils.readFilesFromDir(appConfig['db.typeDir']);
+    await dbClient.query(types.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load types into database \n${e}`);
+    throw new Error('Unable to load types into database');
   }
 }
 
@@ -104,10 +117,10 @@ async function createSchema(dbClient) {
 
 async function applyConstraints(dbClient) {
   try {
-    let schemas = fileUtils.readFilesFromDir(appConfig['db.constraintDir']);
-    await dbClient.query(schemas.join(';'));
+    let constraints = fileUtils.readFilesFromDir(appConfig['db.constraintDir']);
+    await dbClient.query(constraints.join(';'));
   } catch (e) {
-    logger.error(`Unable to apply constraints to database '${dbClient.database}' \n${e}`);
+    logger.error(`Unable to apply constraints to database \n${e}`);
     throw new Error('Unable to apply constraints to database');
   }
 }
@@ -116,22 +129,33 @@ async function loadFunctions(dbClient) {
   logger.info('Loading Functions');
 
   try {
-    await dropFunctions(dbClient)
-  } catch (e) {
-    logger.error(`Unable to drop functions from '${dbClient.database}'`);
-    throw e;
-  }
-
-  try {
     let functions = fileUtils.readFilesFromDir(appConfig['db.functionDir']);
     await dbClient.query(functions.join(';'));
   } catch (e) {
-    logger.error(`Unable to load functions into database '${dbClient.database}'`);
+    logger.error(`Unable to load functions into database`);
+    throw e;
+  }
+}
+
+async function dropExtensions(dbClient) {
+  logger.info('Dropping Extensions');
+
+  try {
+    let dropExtensionsQueries = await dbClient.query({
+      text: getDropExtensionsQueries,
+      rowMode: 'array'
+    });
+
+    dropExtensionsQueries = dropExtensionsQueries.rows.map(row => row[0]).join('');
+    await dbClient.query(dropExtensionsQueries);
+  } catch (e) {
+    logger.error(`Unable to drop extensions from database`);
     throw e;
   }
 }
 
 async function dropFunctions(dbClient) {
+  logger.info('Dropping Functions');
   try {
     let dropFunctionsQueries = await dbClient.query({
       text: getDropFunctionsQueries,
@@ -141,7 +165,7 @@ async function dropFunctions(dbClient) {
     dropFunctionsQueries = dropFunctionsQueries.rows.map(row => row[0]).join('');
     await dbClient.query(dropFunctionsQueries);
   } catch (e) {
-    logger.error(`Unable to drop functions from database '${dbClient.database}'`);
+    logger.error(`Unable to drop functions from database`);
     throw e;
   }
 }
@@ -150,8 +174,8 @@ async function seedDb(dbClient) {
   logger.info('Seeding Database');
 
   try {
-    for (let tableName in devData) {
-      let tableRows = devData[tableName];
+    for (let tableName in data) {
+      let tableRows = data[tableName];
       for (let rowIndex in tableRows) {
         let keys = Object.keys(tableRows[rowIndex]);
         let values = Object.values(tableRows[rowIndex]);
@@ -172,4 +196,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb, loadSchema, seedDb, loadFunctions }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions }

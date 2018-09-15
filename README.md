@@ -2,6 +2,10 @@
 
 This is an api that the repo ```Renascentinc/retina-app``` will call.
 
+# GraphQL Development
+
+GraphQl cheat sheet can be found [here](https://github.com/sogko/graphql-schema-language-cheat-sheet)
+
 ## To run the app locally
 
 ### On a Mac

@@ -6,5 +6,10 @@ module.exports = {
 
   getDbFunctionNames:
     `SELECT DISTINCT routine_name FROM information_schema.routines
-     WHERE routine_type='FUNCTION' AND specific_schema='public'`
+     WHERE routine_type='FUNCTION' AND specific_schema='public'`,
+
+  getDropExtensionsQueries:
+    `SELECT 'DROP EXTENSION IF EXISTS "' || extensions.extname || '";'
+    FROM pg_extension as extensions
+    WHERE extensions.extname != 'plpgsql'`
 }
