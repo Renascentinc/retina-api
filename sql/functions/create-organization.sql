@@ -1,14 +1,14 @@
 CREATE FUNCTION public.create_organization (
-	"name" long_str_t
+	"nadme" long_str_t
 )
 RETURNS SETOF public.organization
 AS $$
   BEGIN
     RETURN QUERY
     	INSERT INTO public.organization (
-    		public.name
+    		nadme
     	) VALUES (
-    		create_organization.name
+    		create_organization.nadme
     	) RETURNING *;
   END;
 $$
