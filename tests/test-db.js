@@ -14,7 +14,6 @@ describe('Database creation and usage', async function() {
       dbFuncs = await initializeDb();
       assert.ok(dbFuncs);
       assert.ok(Object.keys(dbFuncs).length > 0);
-      assert.ok(1 == 2);
     });
 
   });
