@@ -8,7 +8,7 @@ const dataUtil = require('../utils/data-utils');
 describe('Database creation and usage', async function() {
   let dbFuncs;
 
-  describe('initializeDb()', () => {
+  describe('db-initializer.initializeDb()', () => {
 
     it('successfully creates database and functions', async () => {
       dbFuncs = await initializeDb();
@@ -339,11 +339,12 @@ describe('Database creation and usage', async function() {
 
     it('successfully deletes a session', async () => {
       let newSession = dataUtil.getRandFromArray(data.session);
-      newSession['token'] = dataUtil.createRandomId();
-
       newSession = await dbFuncs.create_session(newSession);
       newSession = newSession[0];
-      let deletedSession = await dbFuncs.delete_session(newSession);
+
+      let deletedSession = await dbFuncs.delete_session({
+        token: newSession.token
+      });
 
       assert.equal(deletedSession.length, 1);
       assert.equal(newSession.token, deletedSession[0].token);
@@ -351,31 +352,75 @@ describe('Database creation and usage', async function() {
 
   });
 
-  describe('session_token_exists()', () => {
+  describe('get_session_by_token()', () => {
 
-    it('successfully verifies that a token exists', async () => {
-      let newSession = await dbFuncs.create_session({
-        token: dataUtil.createRandomId(),
-        user_id: dataUtil.getRandIdFromArray(data.user),
-        organization_id: dataUtil.getRandIdFromArray(data.organization)
-      });
+    it('successfully gets an existing token', async () => {
+      let newSession = dataUtil.getRandFromArray(data.session);
+      newSession = await dbFuncs.create_session(newSession);
+      newSession = newSession[0];
 
-      let sessionExists = await dbFuncs.session_token_exists({token: newSession[0].token});
-      assert.equal(sessionExists.length, 1);
-      assert.ok(sessionExists[0]);
-      assert.ok(sessionExists[0].session_token_exists);
+      let session = await dbFuncs.get_session_by_token({token: newSession.token});
+      assert.equal(session.length, 1);
+      assert.equal(session[0].user_id, newSession.user_id);
     });
 
 
-    it('successfully verifies that a token does not exist', async () => {
-      let sessionExists = await dbFuncs.session_token_exists({token: dataUtil.createRandomId()});
-      assert.ok(sessionExists[0]);
-      assert.ok(!sessionExists[0].session_token_exists);
+    it('fails to get a token does not exist', async () => {
+      session = await dbFuncs.get_session_by_token({token: dataUtil.createRandomUuid()});
+      assert.equal(session.length, 0);
+    });
+
+  });
+
+  describe('get_session_by_user_id()', () => {
+
+    it('a session can be retrieved by user id', async () => {
+      let existingSession = await dbFuncs.get_session_by_user_id({
+        user_id: dataUtil.getRandIdFromArray(data.user)
+      });
+
+      assert.ok(existingSession.length >= 1);
+    });
+
+  });
+
+  describe('get_organization_by_name()', () => {
+
+    it('an organization can be retrieved by name', async () => {
+      let newOrganization = await dbFuncs.create_organization(
+      {
+        name: dataUtil.createRandomUuid()
+      });
+
+      newOrganization = newOrganization[0];
+
+      let organization = await dbFuncs.get_organization_by_name({
+        organization_name: newOrganization.name
+      });
+      assert.equal(organization.length, 1);
+      assert.equal(organization[0].id, newOrganization.id);
+    });
+
+  });
+
+  describe('get_user_by_credentials()', () => {
+
+    it('a user can be retrieved, given their email, password, and org id', async () => {
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let validUser = await dbFuncs.get_user_by_credentials({
+        email: randomUser.email,
+        password: randomUser.password,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
     });
 
   });
 
   after(async () => {
-    dbClient.disconnect()
+    await dbClient.disconnect()
   })
 });
