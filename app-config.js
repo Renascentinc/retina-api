@@ -1,5 +1,3 @@
-const logger = require('./logger');
-const util = require('util');
 
 let appConfig = {
   'db.port': 5432,
@@ -49,7 +47,5 @@ if (appConfig['environment'] == 'release') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
 }
-
-logger.info(`App Config: \n` + util.inspect(appConfig, false));
 
 module.exports = appConfig;

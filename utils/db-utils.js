@@ -72,7 +72,7 @@ async function loadSchema(dbClient) {
 }
 
 async function dropSchema(dbClient) {
-  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop' && appConfig['environment'] != 'test') {
+  if (appConfig['environment'] != 'local' && appConfig['environment'] != 'develop' && appConfig['environment'] != 'test' && appConfig['environment'] != 'release') {
     logger.warn('Trying to drop schema in a dis-allowed environment');
     return;
   }
