@@ -7,6 +7,7 @@ const { GraphQlError } = require('./error');
 const express = require('express');
 const bodyParser = require('body-parser');
 const gql = require('graphql-tag');
+const scheduler = require('node-schedule');
 
 function tokenValid(token) {
   return token == 13;
@@ -39,6 +40,10 @@ class Server {
   }
 
   async start() {
+    scheduler.scheduleJob({hour: 3, minute: 0, dayOfWeek: 0}, () => {
+      console.log('Deleting old tokens');
+    });
+
     let schema;
     try {
       schema = createSchema();
