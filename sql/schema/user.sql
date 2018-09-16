@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.user (
 	password				str_t						 NOT NULL,
 	role				 		role_type				 NOT NULL,
 	status			 		user_status_type NOT NULL,
-	organization_id id_t
+	organization_id id_t             NOT NULL
 );
 
 COMMIT;

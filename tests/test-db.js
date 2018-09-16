@@ -18,7 +18,7 @@ async function dropDbIfExists(dbName) {
       AND pid <> pg_backend_pid();
   `);
 
-  logger.info(`Dropping database`)
+  logger.info(`Dropping database (if it exists)`)
   await postgresClient.query(`DROP DATABASE IF EXISTS ${dbName};`);
   await postgresClient.end();
 }
