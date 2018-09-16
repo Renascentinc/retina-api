@@ -7,10 +7,10 @@ module.exports = {
        return result;
      },
 
-     getTool: async (_, { tool_id }, db) => {
+     getTool: async (_, { tool_id }, { db, session }) => {
        let tool = await db.get_tool({
          tool_id,
-         organization_id: 1
+         organization_id: session.organization_id
        });
        return tool[0];
      }

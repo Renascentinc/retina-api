@@ -175,18 +175,8 @@ async function seedDb(dbClient) {
   try {
     for (let tableName in data) {
       let tableRows = data[tableName];
-      for (let rowIndex in tableRows) {
-        let keys = Object.keys(tableRows[rowIndex]);
-        let values = Object.values(tableRows[rowIndex]);
-        let commaDelimitedKeys = keys.join(',');
-
-        let vars = [];
-        for (var i = 0; i < values.length; i++) {
-          vars.push(`$${i+1}`);
-        }
-        vars = vars.join(',');
-
-        await dbClient.queryWithParams(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
+      for (let row of tableRows) {
+        await dbClient.executeDbFunction(`create_${tableName}`, row);
       }
     }
   } catch (e) {

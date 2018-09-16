@@ -35,10 +35,23 @@ class Server {
       let apolloServer = new ApolloServer({
         schema: schema,
         context: async ({req}) => {
-          if (!(await this.userAuthenticated(req))) {
-            throw new AuthenticationError(`User must be logged in`);
+          if (typeof req.headers.authorization !== 'string') {
+            if (this.isLoginRoute(req)) {
+              return { db: this.dbFunctions }
+            }
+            throw new UserInputError(`No 'Authorization' header is present`);
           }
-          return this.dbFunctions;
+
+          let session = await this.getSessionFromAuthorizationHeader(req.headers.authorization);
+
+          if (typeof session !== 'object') {
+            throw new AuthenticationError(`Token authentication failed`);
+          }
+
+          return {
+            session,
+            db: this.dbFunctions
+          };
         }
       });
 
@@ -52,10 +65,6 @@ class Server {
     }
   }
 
-  async userAuthenticated(req) {
-    return await this.tokenValid(req.headers) || this.isLoginRoute(req)
-  }
-
   isLoginRoute(req) {
     try {
       const parsedRequest = gql(req.body.query);
@@ -67,17 +76,12 @@ class Server {
     }
   }
 
-  async tokenValid(headers) {
-    if (!headers.authorization || typeof headers.authorization !== 'string') {
-      throw new UserInputError(`No 'Authorization' header is present`);
-      return false;
+  async getSessionFromAuthorizationHeader(authHeader) {
+    if (authHeader.lastIndexOf('Bearer ') !== 0 || authHeader.split(' ').length !== 2) {
+      throw new UserInputError(`Authentication header '${authHeader}' is not a valid authorization header. It must be of the format "Bearer <your-token>"`);
     }
 
-    if (headers.authorization.lastIndexOf('Bearer ') !== 0 || headers.authorization.split(' ').length !== 2) {
-      throw new UserInputError(`Authentication header '${headers.authorization}' is not a valid authorization header. It must be of the format "Bearer <your-token>"`);
-    }
-
-    let token = headers.authorization.split(' ')[1];
+    let token = authHeader.split(' ')[1];
 
     if (!uuidValidate(token)) {
       throw new UserInputError(`Token '${token}' is not a valid uuid`);
@@ -85,7 +89,7 @@ class Server {
 
     let session = await this.dbFunctions.get_session_by_token({token});
 
-    return session.length > 0;
+    return session[0];
   }
 
   shutdown() { }

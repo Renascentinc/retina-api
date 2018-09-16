@@ -443,6 +443,7 @@ describe('Database creation and usage', async () => {
   });
 
   after(async () => {
-    await dbClient.disconnect()
+    await dbClient.disconnect();
+    await dropDbIfExists(appConfig['db.database']);
   })
 });

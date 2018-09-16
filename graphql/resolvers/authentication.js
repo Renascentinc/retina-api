@@ -5,7 +5,7 @@ const { UserInputError, AuthenticationError } = require('apollo-server');
 
 module.exports = {
   Mutation: {
-    login: async (_, { organization_name, email, password }, db) => {
+    login: async (_, { organization_name, email, password }, { db }) => {
       let organization = await db.get_organization_by_name({
         organization_name
       });
@@ -54,8 +54,8 @@ module.exports = {
       }
     },
 
-    logout: async (_, { token }, db) => {
-      let deletedToken = await db.delete_session({ token });
+    logout: async (_, __, { db, session }) => {
+      let deletedToken = await db.delete_session({ token: session.token });
       return deletedToken[0] ? true : false;
     }
   }

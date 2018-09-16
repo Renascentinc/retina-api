@@ -153,7 +153,7 @@ for (let user_name of user_names) {
     last_name: user_name.last_name,
     email: `${user_name.first_name.toLowerCase()}.${user_name.last_name.toLowerCase()}@somecompany.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
-    password: dataUtil.getRandPassword(),
+    password: 'Test1234!',
     role: dataUtil.getRandFromArray(roles),
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: dataUtil.getRandIdFromArray(data.organization)
