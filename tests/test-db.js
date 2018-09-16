@@ -4,9 +4,31 @@ const { initializeDb } = require('../db-initializer');
 const { dbClient } = require('../db-client');
 const { data } = require('../data/seed-data');
 const dataUtil = require('../utils/data-utils');
+const appConfig = require('../app-config');
+const { getPostgresDbRawClient } = require('../utils/db-utils');
+const logger = require('../logger');
 
-describe('Database creation and usage', async function() {
+async function dropDbIfExists(dbName) {
+  let postgresClient = getPostgresDbRawClient();
+  await postgresClient.connect();
+  await postgresClient.query(`
+    SELECT pg_terminate_backend(pg_stat_activity.pid)
+    FROM pg_stat_activity
+      WHERE pg_stat_activity.datname = '${dbName}'
+      AND pid <> pg_backend_pid();
+  `);
+
+  logger.info(`Dropping database`)
+  await postgresClient.query(`DROP DATABASE ${dbName};`);
+  await postgresClient.end();
+}
+
+describe('Database creation and usage', async () => {
   let dbFuncs;
+
+  before(async () => {
+    await dropDbIfExists(appConfig['db.database']);
+  });
 
   describe('db-initializer.initializeDb()', () => {
 
@@ -115,7 +137,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all configurable items for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumItems = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId).length;
+      let expectedNumItems = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId).objects.length;
 
       let configurableItems = await dbFuncs.get_all_configurable_item({
         organization_id: randOrgId
@@ -143,7 +165,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all locations for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumLocations = dataUtil.getFromObjectArrayWhere(data.location, 'organization_id', randOrgId).length;
+      let expectedNumLocations = dataUtil.getFromObjectArrayWhere(data.location, 'organization_id', randOrgId).objects.length;
       let locations = await dbFuncs.get_all_location({
         organization_id: randOrgId
       });
@@ -171,7 +193,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all tools for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumTools= dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).length;
+      let expectedNumTools= dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
       let tools = await dbFuncs.get_all_tool({
         organization_id: randOrgId
       });
@@ -199,7 +221,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all users for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedLength = dataUtil.getFromObjectArrayWhere(data.user, 'organization_id', randOrgId).length;
+      let expectedLength = dataUtil.getFromObjectArrayWhere(data.user, 'organization_id', randOrgId).objects.length;
       let users = await dbFuncs.get_all_user({
         organization_id: randOrgId
       });

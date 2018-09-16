@@ -19,7 +19,7 @@ class Util {
     return array[Math.floor(Math.random() * array.length)];
   }
 
-  getRandFromObjectArrayWhere(array, key, value) {
+  getRandIdFromObjectArrayWhere(array, key, value) {
     let ids = []
     array.forEach((object, i) => {
      if (object[key] == value) {
@@ -32,13 +32,15 @@ class Util {
 
   getFromObjectArrayWhere(array, key, value) {
     let objects = []
+    let originalIndecies = []
     array.forEach((object, i) => {
      if (object[key] == value) {
        objects.push(object);
+       originalIndecies.push(i);
      }
     });
 
-    return objects;
+    return { objects, originalIndecies };
   }
 
   getRandNameAndValFromArrayObject(object) {
