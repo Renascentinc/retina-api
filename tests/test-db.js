@@ -19,7 +19,7 @@ async function dropDbIfExists(dbName) {
   `);
 
   logger.info(`Dropping database`)
-  await postgresClient.query(`DROP DATABASE ${dbName};`);
+  await postgresClient.query(`DROP DATABASE IF EXISTS ${dbName};`);
   await postgresClient.end();
 }
 
