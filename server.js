@@ -65,7 +65,7 @@ class Server {
 
   async getSessionFromAuthorizationHeader(authHeader) {
     if (authHeader.lastIndexOf('Bearer ') !== 0 || authHeader.split(' ').length !== 2) {
-      throw new UserInputError(`Authentication header '${authHeader}' is not a valid authorization header. It must be of the format "Bearer <your-token>"`);
+      throw new UserInputError(`Authentication header '${authHeader}' is not a valid authorization header. It must be of the format "Bearer <token>"`);
     }
 
     let token = authHeader.split(' ')[1];
