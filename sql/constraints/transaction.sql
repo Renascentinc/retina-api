@@ -1,4 +1,4 @@
-ALTER TABLE public."transaction"
+/* ALTER TABLE public."transaction"
 ADD FOREIGN KEY (to_user_id)
   REFERENCES public."user" (id)
   ON DELETE RESTRICT
@@ -26,4 +26,4 @@ ALTER TABLE public."transaction"
 ADD FOREIGN KEY (organization_id)
   REFERENCES public.organization (id)
   ON DELETE RESTRICT
-  ON UPDATE RESTRICT;
+  ON UPDATE RESTRICT; */

@@ -2,8 +2,10 @@
 
 module.exports = {
   Query: {
-     getAllTool: async (_0, _1, db) => {
-       let result = await db.get_all_tool({organization_id: 1});
+     getAllTool: async (_, __, { db, session}) => {
+       let result = await db.get_all_tool({
+         organization_id: session.organization_id
+       });
        return result;
      },
 
@@ -17,14 +19,15 @@ module.exports = {
   },
 
   Mutation: {
-     createTool: async (_, {newTool}, db) => {
-       newTool['organization_id'] = 1;
+     createTool: async (_, { newTool }, { db, session }) => {
+       newTool['organization_id'] = session.organization_id;
        let result = await db.create_tool(newTool);
        return result[0];
      },
 
-     updateTool: async(_, {tool}, db) => {
-       let result = await db.update_tool(tool);
+     updateTool: async(_, { updatedTool }, { db, session }) => {
+       updatedTool['organization_id'] = session.organization_id;
+       let result = await db.update_tool(updatedTool);
        return result[0];
      }
   }

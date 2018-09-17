@@ -54,5 +54,5 @@ type Query {
 
 type Mutation {
   createTool(newTool: NewTool!): Tool
-  updateTool(tool: UpdatedTool!): Tool
+  updateTool(updatedTool: UpdatedTool!): Tool
 }

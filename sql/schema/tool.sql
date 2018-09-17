@@ -1,7 +1,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool (
-	id 								serial 					 PRIMARY KEY,
+	id 								serial,
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
 	model_number 			str_t 					 NOT NULL,
@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	purchased_from_id id_t,
 	price 						integer,
 	photo 						long_str_t,
-	"year" 						integer
-	CONSTRAINT tool_has_owner CHECK(user_id IS NOT NULL or location_id IS NOT NULL)
+	"year" 						integer,
+  PRIMARY KEY (id, organization_id),
+	CONSTRAINT tool_has_owner CHECK(user_id IS NOT NULL OR location_id IS NOT NULL)
 );
 
 COMMIT;
