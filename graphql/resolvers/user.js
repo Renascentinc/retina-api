@@ -20,8 +20,8 @@ module.exports = {
   Mutation: {
     createUser: async (_, { newUser }, { db, session }) => {
       newUser['organization_id'] = session.organization_id;
-      let createdUser = await db.create_user(newUser);
-      return createdUser[0];
+      newUser = await db.create_user(newUser);
+      return newUser[0];
     },
 
     updateUser: async (_, { updatedUser }, { db, session }) => {

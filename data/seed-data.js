@@ -79,17 +79,18 @@ data.organization = [
 ];
 
 data.configurable_item = [ ];
-let numConfItemsPerOrg = 20;
 
 for (var i = 0; i < data.organization.length; i++) {
-  for (var j = 0; j < numConfItemsPerOrg; j++) {
-    let { arrayName, value } = dataUtil.getRandNameAndValFromArrayObject(configurable_items);
-    data.configurable_item.push({
-      type: arrayName,
-      name: value,
-      sanctioned: dataUtil.getRandBool(),
-      organization_id: i + 1
-    })
+  for (let configurable_item_type in configurable_items) {
+    let configurable_item_type_names = configurable_items[configurable_item_type];
+    for (let configurable_item_type_name of configurable_item_type_names) {
+      data.configurable_item.push({
+        type: configurable_item_type,
+        name: configurable_item_type_name,
+        sanctioned: dataUtil.getRandBool(),
+        organization_id: i + 1
+      })
+    }
   }
 }
 

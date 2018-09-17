@@ -15,7 +15,6 @@ type Tool {
   year:              Int
 }
 
-# TODO: Create directive for New Tool to have at least a user or location id
 input NewTool {
   type_id:           ID!
 	brand_id:          ID!

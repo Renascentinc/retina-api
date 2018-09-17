@@ -16,7 +16,10 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	photo 						long_str_t,
 	"year" 						integer,
   PRIMARY KEY (id, organization_id),
-	CONSTRAINT tool_has_owner CHECK(user_id IS NOT NULL OR location_id IS NOT NULL)
+	CONSTRAINT tool_has_owner CHECK (user_id IS NOT NULL OR location_id IS NOT NULL),
+  CONSTRAINT tool_unique_model_number UNIQUE (model_number, organization_id),
+  CONSTRAINT tool_unique_serial_number UNIQUE (serial_number, organization_id),
+  CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
 );
 
 COMMIT;

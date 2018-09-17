@@ -344,7 +344,12 @@ describe('Database creation and usage', async () => {
   describe('delete_configurable_item()', () => {
 
     it('successfully deletes a location for an organization', async () => {
-      let newItem = await dbFuncs.create_configurable_item(dataUtil.getRandFromArray(data.configurable_item));
+      let newItem = await dbFuncs.create_configurable_item({
+        type: 'BRAND',
+        name: 'A New Brand',
+        sanctioned: true,
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
       newItem = newItem[0];
       let deletedItem = await dbFuncs.delete_configurable_item({
         configurable_item_id: newItem.id,
