@@ -1,0 +1,38 @@
+type Location {
+  id:               ID!
+  city:             String!
+  state:            String!
+  zip:              String!
+  address_line_one: String!
+  address_line_two: String
+  name: 						String
+}
+
+input NewLocation {
+  city:             String!
+  state:            String!
+  zip:              String!
+  address_line_one: String!
+  address_line_two: String
+  name: 						String
+}
+
+input UpdatedLocation {
+  id:               ID!
+  city:             String!
+  state:            String!
+  zip:              String!
+  address_line_one: String!
+  address_line_two: String
+  name: 						String
+}
+
+type Query {
+  getAllLocation: [Location]!
+  getLocation(location_id: ID!): Location
+}
+
+type Mutation {
+  createLocation(newLocation: NewLocation!): Location
+  updateLocation(updatedLocation: UpdatedLocation!): Location
+}
