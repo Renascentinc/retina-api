@@ -3,10 +3,10 @@
 module.exports = {
   Query: {
     getAllTool: async (_, __, { db, session}) => {
-      let result = await db.get_all_tool({
+      let tools = await db.get_all_tool({
         organization_id: session.organization_id
       });
-      return result;
+      return tools;
     },
 
     getTool: async (_, { tool_id }, { db, session }) => {

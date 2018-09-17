@@ -6,7 +6,6 @@ const { GraphQlError } = require('./error');
 const express = require('express');
 const bodyParser = require('body-parser');
 const gql = require('graphql-tag');
-const scheduler = require('node-schedule');
 const uuidValidate = require('uuid-validate');
 const { UserInputError, AuthenticationError } = require('apollo-server');
 
@@ -17,9 +16,6 @@ class Server {
   }
 
   async start() {
-    scheduler.scheduleJob({hour: 3, minute: 0, dayOfWeek: 0}, () => {
-      console.log('Deleting old tokens');
-    });
 
     let schema;
     try {

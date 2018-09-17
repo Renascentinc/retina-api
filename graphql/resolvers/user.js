@@ -2,18 +2,18 @@
 module.exports = {
   Query: {
     getAllUser: async (_, __, { db, session }) => {
-      let result = await db.get_all_user({
+      let users = await db.get_all_user({
         organization_id: session.organization_id
       });
-      return result;
+      return users;
     },
 
     getUser: async (_, { user_id }, { db, session }) => {
-      let result = await db.get_user({
+      let user = await db.get_user({
         user_id,
         organization_id: session.organization_id
       });
-      return result[0];
+      return user[0];
     }
   },
 
