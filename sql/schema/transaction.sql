@@ -1,7 +1,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public."transaction" (
-	id 								serial 						PRIMARY KEY,
+	id 								serial,
 	date 							date 							NOT NULL,
 	"type" 						transaction_type 	NOT NULL,
 	organization_id 	id_t 							NOT NULL,
@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS public."transaction" (
 	to_user_id 				id_t,
 	from_user_id 			id_t,
 	to_location_id 		id_t,
-	from_location_id 	id_t
+	from_location_id 	id_t,
+  PRIMARY KEY (id, organization_id)
 );
 
 COMMIT;

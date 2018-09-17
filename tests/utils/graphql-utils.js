@@ -7,7 +7,7 @@ describe('graphql-utils', function() {
 
   describe('createSchema()', function() {
 
-    it('should return a schema', () => {
+    it('should successfully create a schema', () => {
       let typeDefs = createSchema();
       assert.equal(typeof typeDefs, 'object');
     });

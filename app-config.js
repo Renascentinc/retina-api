@@ -21,21 +21,17 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
   process.env['DB_USER'] = process.env.USER;
   process.env['DB_HOST'] = 'localhost';
   process.env['DB_PASSWORD'] = '';
-  process.env['DB_NAME'] = 'local_db';
 }
-
-appConfig['db.user'] = process.env.DB_USER;
-appConfig['db.host'] = process.env.DB_HOST;
-appConfig['db.password'] = process.env.DB_PASSWORD;
-appConfig['db.database'] = process.env.DB_NAME;
 
 if (appConfig['environment'] == 'local') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
+  process.env['DB_NAME'] = 'local_db';
 }
 
 if (appConfig['environment'] == 'test') {
   appConfig['db.refreshSchema'] = true;
+  process.env['DB_NAME'] = 'test_db';
 }
 
 if (appConfig['environment'] == 'develop') {
@@ -47,5 +43,10 @@ if (appConfig['environment'] == 'release') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
 }
+
+appConfig['db.user'] = process.env.DB_USER;
+appConfig['db.host'] = process.env.DB_HOST;
+appConfig['db.password'] = process.env.DB_PASSWORD;
+appConfig['db.database'] = process.env.DB_NAME;
 
 module.exports = appConfig;

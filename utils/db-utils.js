@@ -5,24 +5,24 @@ const logger = require('../logger');
 const fileUtils = require('./file-utils');
 const { data } = require('../data/seed-data');
 
-//TODO: Instead of joining all the sql CREATE queries together with ';'
-//      run through each query with the try/catch in the for-loop. This
-//      will help with debugging
-
 let postgresDbName = 'postgres';
 
 let dropSchemaQuery = `DROP SCHEMA public CASCADE;
                        CREATE SCHEMA public;
                        GRANT ALL ON SCHEMA public TO public;`;
 
-async function createDb(dbClient) {
-  let postgresDbClient = new Client({
+function getPostgresDbRawClient() {
+  return new Client({
     user: appConfig['db.user'],
     host: appConfig['db.host'],
     database: postgresDbName,
     password: appConfig['db.password'],
     port: appConfig['db.port']
   });
+}
+
+async function createDb(dbClient) {
+  let postgresDbClient = getPostgresDbRawClient();
 
   try {
     await postgresDbClient.connect();
@@ -40,7 +40,6 @@ async function createDb(dbClient) {
     logger.info('Creating database');
     await postgresDbClient.query(`CREATE DATABASE ${appConfig['db.database']};`);
   }
-
 
   await postgresDbClient.end();
 }
@@ -176,18 +175,8 @@ async function seedDb(dbClient) {
   try {
     for (let tableName in data) {
       let tableRows = data[tableName];
-      for (let rowIndex in tableRows) {
-        let keys = Object.keys(tableRows[rowIndex]);
-        let values = Object.values(tableRows[rowIndex]);
-        let commaDelimitedKeys = keys.join(',');
-
-        let vars = [];
-        for (var i = 0; i < values.length; i++) {
-          vars.push(`$${i+1}`);
-        }
-        vars = vars.join(',');
-
-        await dbClient.queryWithParams(`INSERT INTO public.${tableName}(${commaDelimitedKeys}) VALUES (${vars})`, values);
+      for (let row of tableRows) {
+        await dbClient.executeDbFunction(`create_${tableName}`, row);
       }
     }
   } catch (e) {
@@ -196,4 +185,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient }

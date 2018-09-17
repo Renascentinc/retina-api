@@ -4,11 +4,33 @@ const { initializeDb } = require('../db-initializer');
 const { dbClient } = require('../db-client');
 const { data } = require('../data/seed-data');
 const dataUtil = require('../utils/data-utils');
+const appConfig = require('../app-config');
+const { getPostgresDbRawClient } = require('../utils/db-utils');
+const logger = require('../logger');
 
-describe('Database creation and usage', async function() {
+async function dropDbIfExists(dbName) {
+  let postgresClient = getPostgresDbRawClient();
+  await postgresClient.connect();
+  await postgresClient.query(`
+    SELECT pg_terminate_backend(pg_stat_activity.pid)
+    FROM pg_stat_activity
+      WHERE pg_stat_activity.datname = '${dbName}'
+      AND pid <> pg_backend_pid();
+  `);
+
+  logger.info(`Dropping database (if it exists)`)
+  await postgresClient.query(`DROP DATABASE IF EXISTS ${dbName};`);
+  await postgresClient.end();
+}
+
+describe('Database creation and usage', async () => {
   let dbFuncs;
 
-  describe('initializeDb()', () => {
+  before(async () => {
+    await dropDbIfExists(appConfig['db.database']);
+  });
+
+  describe('db-initializer.initializeDb()', () => {
 
     it('successfully creates database and functions', async () => {
       dbFuncs = await initializeDb();
@@ -115,7 +137,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all configurable items for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumItems = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId).length;
+      let expectedNumItems = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId).objects.length;
 
       let configurableItems = await dbFuncs.get_all_configurable_item({
         organization_id: randOrgId
@@ -143,7 +165,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all locations for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumLocations = dataUtil.getFromObjectArrayWhere(data.location, 'organization_id', randOrgId).length;
+      let expectedNumLocations = dataUtil.getFromObjectArrayWhere(data.location, 'organization_id', randOrgId).objects.length;
       let locations = await dbFuncs.get_all_location({
         organization_id: randOrgId
       });
@@ -171,7 +193,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all tools for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumTools= dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).length;
+      let expectedNumTools= dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
       let tools = await dbFuncs.get_all_tool({
         organization_id: randOrgId
       });
@@ -199,7 +221,7 @@ describe('Database creation and usage', async function() {
 
     it('successfully gets all users for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedLength = dataUtil.getFromObjectArrayWhere(data.user, 'organization_id', randOrgId).length;
+      let expectedLength = dataUtil.getFromObjectArrayWhere(data.user, 'organization_id', randOrgId).objects.length;
       let users = await dbFuncs.get_all_user({
         organization_id: randOrgId
       });
@@ -322,7 +344,12 @@ describe('Database creation and usage', async function() {
   describe('delete_configurable_item()', () => {
 
     it('successfully deletes a location for an organization', async () => {
-      let newItem = await dbFuncs.create_configurable_item(dataUtil.getRandFromArray(data.configurable_item));
+      let newItem = await dbFuncs.create_configurable_item({
+        type: 'BRAND',
+        name: 'A New Brand',
+        sanctioned: true,
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
       newItem = newItem[0];
       let deletedItem = await dbFuncs.delete_configurable_item({
         configurable_item_id: newItem.id,
@@ -339,11 +366,12 @@ describe('Database creation and usage', async function() {
 
     it('successfully deletes a session', async () => {
       let newSession = dataUtil.getRandFromArray(data.session);
-      newSession['token'] = dataUtil.createRandomId();
-
       newSession = await dbFuncs.create_session(newSession);
       newSession = newSession[0];
-      let deletedSession = await dbFuncs.delete_session(newSession);
+
+      let deletedSession = await dbFuncs.delete_session({
+        token: newSession.token
+      });
 
       assert.equal(deletedSession.length, 1);
       assert.equal(newSession.token, deletedSession[0].token);
@@ -351,31 +379,76 @@ describe('Database creation and usage', async function() {
 
   });
 
-  describe('session_token_exists()', () => {
+  describe('get_session_by_token()', () => {
 
-    it('successfully verifies that a token exists', async () => {
-      let newSession = await dbFuncs.create_session({
-        token: dataUtil.createRandomId(),
-        user_id: dataUtil.getRandIdFromArray(data.user),
-        organization_id: dataUtil.getRandIdFromArray(data.organization)
-      });
+    it('successfully gets an existing token', async () => {
+      let newSession = dataUtil.getRandFromArray(data.session);
+      newSession = await dbFuncs.create_session(newSession);
+      newSession = newSession[0];
 
-      let sessionExists = await dbFuncs.session_token_exists({token: newSession[0].token});
-      assert.equal(sessionExists.length, 1);
-      assert.ok(sessionExists[0]);
-      assert.ok(sessionExists[0].session_token_exists);
+      let session = await dbFuncs.get_session_by_token({token: newSession.token});
+      assert.equal(session.length, 1);
+      assert.equal(session[0].user_id, newSession.user_id);
     });
 
 
-    it('successfully verifies that a token does not exist', async () => {
-      let sessionExists = await dbFuncs.session_token_exists({token: dataUtil.createRandomId()});
-      assert.ok(sessionExists[0]);
-      assert.ok(!sessionExists[0].session_token_exists);
+    it('fails to get a token does not exist', async () => {
+      session = await dbFuncs.get_session_by_token({token: dataUtil.createRandomUuid()});
+      assert.equal(session.length, 0);
+    });
+
+  });
+
+  describe('get_session_by_user_id()', () => {
+
+    it('a session can be retrieved by user id', async () => {
+      let existingSession = await dbFuncs.get_session_by_user_id({
+        user_id: dataUtil.getRandIdFromArray(data.user)
+      });
+
+      assert.ok(existingSession.length >= 1);
+    });
+
+  });
+
+  describe('get_organization_by_name()', () => {
+
+    it('an organization can be retrieved by name', async () => {
+      let newOrganization = await dbFuncs.create_organization(
+      {
+        name: dataUtil.createRandomUuid()
+      });
+
+      newOrganization = newOrganization[0];
+
+      let organization = await dbFuncs.get_organization_by_name({
+        organization_name: newOrganization.name
+      });
+      assert.equal(organization.length, 1);
+      assert.equal(organization[0].id, newOrganization.id);
+    });
+
+  });
+
+  describe('get_user_by_credentials()', () => {
+
+    it('a user can be retrieved, given their email, password, and org id', async () => {
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let validUser = await dbFuncs.get_user_by_credentials({
+        email: randomUser.email,
+        password: randomUser.password,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
     });
 
   });
 
   after(async () => {
-    dbClient.disconnect()
+    await dbClient.disconnect();
+    await dropDbIfExists(appConfig['db.database']);
   })
 });

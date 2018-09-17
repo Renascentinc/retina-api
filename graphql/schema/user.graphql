@@ -1,13 +1,41 @@
 type User {
-  id: ID
-  name: String
-  password: String
-  role: String # Make this an enum type
-  phone_number: String
-  email: String
-  status: String # Make this an enum type
+  id:           ID!
+  first_name:   String!
+  last_name:    String!
+  email:        String!
+  phone_number: String!
+  password:     String!
+  role:         Role!
+  status:       UserStatus!
+}
+
+input NewUser {
+  first_name:   String!
+  last_name:    String!
+  email:        String!
+  phone_number: String!
+  password:     String!
+  role:         Role!
+  status:       UserStatus!
+}
+
+input UpdatedUser {
+  id:           ID!
+  first_name:   String!
+  last_name:    String!
+  email:        String!
+  phone_number: String!
+  password:     String!
+  role:         Role!
+  status:       UserStatus!
 }
 
 type Query {
-  users: [User]
+  getAllUser: [User]!
+  getUser(user_id: ID!): User
+}
+
+type Mutation {
+  createUser(newUser: NewUser!): User
+  updateUser(updatedUser: UpdatedUser!): User
 }

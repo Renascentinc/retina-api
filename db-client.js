@@ -99,7 +99,7 @@ class DbClient {
     }
 
     if (params && typeof params != 'object'){
-      logger.warn(`argument 'params' must be an object; instead was of type '${typeof params}`)
+      logger.warn(`argument 'params' must be an object; instead was of type '${typeof params}'`)
       throw new ArgumentError(`argument 'params' must be an object; instead was of type '${typeof params}'`)
     }
 

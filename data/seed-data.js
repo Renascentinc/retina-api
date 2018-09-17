@@ -1,4 +1,4 @@
-
+let appConfig = require('../app-config');
 let dataUtil = require('../utils/data-utils');
 
 let configurable_items = {
@@ -79,16 +79,19 @@ data.organization = [
 ];
 
 data.configurable_item = [ ];
-let numConfItems = 20;
 
-for (var i = 0; i < numConfItems; i++) {
-  let { arrayName, value } = dataUtil.getRandNameAndValFromArrayObject(configurable_items);
-  data.configurable_item.push({
-    type: arrayName,
-    name: value,
-    sanctioned: dataUtil.getRandBool(),
-    organization_id: dataUtil.getRandIdFromArray(data.organization)
-  })
+for (var i = 0; i < data.organization.length; i++) {
+  for (let configurable_item_type in configurable_items) {
+    let configurable_item_type_names = configurable_items[configurable_item_type];
+    for (let configurable_item_type_name of configurable_item_type_names) {
+      data.configurable_item.push({
+        type: configurable_item_type,
+        name: configurable_item_type_name,
+        sanctioned: dataUtil.getRandBool(),
+        organization_id: i + 1
+      })
+    }
+  }
 }
 
 data.location = [
@@ -125,16 +128,18 @@ data.tool = []
 let numTools = 20;
 
 for (var i = 0; i < numTools; i++) {
+  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+  let { objects, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
   data.tool.push(  {
-    type_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'TYPE'),
-    brand_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'BRAND'),
+    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'TYPE') - 1] + 1,
+    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'BRAND') - 1] + 1,
+    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'PURCHASED_FROM') - 1] + 1,
     date_purchased: dataUtil.createRandomDate(),
-    purchased_from_id: dataUtil.getRandFromObjectArrayWhere(data.configurable_item, 'type', 'PURCHASED_FROM'),
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
-    organization_id: dataUtil.getRandIdFromArray(data.organization),
-    location_id: dataUtil.getRandIdFromArray(data.location),
+    organization_id: randOrgId,
+    location_id: dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId),
     price: null,
     photo: null,
     year: null,
@@ -149,23 +154,22 @@ for (let user_name of user_names) {
     last_name: user_name.last_name,
     email: `${user_name.first_name.toLowerCase()}.${user_name.last_name.toLowerCase()}@somecompany.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
-    password: dataUtil.getRandPassword(),
+    password: 'Test1234!',
     role: dataUtil.getRandFromArray(roles),
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: dataUtil.getRandIdFromArray(data.organization)
   });
 }
 
-data.session = [];
-let numSessions = 5;
+if (appConfig['environment'] == 'test') {
+  data.session = [];
 
-for (var i = 0; i < numSessions; i++) {
-  data.session.push({
-    token: dataUtil.createRandomId(),
-    user_id: dataUtil.getRandIdFromArray(data.user),
-    organization_id: dataUtil.getRandIdFromArray(data.organization)
-  });
+  for (let i = 0; i < data.user.length; i++) {
+    data.session.push({
+      user_id: i + 1,
+      organization_id: data.user[i].organization_id
+    });
+  }
 }
-
 
 module.exports = { data };

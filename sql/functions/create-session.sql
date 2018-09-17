@@ -1,5 +1,4 @@
 CREATE FUNCTION public.create_session (
-	token           long_str_t,
   user_id         id_t,
   organization_id id_t
 )
@@ -12,7 +11,7 @@ AS $$
         user_id,
         organization_id
     	) VALUES (
-        token,
+        uuid_generate_v4(),
         user_id,
         organization_id
     	) RETURNING *;

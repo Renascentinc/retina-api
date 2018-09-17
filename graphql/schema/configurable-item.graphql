@@ -19,10 +19,11 @@ input UpdatedConfigurableItem {
 }
 
 type Query {
-  getAllConfigurableItem: [ConfigurableItem]
+  getAllConfigurableItem: [ConfigurableItem]!
+  getConfigurableItem(configurable_item_id: ID!): ConfigurableItem
 }
 
 type Mutation {
-  createConfigurableItem(configurableItem: NewConfigurableItem): ConfigurableItem
+  createConfigurableItem(newConfigurableItem: NewConfigurableItem): ConfigurableItem
   updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem): ConfigurableItem
 }
