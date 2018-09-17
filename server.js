@@ -1,10 +1,8 @@
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server');
 const { createSchema } = require('./utils/graphql-utils');
 const appConfig = require('./app-config');
 const logger = require('./logger');
 const { GraphQlError } = require('./error');
-const express = require('express');
-const bodyParser = require('body-parser');
 const gql = require('graphql-tag');
 const uuidValidate = require('uuid-validate');
 const { UserInputError, AuthenticationError } = require('apollo-server');
@@ -26,16 +24,21 @@ class Server {
     }
 
     try {
-      let app = express();
-
-      let apolloServer = new ApolloServer({
+      let server = new ApolloServer({
         schema: schema,
         context: async ({req}) => {
+          console.log(req)
           if (typeof req.headers.authorization !== 'string') {
+            if (this.isIntrospectionRequest(req))
+            {
+              return;
+            }
+
             if (this.isLoginRoute(req)) {
               return { db: this.dbFunctions }
             }
-            throw new UserInputError(`No 'Authorization' header is present`);
+
+            throw new AuthenticationError(`No 'Authorization' header is present`);
           }
 
           let session = await this.getSessionFromAuthorizationHeader(req.headers.authorization);
@@ -51,24 +54,12 @@ class Server {
         }
       });
 
-      apolloServer.applyMiddleware({app, path: '/graphql'});
-      await app.listen(appConfig['server.port']);
+      await server.listen(appConfig['server.port']);
 
       logger.info(`Started server on port ${appConfig['server.port']}`);
     } catch (e) {
       logger.error(`Unable to start server \n${e}`);
       throw new Error('Unable to start server');
-    }
-  }
-
-  isLoginRoute(req) {
-    try {
-      const parsedRequest = gql(req.body.query);
-      return parsedRequest.definitions.length == 1 &&
-             parsedRequest.definitions[0].selectionSet.selections.length == 1 &&
-             parsedRequest.definitions[0].selectionSet.selections[0].name.value == 'login'
-    } catch (_) {
-      return false
     }
   }
 
@@ -86,6 +77,21 @@ class Server {
     let session = await this.dbFunctions.get_session_by_token({token});
 
     return session[0];
+  }
+
+  isLoginRoute(req) {
+    try {
+      const parsedRequest = gql(req.body.query);
+      return parsedRequest.definitions.length == 1 &&
+             parsedRequest.definitions[0].selectionSet.selections.length == 1 &&
+             parsedRequest.definitions[0].selectionSet.selections[0].name.value == 'login'
+    } catch (_) {
+      return false
+    }
+  }
+
+  isIntrospectionRequest(req) {
+    return req.body.operationName === 'IntrospectionQuery';
   }
 
   shutdown() { }
