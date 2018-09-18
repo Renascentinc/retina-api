@@ -26,32 +26,7 @@ class Server {
     try {
       let server = new ApolloServer({
         schema: schema,
-        context: async ({req}) => {
-          console.log(req)
-          if (typeof req.headers.authorization !== 'string') {
-            if (this.isIntrospectionRequest(req))
-            {
-              return;
-            }
-
-            if (this.isLoginRoute(req)) {
-              return { db: this.dbFunctions }
-            }
-
-            throw new AuthenticationError(`No 'Authorization' header is present`);
-          }
-
-          let session = await this.getSessionFromAuthorizationHeader(req.headers.authorization);
-
-          if (typeof session !== 'object') {
-            throw new AuthenticationError(`Token authentication failed`);
-          }
-
-          return {
-            session,
-            db: this.dbFunctions
-          };
-        }
+        context: ({req}) => this.getContextFromRequest(req)
       });
 
       await server.listen(appConfig['server.port']);
@@ -61,6 +36,32 @@ class Server {
       logger.error(`Unable to start server \n${e}`);
       throw new Error('Unable to start server');
     }
+  }
+
+  async getContextFromRequest(req) {
+    if (typeof req.headers.authorization !== 'string') {
+      if (this.isIntrospectionRequest(req))
+      {
+        return;
+      }
+
+      if (this.isLoginRoute(req)) {
+        return { db: this.dbFunctions }
+      }
+
+      throw new AuthenticationError(`No 'Authorization' header is present`);
+    }
+
+    let session = await this.getSessionFromAuthorizationHeader(req.headers.authorization);
+
+    if (typeof session !== 'object') {
+      throw new AuthenticationError(`Token authentication failed`);
+    }
+
+    return {
+      session,
+      db: this.dbFunctions
+    };
   }
 
   async getSessionFromAuthorizationHeader(authHeader) {

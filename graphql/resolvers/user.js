@@ -28,6 +28,16 @@ module.exports = {
       updatedUser['organization_id'] = session.organization_id;
       updatedUser = await db.update_user(updatedUser);
       return updatedUser[0];
-    }
+    },
+
+    updatePassword: async (_, { user_id, current_password, new_password }, { db, session }) => {
+      let updatedUser = await db.update_password({
+        user_id,
+        current_password,
+        new_password,
+        organization_id: session.organization_id
+      });
+      return updatedUser[0] ? true : false;
+    },
   }
 }

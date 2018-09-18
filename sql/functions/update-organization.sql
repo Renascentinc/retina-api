@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION public.update_organization (
-	id              integer,
+	id              id_t,
 	name 						long_str_t
 )
 RETURNS SETOF public.organization
