@@ -447,6 +447,57 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('update_password()', () => {
+
+    it(`successfully updates a user's password`, async () => {
+      let newPassword = "New Password";
+
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let updatedUser = await dbFuncs.update_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        current_password: randomUser.password,
+        new_password: newPassword
+      });
+
+      assert.equal(updatedUser.length, 1);
+
+      let validUser = await dbFuncs.get_user_by_credentials({
+        email: randomUser.email,
+        password: newPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
+    });
+
+    it(`does not update a user's password if the wrong current password is given`, async () => {
+      let wontBeSetNewPassword = "Won't Be Set New Password";
+
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let updatedUser = await dbFuncs.update_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        current_password: "Wrong Password",
+        new_password: wontBeSetNewPassword
+      });
+
+      assert.equal(updatedUser.length, 0);
+
+      let validUser = await dbFuncs.get_user_by_credentials({
+        email: randomUser.email,
+        password: wontBeSetNewPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 0);
+    });
+
+  });
+
   after(async () => {
     await dbClient.disconnect();
     await dropDbIfExists(appConfig['db.database']);
