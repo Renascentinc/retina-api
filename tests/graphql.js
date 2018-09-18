@@ -14,13 +14,11 @@ describe('Api usage', async () => {
         query {
           getTool(tool_id: 1) {
             id
-            brand_id
           }
         }
       `
       let tool = {
-        id: 'dsfdfajoife83248',
-        brand_id: 3
+        id: 'dsfdfajoife83248'
       }
 
       let context = {
