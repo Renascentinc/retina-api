@@ -1,15 +1,15 @@
 
 type Tool {
   id:                ID!
-  type_id:           ID!
-	brand_id:          ID!
+  type:              ConfigurableItem!
+	brand:             ConfigurableItem!
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
-  purchased_from_id: ID
+  purchased_from:    ConfigurableItem!
   date_purchased:    String
-  user_id:           ID
-  location_id:       ID
+  user:              User
+  location:          Location
   photo:             String
   price:             Int
   year:              Int

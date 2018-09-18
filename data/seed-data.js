@@ -124,29 +124,6 @@ data.location = [
   }
 ];
 
-data.tool = []
-let numTools = 20;
-
-for (var i = 0; i < numTools; i++) {
-  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-  let { objects, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
-  data.tool.push(  {
-    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'TYPE') - 1] + 1,
-    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'BRAND') - 1] + 1,
-    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'PURCHASED_FROM') - 1] + 1,
-    date_purchased: dataUtil.createRandomDate(),
-    model_number: dataUtil.createRandomId(),
-    status: dataUtil.getRandFromArray(tool_statuses),
-    serial_number: dataUtil.createRandomId(),
-    organization_id: randOrgId,
-    location_id: dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId),
-    price: null,
-    photo: null,
-    year: null,
-    user_id: null
-  })
-}
-
 data.user = []
 for (let user_name of user_names) {
   data.user.push({
@@ -159,6 +136,29 @@ for (let user_name of user_names) {
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: dataUtil.getRandIdFromArray(data.organization)
   });
+}
+
+data.tool = []
+let numTools = 20;
+
+for (var i = 0; i < numTools; i++) {
+  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+  let { objects, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
+  data.tool.push({
+    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'TYPE') - 1] + 1,
+    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'BRAND') - 1] + 1,
+    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'PURCHASED_FROM') - 1] + 1,
+    date_purchased: dataUtil.createRandomDate(),
+    model_number: dataUtil.createRandomId(),
+    status: dataUtil.getRandFromArray(tool_statuses),
+    serial_number: dataUtil.createRandomId(),
+    organization_id: randOrgId,
+    location_id: dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId),
+    price: null,
+    photo: null,
+    year: null,
+    user_id: dataUtil.getRandIdFromObjectArrayWhere(data.user, 'organization_id', randOrgId)
+  })
 }
 
 if (appConfig['environment'] == 'test') {

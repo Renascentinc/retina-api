@@ -76,18 +76,6 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('create_tool()', () => {
-
-    it('successfully creates several tools', async () => {
-      let newTools = [];
-      for (let tool of data.tool) {
-        newTools.push(await dbFuncs.create_tool(tool));
-      }
-      assert.equal(newTools.length, data.tool.length);
-    });
-
-  });
-
   describe('create_user()', () => {
 
     it('successfully creates several users', async () => {
@@ -96,6 +84,18 @@ describe('Database creation and usage', async () => {
         newUsers.push(await dbFuncs.create_user(user));
       }
       assert.equal(newUsers.length, data.user.length);
+    });
+
+  });
+
+  describe('create_tool()', () => {
+
+    it('successfully creates several tools', async () => {
+      let newTools = [];
+      for (let tool of data.tool) {
+        newTools.push(await dbFuncs.create_tool(tool));
+      }
+      assert.equal(newTools.length, data.tool.length);
     });
 
   });
