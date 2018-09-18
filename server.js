@@ -26,7 +26,14 @@ class Server {
     try {
       let server = new ApolloServer({
         schema: schema,
-        context: ({req}) => this.getContextFromRequest(req)
+        context: ({req}) => {
+          if (this.isIntrospectionRequest(req))
+          {
+            return;
+          }
+
+          return this.getContextFromRequest(req)
+        }
       });
 
       await server.listen(appConfig['server.port']);
@@ -40,11 +47,6 @@ class Server {
 
   async getContextFromRequest(req) {
     if (typeof req.headers.authorization !== 'string') {
-      if (this.isIntrospectionRequest(req))
-      {
-        return;
-      }
-
       if (this.isLoginRoute(req)) {
         return { db: this.dbFunctions }
       }
