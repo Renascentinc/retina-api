@@ -49,6 +49,7 @@ input UpdatedTool {
 type Query {
   getAllTool: [Tool]!
   getTool(tool_id: ID!): Tool
+  searchTool(query: String!): [Tool]
 }
 
 type Mutation {

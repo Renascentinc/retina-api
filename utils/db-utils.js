@@ -63,6 +63,9 @@ async function loadSchema(dbClient) {
 
     logger.info('Applying Constraints');
     await applyConstraints(dbClient);
+
+    logger.info('Creating Views');
+    await createViews(dbClient);
   } catch (e) {
     logger.warn(`Trouble loading schema \n${e}`);
     dbClient.end();
@@ -121,6 +124,16 @@ async function applyConstraints(dbClient) {
   } catch (e) {
     logger.error(`Unable to apply constraints to database \n${e}`);
     throw new Error('Unable to apply constraints to database');
+  }
+}
+
+async function createViews(dbClient) {
+  try {
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.viewDir']);
+    await dbClient.query(schemas.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load views into database  \n${e}`);
+    throw new Error('Unable to load views into database');
   }
 }
 
