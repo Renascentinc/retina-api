@@ -13,4 +13,6 @@ CREATE TABLE IF NOT EXISTS public."location" (
   CONSTRAINT session_unique_city_state_zip_address_line_one UNIQUE (city, state, zip, address_line_one, organization_id)
 );
 
+CREATE UNIQUE INDEX ON public.location (id);
+
 COMMIT;

@@ -14,4 +14,6 @@ CREATE TABLE IF NOT EXISTS public.user (
   CONSTRAINT user_unique_email UNIQUE (email, organization_id)
 );
 
+CREATE UNIQUE INDEX ON public.user (id);
+
 COMMIT;

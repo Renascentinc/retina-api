@@ -7,4 +7,6 @@ CREATE TABLE IF NOT EXISTS public.session (
   CONSTRAINT session_unique_token_user_id_organization_id UNIQUE (token, user_id, organization_id)
 );
 
+CREATE UNIQUE INDEX ON public.session (token);
+
 COMMIT;

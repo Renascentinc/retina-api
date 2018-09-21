@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE VIEW tool_search_item_view AS
+CREATE OR REPLACE VIEW tool_search_item_view AS
 	SELECT
   	coalesce(public.user.first_name, '') as user_first_name,
   	coalesce(public.user.last_name, '') as user_last_name,

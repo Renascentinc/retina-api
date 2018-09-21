@@ -10,4 +10,6 @@ CREATE TABLE IF NOT EXISTS public.configurable_item (
   CONSTRAINT session_unique_type_name UNIQUE (type, name, organization_id)
 );
 
+CREATE UNIQUE INDEX ON public.configurable_item (id);
+
 COMMIT;
