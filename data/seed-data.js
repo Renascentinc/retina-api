@@ -139,7 +139,7 @@ for (let user_name of user_names) {
 }
 
 data.tool = []
-let numTools = 100;
+let numTools = 20;
 
 for (var i = 0; i < numTools; i++) {
   let randOrgId = dataUtil.getRandIdFromArray(data.organization);
