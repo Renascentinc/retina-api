@@ -498,7 +498,33 @@ describe('Database creation and usage', async () => {
 
   });
 
-  // TODO: Add search test
+  describe('search_tool()', () => {
+
+    it('tools can be searched', async () => {
+      let randomUser = dataUtil.getRandFromArray(data.user);
+      let tools = await dbFuncs.search_tool({
+        lexemes: [randomUser.first_name],
+        organization_id: randomUser.organization_id
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+  });
+
+  describe('search_user()', () => {
+
+    it('tools can be searched', async () => {
+      let randomUser = dataUtil.getRandFromArray(data.user);
+      let users = await dbFuncs.search_user({
+        lexemes: [randomUser.first_name],
+        organization_id: randomUser.organization_id
+      });
+
+      assert.ok(users.length > 0);
+    });
+
+  });
 
   after(async () => {
     await dbClient.disconnect();

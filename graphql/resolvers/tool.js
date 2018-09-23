@@ -27,6 +27,10 @@ module.exports = {
      */
     searchTool: async (_, { query }, { db, session }) => {
       let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+      if (lexemes.length == 0) {
+        return [];
+      }
+
       let searchResults = await db.search_tool({
         lexemes,
         organization_id: session.organization_id
