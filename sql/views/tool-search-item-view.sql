@@ -1,22 +1,25 @@
 BEGIN;
 
+/*
+ * A view to simplify tool searching. It joins together all the fields that
+ * a tool needs to be searched on. It also assures all fields will be of type text
+ */
 CREATE OR REPLACE VIEW tool_search_item_view AS
 	SELECT
-  	coalesce(public.user.first_name, '') as user_first_name,
-  	coalesce(public.user.last_name, '') as user_last_name,
-  	tool.id::text as tool_id,
-  	brand.name as brand_name,
-  	type.name as type_name,
-  	tool.model_number as tool_model_number,
-  	tool.serial_number as tool_serial_number,
-  	coalesce(public.location.name, '') as location_name,
-  	tool.status::text as tool_status,
-  	tool.organization_id as tool_organization_id
-  	from tool
+  	COALESCE(public.user.first_name, '') AS user_first_name,
+  	COALESCE(public.user.last_name, '') AS user_last_name,
+  	tool.id::text AS tool_id,
+  	brand.name AS brand_name,
+  	type.name AS type_name,
+  	tool.model_number AS tool_model_number,
+  	tool.serial_number AS tool_serial_number,
+  	COALESCE(public.location.name, '') AS location_name,
+  	tool.status::text AS tool_status
+  	FROM tool
 
-  	left join public.user on public.user.id = tool.user_id
-    left join public.location on public.location.id = tool.location_id
-  	join public.configurable_item as brand on brand.id = tool.brand_id
-  	join public.configurable_item as type on type.id = tool.type_id;
+  	LEFT JOIN public.user on public.user.id = tool.user_id
+    LEFT JOIN public.location on public.location.id = tool.location_id
+  	JOIN public.configurable_item AS brand ON brand.id = tool.brand_id
+  	JOIN public.configurable_item AS type ON type.id = tool.type_id;
 
 COMMIT;

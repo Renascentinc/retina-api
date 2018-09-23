@@ -1,5 +1,13 @@
--- TODO: Describe how this works
-CREATE OR REPLACE FUNCTION public.search_user(
+/*
+ * 1) Create a table called summed_scores of all the organization's user ids, with scores of 0.
+ * 2) For each search token
+ *    1) For each user in summed_scores, find the score of the closest matching user column to the token
+ *    2) Select only those users with a greatest similarity of > 0.3
+ *    3) Delete users from summed_scores that were not selected in the previous step
+ *    4) Add the greatest similarity for each user to the similarity column in summed_scores
+ * 3) Join the resulting ids in summed_scores with the user table, selecting only the top 25 results (or the requested page of results, once paging is implemented)
+ */
+ CREATE OR REPLACE FUNCTION public.search_user(
 	lexemes		     text[],
 	organization_id integer
 )
@@ -13,7 +21,7 @@ AS $$
 
     FOREACH lexeme IN ARRAY lexemes LOOP
     	WITH scores as (
-    		WITH sim_scores AS (
+    		WITH greatest_scores AS (
     			SELECT public.user.id as user_id,
         		GREATEST (
               similarity(public.user.first_name,lexeme),
@@ -22,7 +30,7 @@ AS $$
 	        FROM public.user
 	          WHERE public.user.id IN (SELECT id from summed_scores)
         )
-    		SELECT * FROM sim_scores where sim_scores.greatest_score > 0.3
+    		SELECT * FROM greatest_scores where greatest_scores.greatest_score > 0.3
       ), _ AS (
       	DELETE FROM summed_scores where id not in (select user_id from scores)
       )
