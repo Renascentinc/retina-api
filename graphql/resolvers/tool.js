@@ -17,7 +17,26 @@ module.exports = {
         organization_id: session.organization_id
       });
       return tool[0];
-     }
+    },
+
+    /**
+     * Split query into lexemes (stripping all unneccessary whitespace) and send them
+     * to the search_tool db function
+     *
+     * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
+     */
+    searchTool: async (_, { query }, { db, session }) => {
+      let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+      if (lexemes.length == 0) {
+        return [];
+      }
+
+      let searchResults = await db.search_tool({
+        lexemes,
+        organization_id: session.organization_id
+      });
+      return searchResults;
+    }
   },
 
   Mutation: {

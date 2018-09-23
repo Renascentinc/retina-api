@@ -22,4 +22,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
   CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
 );
 
+CREATE UNIQUE INDEX ON public.tool (id);
+CREATE INDEX ON public.tool (type_id, brand_id, user_id, location_id);
+
 COMMIT;

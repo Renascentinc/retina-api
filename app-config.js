@@ -6,6 +6,7 @@ let appConfig = {
   'db.constraintDir': `${process.env.PWD}/sql/constraints`,
   'db.functionDir': `${process.env.PWD}/sql/functions`,
   'db.typeDir': `${process.env.PWD}/sql/types`,
+  'db.viewDir': `${process.env.PWD}/sql/views`,
   'db.refreshSchema': false,
   'db.seed': false,
 

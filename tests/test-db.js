@@ -498,6 +498,35 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('search_tool()', () => {
+
+    it('tools can be searched', async () => {
+      let randomTool = dataUtil.getRandFromArray(data.tool);
+      console.log(randomTool.model_number)
+      let tools = await dbFuncs.search_tool({
+        lexemes: [randomTool.model_number],
+        organization_id: randomTool.organization_id
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+  });
+
+  describe('search_user()', () => {
+
+    it('tools can be searched', async () => {
+      let randomUser = dataUtil.getRandFromArray(data.user);
+      let users = await dbFuncs.search_user({
+        lexemes: [randomUser.first_name],
+        organization_id: randomUser.organization_id
+      });
+
+      assert.ok(users.length > 0);
+    });
+
+  });
+
   after(async () => {
     await dbClient.disconnect();
     await dropDbIfExists(appConfig['db.database']);
