@@ -498,6 +498,8 @@ describe('Database creation and usage', async () => {
 
   });
 
+  // TODO: Add search test
+
   after(async () => {
     await dbClient.disconnect();
     await dropDbIfExists(appConfig['db.database']);
