@@ -36,6 +36,12 @@ module.exports = {
         organization_id: session.organization_id
       });
       return searchResults;
+    },
+
+    searchStrictTool: async (_, filters, { db, session }) => {
+      filters['organization_id'] = session.organization_id;
+      let searchResults = await db.search_strict_tool(filters);
+      return searchResults;
     }
   },
 
