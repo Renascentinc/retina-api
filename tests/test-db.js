@@ -503,7 +503,7 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_tool({
-        lexemes: [randomTool.model_number],
+        lexemes: [randomTool.status],
         organization_id: randomTool.organization_id
       });
 
@@ -540,13 +540,21 @@ describe('Database creation and usage', async () => {
     });
 
     it('successfully searches for tools when all filters are passed', async () => {
-      let randomTool = dataUtil.getRandFromArray(data.tool);
-      let tools = await dbFuncs.search_strict_tool({
-        user_id: randomTool.user_id,
-        type_id: randomTool.type_id,
-        brand_id: randomTool.brand_id,
-        tool_status: randomTool.status,
+      let randomToolId = dataUtil.getRandIdFromArray(data.tool);
+      let randomTool = data.tool[randomToolId - 1];
+      let randomToolFromDb = await dbFuncs.get_tool({
+        tool_id: randomToolId,
         organization_id: randomTool.organization_id
+      });
+
+      randomToolFromDb = randomToolFromDb[0];
+
+      let tools = await dbFuncs.search_strict_tool({
+        user_id: randomToolFromDb.user_id,
+        type_id: randomToolFromDb.type_id,
+        brand_id: randomToolFromDb.brand_id,
+        tool_status: randomToolFromDb.status,
+        organization_id: randomToolFromDb.organization_id
       });
 
       assert.ok(tools.length > 0);
