@@ -73,6 +73,13 @@ async function getUserByCredentialsAndOrganization({ email, password, organizati
   });
 }
 
+/**
+ * First check to see if the given user is already logged in and if so, send
+ * back their token and information. Else, create a new session and send back the
+ * token and user information
+ *
+ * @throws ApolloError[SESSION_CREATION_ERROR] if the session fails to be created
+ */
 async function createLoginResponse(user, db) {
   let existingSession = await db.get_session_by_user_id({
     user_id: user.id
