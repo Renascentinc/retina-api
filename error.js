@@ -1,3 +1,4 @@
+const { ApolloError } = require('apollo-server');
 
 class ArgumentError extends Error {
   constructor(...args) {
@@ -27,4 +28,12 @@ class GraphQlError extends Error {
   }
 }
 
-module.exports = { ArgumentError, DbClientError, DbError, GraphQlError }
+class InsufficientInformationError extends ApolloError
+{
+  constructor(message) {
+    super(message, 'INSUFFICIENT_INFORMATION');
+    this.name = 'ArgumentError';
+  }
+}
+
+module.exports = { ArgumentError, DbClientError, DbError, GraphQlError, InsufficientInformationError }

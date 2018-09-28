@@ -1,7 +1,7 @@
+
 CREATE OR REPLACE FUNCTION public.get_user_by_credentials (
   email           str_t,
-  password        str_t,
-  organization_id id_t
+  password        str_t
 )
 RETURNS SETOF public.user
 AS $$
@@ -11,8 +11,7 @@ AS $$
     RETURN QUERY
       SELECT * FROM public.user
 		    WHERE public.user.email = get_user_by_credentials.email
-        AND public.user.password = crypt(get_user_by_credentials.password, public.user.password)
-        AND public.user.organization_id = get_user_by_credentials.organization_id;
+        AND public.user.password = crypt(get_user_by_credentials.password, public.user.password);
   END;
 $$
 LANGUAGE plpgsql;
