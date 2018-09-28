@@ -536,7 +536,7 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_tool({
-        lexemes: [randomTool.status],
+        lexemes: [randomTool.serial_number],
         organization_id: randomTool.organization_id
       });
 
