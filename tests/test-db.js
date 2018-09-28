@@ -500,11 +500,10 @@ describe('Database creation and usage', async () => {
 
   describe('search_tool()', () => {
 
-    it('tools can be searched', async () => {
+    it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
-      console.log(randomTool.model_number)
       let tools = await dbFuncs.search_tool({
-        lexemes: [randomTool.model_number],
+        lexemes: [randomTool.status],
         organization_id: randomTool.organization_id
       });
 
@@ -515,7 +514,7 @@ describe('Database creation and usage', async () => {
 
   describe('search_user()', () => {
 
-    it('tools can be searched', async () => {
+    it('successfully searches for users', async () => {
       let randomUser = dataUtil.getRandFromArray(data.user);
       let users = await dbFuncs.search_user({
         lexemes: [randomUser.first_name],
@@ -523,6 +522,64 @@ describe('Database creation and usage', async () => {
       });
 
       assert.ok(users.length > 0);
+    });
+
+  });
+
+  describe('search_strict_tool()', () => {
+
+    it('successfully searches for tools when only some filters are passed', async () => {
+      let randomTool = dataUtil.getRandFromArray(data.tool);
+      let tools = await dbFuncs.search_strict_tool({
+        user_id: randomTool.user_id,
+        type_id: undefined,
+        organization_id: randomTool.organization_id
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+    it('successfully searches for tools when all filters are passed', async () => {
+      let randomToolId = dataUtil.getRandIdFromArray(data.tool);
+      let randomTool = data.tool[randomToolId - 1];
+      let randomToolFromDb = await dbFuncs.get_tool({
+        tool_id: randomToolId,
+        organization_id: randomTool.organization_id
+      });
+
+      randomToolFromDb = randomToolFromDb[0];
+
+      let tools = await dbFuncs.search_strict_tool({
+        user_id: randomToolFromDb.user_id,
+        type_id: randomToolFromDb.type_id,
+        brand_id: randomToolFromDb.brand_id,
+        tool_status: randomToolFromDb.status,
+        organization_id: randomToolFromDb.organization_id
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+    it('returns all tools if no filters are passed', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let toolsInOrg = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects;
+      let numToolsInOrg = toolsInOrg.length;
+      let tools = await dbFuncs.search_strict_tool({
+        organization_id: randOrgId
+      });
+
+      assert.equal(tools.length, numToolsInOrg);
+    });
+
+    /// To verify that a type_id is being searched on that doesn't exist in the db, search
+    /// for an id that is 1 greater than the greatest id in the db
+    it('returns no tools for a query with no filters that match existing tools', async () => {
+      let tools = await dbFuncs.search_strict_tool({
+        type_id: data.configurable_item.length + 1,
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
+
+      assert.equal(tools.length, 0);
     });
 
   });

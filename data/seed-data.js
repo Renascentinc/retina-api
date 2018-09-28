@@ -41,26 +41,31 @@ let roles = [
   'ADMINISTRATOR'
 ]
 
-let user_names = [
+let user_info = [
   {
     first_name: 'Bob',
-    last_name: 'Thompson'
+    last_name: 'Thompson',
+    organization_id: 1
   },
   {
     first_name: 'Bill',
-    last_name: 'Hathaway'
+    last_name: 'Hathaway',
+    organization_id: 1
   },
   {
     first_name: 'Fred',
-    last_name: 'Richardson'
+    last_name: 'Richardson',
+    organization_id: 2
   },
   {
     first_name: 'Sam',
-    last_name: 'Smith'
+    last_name: 'Smith',
+    organization_id: 2
   },
   {
     first_name: 'Rick',
-    last_name: 'Dickson'
+    last_name: 'Dickson',
+    organization_id: 3
   }
 ];
 
@@ -125,16 +130,16 @@ data.location = [
 ];
 
 data.user = []
-for (let user_name of user_names) {
+for (let single_user_info of user_info) {
   data.user.push({
-    first_name: user_name.first_name,
-    last_name: user_name.last_name,
-    email: `${user_name.first_name.toLowerCase()}.${user_name.last_name.toLowerCase()}@somecompany.com`,
+    first_name: single_user_info.first_name,
+    last_name: single_user_info.last_name,
+    email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@somecompany.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
     role: dataUtil.getRandFromArray(roles),
     status: dataUtil.getRandFromArray(user_statuses),
-    organization_id: dataUtil.getRandIdFromArray(data.organization)
+    organization_id: single_user_info.organization_id
   });
 }
 
