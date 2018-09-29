@@ -5,6 +5,6 @@ type LoginResponse {
 }
 
 type Mutation {
-  login(organization_name: String!, email: String!, password: String!): LoginResponse
+  login(email: String!, password: String!, organization_name: String): LoginResponse
   logout: Boolean
 }

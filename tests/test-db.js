@@ -362,33 +362,18 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('delete_session()', () => {
-
-    it('successfully deletes a session', async () => {
-      let newSession = dataUtil.getRandFromArray(data.session);
-      newSession = await dbFuncs.create_session(newSession);
-      newSession = newSession[0];
-
-      let deletedSession = await dbFuncs.delete_session({
-        token: newSession.token
-      });
-
-      assert.equal(deletedSession.length, 1);
-      assert.equal(newSession.token, deletedSession[0].token);
-    });
-
-  });
-
   describe('get_session_by_token()', () => {
 
-    it('successfully gets an existing token', async () => {
-      let newSession = dataUtil.getRandFromArray(data.session);
-      newSession = await dbFuncs.create_session(newSession);
-      newSession = newSession[0];
+    it('successfully gets an existing session by token', async () => {
+      let randSession = dataUtil.getRandFromArray(data.session);
+      let session = await dbFuncs.get_session_by_user_id({
+        user_id: randSession.user_id
+      });
+      session = session[0];
 
-      let session = await dbFuncs.get_session_by_token({token: newSession.token});
-      assert.equal(session.length, 1);
-      assert.equal(session[0].user_id, newSession.user_id);
+      let sessionFromToken = await dbFuncs.get_session_by_token({token: session.token});
+      assert.equal(sessionFromToken.length, 1);
+      assert.equal(sessionFromToken[0].user_id, session.user_id);
     });
 
 
@@ -407,6 +392,25 @@ describe('Database creation and usage', async () => {
       });
 
       assert.ok(existingSession.length >= 1);
+    });
+
+  });
+
+  describe('delete_session()', () => {
+
+    it('successfully deletes a session', async () => {
+      let randSession = dataUtil.getRandFromArray(data.session);
+      let session = await dbFuncs.get_session_by_user_id({
+        user_id: randSession.user_id
+      });
+      session = session[0];
+
+      let deletedSession = await dbFuncs.delete_session({
+        token: session.token
+      });
+
+      assert.equal(deletedSession.length, 1);
+      assert.equal(session.token, deletedSession[0].token);
     });
 
   });
@@ -430,12 +434,12 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('get_user_by_credentials()', () => {
+  describe('get_user_by_credentials_and_organization()', () => {
 
     it('a user can be retrieved, given their email, password, and org id', async () => {
       let randomUserId = dataUtil.getRandIdFromArray(data.user);
       let randomUser = data.user[randomUserId - 1];
-      let validUser = await dbFuncs.get_user_by_credentials({
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
         email: randomUser.email,
         password: randomUser.password,
         organization_id: randomUser.organization_id
@@ -443,6 +447,35 @@ describe('Database creation and usage', async () => {
 
       assert.equal(validUser.length, 1);
       assert.equal(validUser[0].id, randomUserId);
+    });
+
+  });
+
+  describe('get_user_by_credentials()', () => {
+
+    it('at least one user can be retrieved, given their email and password', async () => {
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let validUser = await dbFuncs.get_user_by_credentials({
+        email: randomUser.email,
+        password: randomUser.password
+      });
+
+      assert.ok(validUser.length > 0);
+    });
+
+  });
+
+  describe('get_user_by_email()', () => {
+
+    it('at least one user can be retrieved, given their email', async () => {
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let validUser = await dbFuncs.get_user_by_email({
+        email: randomUser.email
+      });
+
+      assert.ok(validUser.length > 0);
     });
 
   });
@@ -463,7 +496,7 @@ describe('Database creation and usage', async () => {
 
       assert.equal(updatedUser.length, 1);
 
-      let validUser = await dbFuncs.get_user_by_credentials({
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
         email: randomUser.email,
         password: newPassword,
         organization_id: randomUser.organization_id
@@ -487,7 +520,7 @@ describe('Database creation and usage', async () => {
 
       assert.equal(updatedUser.length, 0);
 
-      let validUser = await dbFuncs.get_user_by_credentials({
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
         email: randomUser.email,
         password: wontBeSetNewPassword,
         organization_id: randomUser.organization_id
@@ -503,7 +536,7 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_tool({
-        lexemes: [randomTool.status],
+        lexemes: [randomTool.serial_number],
         organization_id: randomTool.organization_id
       });
 
