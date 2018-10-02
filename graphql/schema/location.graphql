@@ -28,8 +28,8 @@ input UpdatedLocation {
 }
 
 type Query {
-  getAllLocation: [Location]!
   getLocation(location_id: ID!): Location
+  getAllLocation: [Location]!
 }
 
 type Mutation {

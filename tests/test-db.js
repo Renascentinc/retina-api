@@ -311,6 +311,7 @@ describe('Database creation and usage', async () => {
           status: 'ACTIVE'
         }
       };
+      delete updatedUserObject.password;
       let updatedUser = await dbFuncs.update_user(updatedUserObject);
 
       assert.equal(updatedUser.length, 1);

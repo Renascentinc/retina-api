@@ -21,7 +21,7 @@ module.exports = {
      *
      * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
-    searchUser: async (_, { query }, { db, session }) => {
+    searchUser: async (_, { query, pagingParameters: { page_number, page_size } = {} }, { db, session }) => {
       let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
       if (lexemes.length == 0) {
         return [];
@@ -29,7 +29,9 @@ module.exports = {
 
       let searchResults = await db.search_user({
         lexemes,
-        organization_id: session.organization_id
+        organization_id: session.organization_id,
+        page_number,
+        page_size
       });
       return searchResults;
     }
