@@ -1,5 +1,7 @@
 
 const { UserInputError, AuthenticationError } = require('apollo-server');
+const { InsufficientInformationError } = require('../../error');
+const { PasswordResetMailer } = require('../../mailer');
 
 module.exports = {
   Mutation: {
@@ -11,7 +13,6 @@ module.exports = {
      * @throws AuthenticationError if the user gave incorrect credentials
      */
     login: async (_, loginInfo, { db }) => {
-
       let userArray = loginInfo.organization_name ?
         await getUserByCredentialsAndOrganization(loginInfo, db) :
         await getUserByCredentials(loginInfo, db);
@@ -26,14 +27,75 @@ module.exports = {
     logout: async (_, __, { db, session }) => {
       let deletedToken = await db.delete_session({ token: session.token });
       return deletedToken[0] ? true : false;
+    },
+
+    requestPasswordReset: async (_, passwordResetInfo, { db }) => {
+      let userArray = passwordResetInfo.organization_name ?
+        await getUserByEmailAndOrganization(passwordResetInfo, db) :
+        await getUserByEmail(passwordResetInfo, db);
+
+      if (userArray.length === 0) {
+        throw new UserInputError(`Email does not exist`);
+      }
+
+      let passwordResetCode = await db.create_password_reset_code(passwordResetInfo);
+
+      let mailer = new PasswordResetMailer();
+
+      let sentEmailResult = await mailer.sendEmail({
+        to: passwordResetInfo.email,
+        subject: 'Response to Password Reset Request',
+        html: `https://${environmentName}.renascentinc.com/password-reset?code=${passwordResetCode.code}`
+      });
+
+      return sentEmailResult ? true : false;
     }
   }
 };
 
 /**
+ * Returns an array of users with the given email
+ *
+ * @throws InsufficientInformationError if email is not unique
+ */
+async function getUserByEmail({ email }, db) {
+  let userArray = await db.get_user_by_email({
+    email
+  });
+
+  if (userArray.length > 1) {
+    throw new InsufficientInformationError(`Organization name required`);
+  }
+
+  return userArray;
+}
+
+/**
+ * Returns an array of users with the given email and organization name
+ *
+ * @throws UserInputError if org does not exist
+ */
+async function getUserByEmailAndOrganization({ email, organization_name }, db) {
+  let organization = await db.get_organization_by_name({
+    organization_name
+  });
+
+  if (organization.length === 0) {
+    throw new UserInputError(`Organization "${organization_name}" does not exist`);
+  }
+
+  organization = organization[0];
+
+  return await db.get_user_by_email_and_organization({
+    organization_id: organization.id,
+    email,
+  });
+}
+
+/**
  * Returns an array of users with the given credentials
  *
- * @throws InsufficientInformationError if email and password are not unique
+ * @throws InsufficientInformationError if email is not unique
  */
 async function getUserByCredentials({ email, password }, db) {
   let userArray = await db.get_user_by_email({

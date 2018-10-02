@@ -7,4 +7,5 @@ type LoginResponse {
 type Mutation {
   login(email: String!, password: String!, organization_name: String): LoginResponse
   logout: Boolean
+  requestPasswordReset(email: String!, organization_name: String): Boolean
 }
