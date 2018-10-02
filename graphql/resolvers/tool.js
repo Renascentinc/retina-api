@@ -4,10 +4,9 @@ let configurableItemResolvers = require('./configurable-item');
 
 module.exports = {
   Query: {
-    getAllTool: async (_, __, { db, session}) => {
-      let tools = await db.get_all_tool({
-        organization_id: session.organization_id
-      });
+    getAllTool: async (_, { pagingParameters = {} }, { db, session}) => {
+      pagingParameters['organization_id'] = session.organization_id;
+      let tools = await db.get_all_tool(pagingParameters);
       return tools;
     },
 

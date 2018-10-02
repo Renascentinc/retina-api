@@ -47,7 +47,7 @@ input UpdatedTool {
 }
 
 type Query {
-  getAllTool: [Tool]!
+  getAllTool(pagingParameters: PagingParameters): [Tool]!
   getTool(tool_id: ID!): Tool
   searchTool(query: String!): [Tool]
   searchStrictTool(user_id: ID, brand_id: ID, type_id: ID, tool_status: ToolStatus): [Tool]

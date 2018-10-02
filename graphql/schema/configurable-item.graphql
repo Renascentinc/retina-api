@@ -24,6 +24,6 @@ type Query {
 }
 
 type Mutation {
-  createConfigurableItem(newConfigurableItem: NewConfigurableItem): ConfigurableItem
-  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem): ConfigurableItem
+  createConfigurableItem(newConfigurableItem: NewConfigurableItem!): ConfigurableItem
+  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem!): ConfigurableItem
 }
