@@ -24,7 +24,8 @@ AS $$
       (CASE WHEN search_strict_tool.user_id IS NULL THEN '' ELSE ' AND user_id =' || search_strict_tool.user_id END) ||
       (CASE WHEN search_strict_tool.brand_id IS NULL THEN '' ELSE ' AND brand_id =' || search_strict_tool.brand_id END) ||
       (CASE WHEN search_strict_tool.type_id IS NULL THEN '' ELSE ' AND type_id =' || search_strict_tool.type_id END) ||
-      (CASE WHEN search_strict_tool.tool_status IS NULL THEN '' ELSE ' AND status =' || quote_literal(search_strict_tool.tool_status) END);
+      (CASE WHEN search_strict_tool.tool_status IS NULL THEN '' ELSE ' AND status =' || quote_literal(search_strict_tool.tool_status) END) ||
+      ' ORDER BY tool.id ASC';
 
     RETURN QUERY EXECUTE query;
 
