@@ -480,6 +480,21 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_user_by_email_and_organization()', () => {
+
+    it('at least one user can be retrieved, given their email and organization', async () => {
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let validUser = await dbFuncs.get_user_by_email_and_organization({
+        email: randomUser.email,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.ok(validUser.length > 0);
+    });
+
+  });
+
   describe('update_password()', () => {
 
     it(`successfully updates a user's password`, async () => {
