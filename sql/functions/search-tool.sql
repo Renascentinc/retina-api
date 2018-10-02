@@ -9,8 +9,10 @@
  * 3) Join the resulting ids in summed_scores with the tool table, selecting only the top 25 results (or the requested page of results, once paging is implemented)
  */
 CREATE FUNCTION public.search_tool(
-	lexemes		     text[],
-	organization_id integer
+  lexemes		     text[],
+  organization_id id_t,
+  page_size       integer = NULL,
+  page_number     integer = 0
 )
  RETURNS SETOF tool
 AS $$
@@ -50,7 +52,8 @@ AS $$
         SELECT tool.* FROM tool
         JOIN (SELECT * FROM summed_scores
               ORDER BY score DESC
-              LIMIT 25) ss
+              OFFSET page_number*page_size
+              LIMIT page_size) ss
         ON tool.id = ss.id
         ORDER BY ss.score DESC;
   END;
