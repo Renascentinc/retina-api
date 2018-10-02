@@ -39,9 +39,13 @@ module.exports = {
       return searchResults;
     },
 
-    searchStrictTool: async (_, filters, { db, session }) => {
-      filters['organization_id'] = session.organization_id;
-      let searchResults = await db.search_strict_tool(filters);
+    searchStrictTool: async (_, { pagingParameters, ...filters }, { db, session }) => {
+      let pagedFilters = {
+        ...filters,
+        ...pagingParameters,
+        organization_id: session.organization_id
+      };
+      let searchResults = await db.search_strict_tool(pagedFilters);
       return searchResults;
     }
   },
