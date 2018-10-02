@@ -29,9 +29,9 @@ input UpdatedUser {
 }
 
 type Query {
-  getAllUser: [User]!
+  getAllUser(pagingParameters: PagingParameters): [User]!
   getUser(user_id: ID!): User
-  searchUser(query: String!): [User]
+  searchUser(query: String!): [User]!
 }
 
 type Mutation {

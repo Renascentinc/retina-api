@@ -1,10 +1,9 @@
 
 module.exports = {
   Query: {
-    getAllUser: async (_, __, { db, session }) => {
-      let users = await db.get_all_user({
-        organization_id: session.organization_id
-      });
+    getAllUser: async (_, { pagingParameters = {} }, { db, session }) => {
+      pagingParameters['organization_id'] = session.organization_id;
+      let users = await db.get_all_user(pagingParameters);
       return users;
     },
 
