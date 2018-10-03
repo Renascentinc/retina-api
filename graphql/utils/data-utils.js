@@ -6,7 +6,9 @@ var TimSort = require('timsort');
  *   1) Removing extra whitespace
  *   2) Taking it to lowercase
  *   3) Splitting it by ' '
- *   4) Sorting it by word length descending
+ *   4) Sorting it by word length descending (this is a heuristic based on the
+ *      idea that longer words are more rare and therefore will trim down the
+ *      query results more quickly)
  *
  * @param {String} query - A query string
  *
