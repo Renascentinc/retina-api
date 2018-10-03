@@ -1,6 +1,7 @@
 let locationResolvers = require('./location');
 let userResolvers = require('./user');
 let configurableItemResolvers = require('./configurable-item');
+let { preprocessQuery } = require('../utils/data-utils');
 
 module.exports = {
   Query: {
@@ -18,14 +19,8 @@ module.exports = {
       return tool[0];
     },
 
-    /**
-     * Split query into lexemes (stripping all unneccessary whitespace) and send them
-     * to the search_tool db function
-     *
-     * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
-     */
     searchTool: async (_, { query, pagingParameters: { page_number, page_size } = {} }, { db, session }) => {
-      let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+      let lexemes = preprocessQuery(query);
       if (lexemes.length == 0) {
         return [];
       }

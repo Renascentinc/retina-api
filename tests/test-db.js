@@ -193,7 +193,7 @@ describe('Database creation and usage', async () => {
 
     it('successfully gets all tools for an organization', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let expectedNumTools= dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
+      let expectedNumTools = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
       let tools = await dbFuncs.get_all_tool({
         organization_id: randOrgId
       });
@@ -201,6 +201,50 @@ describe('Database creation and usage', async () => {
       assert.equal(tools.length, expectedNumTools);
     });
 
+    it('successfully gets a page of tools', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let pageSize = 5;
+      let tools = await dbFuncs.get_all_tool({
+        organization_id: randOrgId,
+        page_size: pageSize,
+        page_number: 0
+      });
+
+      assert.equal(tools.length, pageSize);
+    });
+
+    it('gets 0 tools for an out-of-range page', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let tools = await dbFuncs.get_all_tool({
+        organization_id: randOrgId,
+        page_size: 5,
+        page_number: 100000
+      });
+
+      assert.equal(tools.length, 0);
+    });
+
+    it('successfully gets all tools when page size is not specified', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let expectedNumTools = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
+      let tools = await dbFuncs.get_all_tool({
+        organization_id: randOrgId,
+        page_number: 10
+      });
+
+      assert.equal(tools.length, expectedNumTools);
+    });
+
+    it('successfully gets page of tools when no page is specified', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let pageSize = 5;
+      let tools = await dbFuncs.get_all_tool({
+        organization_id: randOrgId,
+        page_size: pageSize,
+      });
+
+      assert.equal(tools.length, pageSize);
+    });
   });
 
   describe('get_tool()', () => {
