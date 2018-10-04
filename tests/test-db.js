@@ -531,11 +531,11 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('search_tool()', () => {
+  describe('search_fuzzy_tool()', () => {
 
     it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
-      let tools = await dbFuncs.search_tool({
+      let tools = await dbFuncs.search_fuzzy_tool({
         lexemes: [randomTool.serial_number],
         organization_id: randomTool.organization_id
       });
