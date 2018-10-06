@@ -47,10 +47,10 @@ input UpdatedTool {
 }
 
 type Query {
-  getAllTool: [Tool]!
   getTool(tool_id: ID!): Tool
-  searchTool(query: String!): [Tool]
-  searchStrictTool(user_id: ID, brand_id: ID, type_id: ID, tool_status: ToolStatus): [Tool]
+  getAllTool(pagingParameters: PagingParameters): [Tool]!
+  searchTool(query: String!, pagingParameters: PagingParameters): [Tool]
+  searchStrictTool(user_id: ID, brand_id: ID, type_id: ID, tool_status: ToolStatus, pagingParameters: PagingParameters): [Tool]
 }
 
 type Mutation {

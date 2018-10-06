@@ -2,10 +2,9 @@
 
 module.exports = {
   Query: {
-    getAllConfigurableItem: async (_, __, { db, session }) => {
-      let configurableItems = await db.get_all_configurable_item({
-        organization_id: session.organization_id
-      });
+    getAllConfigurableItem: async (_, { pagingParameters = {} }, { db, session }) => {
+      pagingParameters['organization_id'] = session.organization_id;
+      let configurableItems = await db.get_all_configurable_item(pagingParameters);
       return configurableItems;
     },
 

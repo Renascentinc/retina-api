@@ -154,7 +154,7 @@ for (let single_user_info of user_info) {
 }
 
 data.tool = []
-let numTools = 20;
+let numTools = 40;
 
 for (var i = 0; i < numTools; i++) {
   let randOrgId = dataUtil.getRandIdFromArray(data.organization);

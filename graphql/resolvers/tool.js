@@ -1,13 +1,13 @@
 let locationResolvers = require('./location');
 let userResolvers = require('./user');
 let configurableItemResolvers = require('./configurable-item');
+let { preprocessQuery } = require('../utils/data-utils');
 
 module.exports = {
   Query: {
-    getAllTool: async (_, __, { db, session}) => {
-      let tools = await db.get_all_tool({
-        organization_id: session.organization_id
-      });
+    getAllTool: async (_, { pagingParameters = {} }, { db, session}) => {
+      pagingParameters['organization_id'] = session.organization_id;
+      let tools = await db.get_all_tool(pagingParameters);
       return tools;
     },
 
@@ -19,28 +19,28 @@ module.exports = {
       return tool[0];
     },
 
-    /**
-     * Split query into lexemes (stripping all unneccessary whitespace) and send them
-     * to the search_tool db function
-     *
-     * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
-     */
-    searchTool: async (_, { query }, { db, session }) => {
-      let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+    searchTool: async (_, { query, pagingParameters: { page_number, page_size } = {} }, { db, session }) => {
+      let lexemes = preprocessQuery(query);
       if (lexemes.length == 0) {
         return [];
       }
 
       let searchResults = await db.search_tool({
         lexemes,
-        organization_id: session.organization_id
+        organization_id: session.organization_id,
+        page_number,
+        page_size
       });
       return searchResults;
     },
 
-    searchStrictTool: async (_, filters, { db, session }) => {
-      filters['organization_id'] = session.organization_id;
-      let searchResults = await db.search_strict_tool(filters);
+    searchStrictTool: async (_, { pagingParameters, ...filters }, { db, session }) => {
+      let pagedFilters = {
+        ...filters,
+        ...pagingParameters,
+        organization_id: session.organization_id
+      };
+      let searchResults = await db.search_strict_tool(pagedFilters);
       return searchResults;
     }
   },
