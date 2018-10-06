@@ -18,6 +18,10 @@ var TimSort = require('timsort');
  * Note: Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
  */
 function preprocessQuery(query) {
+  if (!Boolean(query)) {
+    return [];
+  }
+
   let trimmedQuery = query.replace(/\s+/g, " ").trim();
   if (trimmedQuery.length === 0) {
     return [];
