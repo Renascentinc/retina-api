@@ -24,7 +24,7 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     region: us-east-2
     app: retina
-    env: release
+    env: develop
     bucket_name: elasticbeanstalk-us-east-2-814839865406
     on:
       repo: Renascentinc/retina-api
