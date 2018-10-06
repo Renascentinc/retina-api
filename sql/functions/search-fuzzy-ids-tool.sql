@@ -10,7 +10,9 @@
  */
  CREATE FUNCTION public.search_fuzzy_ids_tool(
    lexemes		   text[],
-   tool_ids      integer[]
+   tool_ids      integer[],
+   page_size     integer = NULL,
+   page_number   integer = 0
  )
   RETURNS SETOF tool
  AS $$
@@ -50,7 +52,8 @@
          SELECT tool.* FROM tool
          JOIN (SELECT * FROM summed_scores
                ORDER BY score DESC
-               LIMIT 25) ss
+               OFFSET page_number*page_size
+               LIMIT page_size) ss
          ON tool.id = ss.id
          ORDER BY ss.score DESC;
    END;

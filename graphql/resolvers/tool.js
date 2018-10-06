@@ -1,7 +1,7 @@
 let locationResolvers = require('./location');
 let userResolvers = require('./user');
 let configurableItemResolvers = require('./configurable-item');
-let { preprocessQuery } = require('../utils/data-utils');
+let { preprocessQuery, objectHasTruthyValues } = require('../utils/data-utils');
 
 module.exports = {
   Query: {
@@ -19,7 +19,6 @@ module.exports = {
       return tool[0];
     },
 
-<<<<<<< HEAD
     /**
      * Split query into lexemes (stripping all unneccessary whitespace) and send them
      * to the search_tool db function
@@ -31,7 +30,7 @@ module.exports = {
      */
     searchTool: async (_, { query = '', toolFilter, pagingParameters = {} }, { db, session }) => {
       let functionParams = {
-        organization_id: session.organization_id
+        organization_id: session.organization_id,
         ...pagingParameters
       };
 
@@ -41,7 +40,7 @@ module.exports = {
         return await db.search_strict_tool({ ...functionParams, ...toolFilter });
       }
 
-      if (objectDeepFalsey(toolFilter)) {
+      if (!objectHasTruthyValues(toolFilter)) {
         return await db.search_fuzzy_tool({ ...functionParams, lexemes });
       }
 
