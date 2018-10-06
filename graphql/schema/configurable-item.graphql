@@ -19,11 +19,11 @@ input UpdatedConfigurableItem {
 }
 
 type Query {
-  getAllConfigurableItem: [ConfigurableItem]!
   getConfigurableItem(configurable_item_id: ID!): ConfigurableItem
+  getAllConfigurableItem(pagingParameters: PagingParameters): [ConfigurableItem]!
 }
 
 type Mutation {
-  createConfigurableItem(newConfigurableItem: NewConfigurableItem): ConfigurableItem
-  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem): ConfigurableItem
+  createConfigurableItem(newConfigurableItem: NewConfigurableItem!): ConfigurableItem
+  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem!): ConfigurableItem
 }

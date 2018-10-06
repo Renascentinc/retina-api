@@ -43,28 +43,38 @@ let roles = [
 
 let user_info = [
   {
-    first_name: 'Bob',
-    last_name: 'Thompson',
+    first_name: 'Josiah',
+    last_name: 'Campbell',
     organization_id: 1
   },
   {
-    first_name: 'Bill',
-    last_name: 'Hathaway',
+    first_name: 'Elias',
+    last_name: 'Kraihanzel',
     organization_id: 1
   },
   {
-    first_name: 'Fred',
-    last_name: 'Richardson',
+    first_name: 'Jeremy',
+    last_name: 'Brown',
+    organization_id: 1
+  },
+  {
+    first_name: 'Amos',
+    last_name: 'Endersen',
+    organization_id: 1
+  },
+  {
+    first_name: 'James',
+    last_name: 'Alstrong',
     organization_id: 2
   },
   {
-    first_name: 'Sam',
-    last_name: 'Smith',
-    organization_id: 2
+    first_name: 'Nathan',
+    last_name: 'Powell',
+    organization_id: 1
   },
   {
-    first_name: 'Rick',
-    last_name: 'Dickson',
+    first_name: 'Nathan',
+    last_name: 'Powell',
     organization_id: 3
   }
 ];
@@ -134,7 +144,7 @@ for (let single_user_info of user_info) {
   data.user.push({
     first_name: single_user_info.first_name,
     last_name: single_user_info.last_name,
-    email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@somecompany.com`,
+    email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@renascentinc.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
     role: dataUtil.getRandFromArray(roles),
@@ -144,7 +154,7 @@ for (let single_user_info of user_info) {
 }
 
 data.tool = []
-let numTools = 20;
+let numTools = 50;
 
 for (var i = 0; i < numTools; i++) {
   let randOrgId = dataUtil.getRandIdFromArray(data.organization);

@@ -9,7 +9,9 @@
  */
  CREATE OR REPLACE FUNCTION public.search_user(
 	lexemes		     text[],
-	organization_id integer
+	organization_id integer,
+  page_size       integer = NULL,
+  page_number     integer = 0
 )
  RETURNS SETOF public.user
 AS $$
@@ -42,7 +44,8 @@ AS $$
         SELECT public.user.* FROM public.user
         JOIN (SELECT * FROM summed_scores
               ORDER BY score DESC
-              LIMIT 25) ss
+              OFFSET page_number*page_size
+              LIMIT page_size) ss
         ON public.user.id = ss.id
         ORDER BY ss.score DESC;
   END;
