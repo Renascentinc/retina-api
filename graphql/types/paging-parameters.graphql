@@ -1,0 +1,17 @@
+
+"""
+Object used to page through large requests. Paging is zero-based so page
+0 is the first page. If this parameter is not passed to a query all results
+will be returned
+"""
+input PagingParameters {
+  """
+  Defaults to 0, i.e. the first page
+  """
+  page_number: Int
+
+  """
+  If empty, all results will be returned, regardless of page_number
+  """
+  page_size: Int
+}

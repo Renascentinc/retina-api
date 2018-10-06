@@ -82,8 +82,8 @@ class DbClient {
     try {
       return await this.client.query(queryString, params);
     } catch (e) {
-      logger.error(`Error executing query '${queryString}' with parameters [${params}] \n${e}`);
-      throw new DbError(`Error executing query '${queryString}' with parameters [${params}]'`)
+      logger.error(`Error executing query '${queryString}' with parameters ${params} \n${e}`);
+      throw new DbError(`Error executing query '${queryString}' with parameters ${params}'`)
     }
   }
 
@@ -115,8 +115,8 @@ class DbClient {
       let result = await this.client.query(namedQuery);
       return result.rows;
     } catch (e) {
-      logger.error(`Function '${functionName}' failed to execute with parameters \n[${util.inspect(params)}] \nCause: ${e}`);
-      throw new DbClientError(`Function '${functionName}' with parameters \n[${util.inspect(params)}] failed to execute \nCause: ${e}`);
+      logger.error(`Function '${functionName}' failed to execute with parameters \n${util.inspect(params)} \nCause: ${e}`);
+      throw new DbClientError(`Function '${functionName}' with parameters \n${util.inspect(params)} failed to execute \nCause: ${e}`);
     }
   }
 

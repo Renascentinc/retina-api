@@ -1,13 +1,13 @@
 let locationResolvers = require('./location');
 let userResolvers = require('./user');
 let configurableItemResolvers = require('./configurable-item');
+let { preprocessQuery } = require('../utils/data-utils');
 
 module.exports = {
   Query: {
-    getAllTool: async (_, __, { db, session}) => {
-      let tools = await db.get_all_tool({
-        organization_id: session.organization_id
-      });
+    getAllTool: async (_, { pagingParameters = {} }, { db, session}) => {
+      pagingParameters['organization_id'] = session.organization_id;
+      let tools = await db.get_all_tool(pagingParameters);
       return tools;
     },
 
@@ -19,6 +19,7 @@ module.exports = {
       return tool[0];
     },
 
+<<<<<<< HEAD
     /**
      * Split query into lexemes (stripping all unneccessary whitespace) and send them
      * to the search_tool db function
@@ -28,10 +29,13 @@ module.exports = {
      * 3) If there are bot
      * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
-    searchTool: async (_, { query = '', toolFilter }, { db, session }) => {
-      let functionParams = { organization_id: session.organization_id };
+    searchTool: async (_, { query = '', toolFilter, pagingParameters = {} }, { db, session }) => {
+      let functionParams = {
+        organization_id: session.organization_id
+        ...pagingParameters
+      };
 
-      let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+      let lexemes = preprocessQuery(query);
 
       if (lexemes.length == 0) {
         return await db.search_strict_tool({ ...functionParams, ...toolFilter });
@@ -42,7 +46,7 @@ module.exports = {
       }
 
       return await db.search_strict_fuzzy_tool({ ...functionParams, lexemes, ...toolFilter });
-    },
+    }
   },
 
   Mutation: {

@@ -54,9 +54,9 @@ input ToolFilter {
 }
 
 type Query {
-  getAllTool: [Tool]!
   getTool(tool_id: ID!): Tool
-  searchTool(query: String, toolFilter: ToolFilter): [Tool]
+  getAllTool(pagingParameters: PagingParameters): [Tool]!
+  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool]
 }
 
 type Mutation {

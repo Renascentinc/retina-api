@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION public.search_strict_tool (
   user_id         id_t             = NULL,
   brand_id        id_t             = NULL,
   type_id         id_t             = NULL,
-  tool_status     tool_status_type = NULL
+  tool_status     tool_status_type = NULL,
+  page_size       integer          = NULL,
+  page_number     integer          = 0
 )
 RETURNS SETOF public.tool
 AS $$
@@ -24,9 +26,12 @@ AS $$
       (CASE WHEN search_strict_tool.user_id IS NULL THEN '' ELSE ' AND user_id =' || search_strict_tool.user_id END) ||
       (CASE WHEN search_strict_tool.brand_id IS NULL THEN '' ELSE ' AND brand_id =' || search_strict_tool.brand_id END) ||
       (CASE WHEN search_strict_tool.type_id IS NULL THEN '' ELSE ' AND type_id =' || search_strict_tool.type_id END) ||
-      (CASE WHEN search_strict_tool.tool_status IS NULL THEN '' ELSE ' AND status =' || quote_literal(search_strict_tool.tool_status) END);
+      (CASE WHEN search_strict_tool.tool_status IS NULL THEN '' ELSE ' AND status =' || quote_literal(search_strict_tool.tool_status) END) ||
+      ' ORDER BY tool.id ASC' ||
+      ' OFFSET $1' ||
+      ' LIMIT $2';
 
-    RETURN QUERY EXECUTE query;
+    RETURN QUERY EXECUTE query USING page_number*page_size, page_size;
 
   END;
 $$
