@@ -34,4 +34,16 @@ function preprocessQuery(query) {
   return lexemes;
 }
 
-module.exports = { preprocessQuery }
+/**
+ * Determine if object contains any keys with truthy vlaues
+ *
+ * @param {Object} object - An object
+ *
+ * @returns {true} - If object contains keys with truthy values
+ * @returns {false} - If object has no keys with truthy values (or object itself is falsey)
+ */
+function objectHasTruthyValues(object = {}) {
+  return Boolean(object) && Object.values(object).some(value => Boolean(value));
+}
+
+module.exports = { preprocessQuery, objectHasTruthyValues }

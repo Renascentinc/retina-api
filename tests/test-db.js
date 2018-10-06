@@ -576,16 +576,27 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('search_tool()', () => {
+  describe('search_fuzzy_tool()', () => {
 
     it('successfully searches for tools', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
-      let tools = await dbFuncs.search_tool({
+      let tools = await dbFuncs.search_fuzzy_tool({
         lexemes: [randomTool.serial_number],
         organization_id: randomTool.organization_id
       });
 
       assert.ok(tools.length > 0);
+    });
+
+    it('returns all tools when lexemes is empty', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let expectedToolArrayLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
+      let tools = await dbFuncs.search_fuzzy_tool({
+        lexemes: [],
+        organization_id: randOrgId
+      });
+
+      assert.equal(tools.length, expectedToolArrayLength)
     });
 
   });
@@ -640,13 +651,12 @@ describe('Database creation and usage', async () => {
 
     it('returns all tools if no filters are passed', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-      let toolsInOrg = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects;
-      let numToolsInOrg = toolsInOrg.length;
+      let expectedToolArrayLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
       let tools = await dbFuncs.search_strict_tool({
         organization_id: randOrgId
       });
 
-      assert.equal(tools.length, numToolsInOrg);
+      assert.equal(tools.length, expectedToolArrayLength);
     });
 
     /// To verify that a type_id is being searched on that doesn't exist in the db, search
@@ -658,6 +668,57 @@ describe('Database creation and usage', async () => {
       });
 
       assert.equal(tools.length, 0);
+    });
+
+  });
+
+  describe('search_fuzzy_ids_tool()', () => {
+
+    it('successfully searches for tools based on the ids given', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let { objects: toolArray, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
+      let tools = await dbFuncs.search_fuzzy_ids_tool({
+        lexemes: [dataUtil.getRandFromArray(toolArray).serial_number],
+        tool_ids: originalIndecies.map(index => index + 1)
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+    it('returns no tools if tool_ids is empty', async () => {
+      let randomTool = dataUtil.getRandFromArray(data.tool);
+      let tools = await dbFuncs.search_fuzzy_ids_tool({
+        lexemes: [randomTool.serial_number],
+        tool_ids: []
+      });
+
+      assert.equal(tools, 0)
+    });
+
+    it('returns all given tools when lexemes is empty', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let toolIndecies = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).originalIndecies;
+      let tools = await dbFuncs.search_fuzzy_ids_tool({
+        lexemes: [],
+        tool_ids: toolIndecies.map(index => index + 1)
+      });
+
+      assert.equal(tools.length, toolIndecies.length)
+    });
+
+  });
+
+  describe('search_strict_fuzzy_tool()', () => {
+
+    it('successfully searches for tools', async () => {
+      let randTool = dataUtil.getRandFromArray(data.tool);
+      let tools = await dbFuncs.search_strict_fuzzy_tool({
+        organization_id: randTool.organization_id,
+        lexemes: [randTool.serial_number],
+        brand_id: randTool.brand_id
+      });
+
+      assert.ok(tools.length > 0);
     });
 
   });
