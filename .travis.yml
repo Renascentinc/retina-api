@@ -1,0 +1,44 @@
+
+language: node_js
+node_js: "8.11.3"
+
+cache:
+  directories:
+    - "node_modules"
+    - $HOME/.npm
+
+deploy:
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-2
+    app: retina
+    env: develop
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
+    on:
+      repo: Renascentinc/retina-api
+      branch: develop
+
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-2
+    app: retina
+    env: release
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
+    on:
+      repo: Renascentinc/retina-api
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^release.*$
+
+  - provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    region: us-east-2
+    app: retina
+    env: production
+    bucket_name: elasticbeanstalk-us-east-2-814839865406
+    on:
+      repo: Renascentinc/retina-api
+      branch: master
+      condition: $TRAVIS_BRANCH = master

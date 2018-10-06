@@ -1,0 +1,29 @@
+
+type ConfigurableItem {
+  id: ID!
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input NewConfigurableItem {
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input UpdatedConfigurableItem {
+  id: ID!
+  name: String!
+  sanctioned: Boolean!
+}
+
+type Query {
+  getAllConfigurableItem: [ConfigurableItem]!
+  getConfigurableItem(configurable_item_id: ID!): ConfigurableItem
+}
+
+type Mutation {
+  createConfigurableItem(newConfigurableItem: NewConfigurableItem): ConfigurableItem
+  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem): ConfigurableItem
+}

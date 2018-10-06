@@ -1,0 +1,10 @@
+
+type LoginResponse {
+  token: String!
+  user: User!
+}
+
+type Mutation {
+  login(email: String!, password: String!, organization_name: String): LoginResponse
+  logout: Boolean
+}

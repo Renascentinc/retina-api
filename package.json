@@ -1,0 +1,26 @@
+{
+  "name": "retina-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node main",
+    "test": "ENVIRONMENT=test mocha --recursive tests"
+  },
+  "dependencies": {
+    "apollo-server": "^2.0.0",
+    "chalk": "^2.4.1",
+    "faker": "^4.1.0",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
+    "merge-graphql-schemas": "^1.5.3",
+    "pg": "^7.4.3",
+    "uuid": "^3.3.2",
+    "uuid-validate": "0.0.3",
+    "winston": "^3.0.0",
+    "yesql": "^3.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "rewire": "^4.0.1"
+  }
+}

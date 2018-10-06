@@ -1,0 +1,59 @@
+
+type Tool {
+  id:                ID!
+  type:              ConfigurableItem!
+	brand:             ConfigurableItem!
+	model_number:      String!
+  serial_number:     String!
+	status:            ToolStatus!
+  purchased_from:    ConfigurableItem!
+  date_purchased:    String
+  user:              User
+  location:          Location
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+input NewTool {
+  type_id:           ID!
+	brand_id:          ID!
+	model_number:      String!
+  serial_number:     String!
+	status:            ToolStatus!
+  purchased_from_id: ID
+  date_purchased:    String
+  user_id:           ID
+  location_id:       ID
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+input UpdatedTool {
+  id:                ID!
+  type_id:           ID!
+	brand_id:          ID!
+	model_number:      String!
+  serial_number:     String!
+	status:            ToolStatus!
+  purchased_from_id: ID
+  date_purchased:    String
+  user_id:           ID
+  location_id:       ID
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+type Query {
+  getAllTool: [Tool]!
+  getTool(tool_id: ID!): Tool
+  searchTool(query: String!): [Tool]
+  searchStrictTool(user_id: ID, brand_id: ID, type_id: ID, tool_status: ToolStatus): [Tool]
+}
+
+type Mutation {
+  createTool(newTool: NewTool!): Tool
+  updateTool(updatedTool: UpdatedTool!): Tool
+}

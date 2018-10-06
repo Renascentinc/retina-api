@@ -1,0 +1,18 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS public."location" (
+	id 								serial,
+	city							str_t 								NOT NULL,
+	state 						state_t			 					NOT NULL,
+	zip 							zip_t 								NOT NULL,
+	organization_id 	id_t	 								NOT NULL,
+	address_line_one	long_str_t 						NOT NULL,
+	address_line_two 	long_str_t,
+	"name" 						str_t,
+  PRIMARY KEY (id, organization_id),
+  CONSTRAINT session_unique_city_state_zip_address_line_one UNIQUE (city, state, zip, address_line_one, organization_id)
+);
+
+CREATE UNIQUE INDEX ON public.location (id);
+
+COMMIT;
