@@ -23,26 +23,26 @@ module.exports = {
      * Split query into lexemes (stripping all unneccessary whitespace) and send them
      * to the search_tool db function
      *
+     * 1) If there are no lexems, just use filters
+     * 2) If there are lexemes, but no filters, return
+     * 3) If there are bot
      * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
-    searchTool: async (_, { query }, { db, session }) => {
+    searchTool: async (_, { query = '', toolFilter }, { db, session }) => {
+      let functionParams = { organization_id: session.organization_id };
+
       let lexemes = query.replace(/\s+/g, " ").trim().split(' ');
+
       if (lexemes.length == 0) {
-        return [];
+        return await db.search_strict_tool({ ...functionParams, ...toolFilter });
       }
 
-      let searchResults = await db.search_tool({
-        lexemes,
-        organization_id: session.organization_id
-      });
-      return searchResults;
-    },
+      if (objectDeepFalsey(toolFilter)) {
+        return await db.search_fuzzy_tool({ ...functionParams, lexemes });
+      }
 
-    searchStrictTool: async (_, filters, { db, session }) => {
-      filters['organization_id'] = session.organization_id;
-      let searchResults = await db.search_strict_tool(filters);
-      return searchResults;
-    }
+      return await db.search_strict_fuzzy_tool({ ...functionParams, lexemes, ...toolFilter });
+    },
   },
 
   Mutation: {

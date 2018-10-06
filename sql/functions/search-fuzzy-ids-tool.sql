@@ -1,8 +1,8 @@
 
 /*
  * 1) Create a table called summed_scores of all passed in tool ids, with scores of 0.
- * 2) For each search token
- *    1) For each tool in summed_scores, find the score of the closest matching column from tool_search_item_view to the token
+ * 2) For each search lexeme
+ *    1) For each tool in summed_scores, find the score of the closest matching column from tool_search_item_view to the lexeme
  *    2) Select only those tools with a greatest similarity of > 0.3
  *    3) Delete tools from summed_scores that were not selected in the previous step
  *    4) Add the greatest similarity for each tool to the similarity column in summed_scores

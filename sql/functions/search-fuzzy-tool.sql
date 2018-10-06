@@ -3,8 +3,8 @@
  * Fuzzy search on all tools in an organization
  */
 CREATE FUNCTION public.search_fuzzy_tool(
-	lexemes		      text[],
-	organization_id id_t
+  organization_id id_t,
+	lexemes		      text[]
 )
  RETURNS SETOF tool
 AS $$

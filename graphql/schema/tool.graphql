@@ -46,11 +46,17 @@ input UpdatedTool {
   year:              Int
 }
 
+input ToolFilter {
+  user_id:     ID
+  brand_id:    ID
+  type_id:     ID
+  tool_status: ToolStatus
+}
+
 type Query {
   getAllTool: [Tool]!
   getTool(tool_id: ID!): Tool
-  searchTool(query: String!): [Tool]
-  searchStrictTool(user_id: ID, brand_id: ID, type_id: ID, tool_status: ToolStatus): [Tool]
+  searchTool(query: String, toolFilter: ToolFilter): [Tool]
 }
 
 type Mutation {
