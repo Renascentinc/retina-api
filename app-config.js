@@ -25,8 +25,8 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
 }
 
 if (appConfig['environment'] == 'local') {
-  appConfig['db.refreshSchema'] = true;
-  appConfig['db.seed'] = true;
+  // appConfig['db.refreshSchema'] = true;
+  // appConfig['db.seed'] = true;
   process.env['DB_NAME'] = 'local_db';
 }
 
