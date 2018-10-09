@@ -36,4 +36,17 @@ class InsufficientInformationError extends ApolloError
   }
 }
 
-module.exports = { ArgumentError, DbClientError, DbError, GraphQlError, InsufficientInformationError }
+class AuthorizationError extends ApolloError
+{
+  constructor(message) {
+    super(message, 'UNAUTHORIZED');
+    this.name = 'AuthorizationError';
+  }
+}
+
+module.exports = { ArgumentError,
+                   DbClientError,
+                   DbError,
+                   GraphQlError,
+                   InsufficientInformationError,
+                   AuthorizationError }

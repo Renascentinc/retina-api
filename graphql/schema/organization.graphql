@@ -3,6 +3,14 @@ type Organization {
   name: String!
 }
 
+input NewOrganization {
+  name: String!
+}
+
 type Query {
   getOrganization: Organization
+}
+
+type Mutation {
+  createOrganization(organization: NewOrganization!): Organization
 }

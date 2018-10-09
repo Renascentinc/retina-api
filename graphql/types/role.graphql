@@ -2,4 +2,5 @@
 enum Role {
   USER
   ADMINISTRATOR
+  SUPER_ADMINISTRATOR
 }

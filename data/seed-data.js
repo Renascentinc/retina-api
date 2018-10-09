@@ -38,7 +38,8 @@ let user_statuses = [
 
 let roles = [
   'USER',
-  'ADMINISTRATOR'
+  'ADMINISTRATOR',
+  'SUPER_ADMINISTRATOR'
 ]
 
 let user_info = [
