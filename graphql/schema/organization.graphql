@@ -3,6 +3,11 @@ type Organization {
   name: String!
 }
 
+type NewOrganizationInformation {
+  newOrganization: Organization!
+  firstUser: User!
+}
+
 input NewOrganization {
   name: String!
 }
@@ -12,5 +17,5 @@ type Query {
 }
 
 type Mutation {
-  createOrganization(organization: NewOrganization!): Organization
+  createOrganization(newOrganization: NewOrganization!, firstUser: NewUser!): NewOrganizationInformation
 }

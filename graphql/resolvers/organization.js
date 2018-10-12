@@ -1,6 +1,6 @@
 
-const { authorizeUser } = require('../utils/authorization-utils');
-const { AuthorizationError } = require('../../error');
+const { userHasRole } = require('../utils/authorization-utils');
+const { AuthorizationError, DbError } = require('../../error');
 
 module.exports = {
   Query: {
@@ -12,13 +12,32 @@ module.exports = {
   },
 
   Mutation: {
-    createOrganization: async (_, { organization }, context) => {
-      if (await authorizeUser(context, 'SUPER_ADMINISTRATOR')) {
-        let newOrganization = await context.db.create_organization(organization);
-        return newOrganization[0];
+    createOrganization: async (_, { newOrganization, firstUser }, { db, session: { organization_id, user_id } }) => {
+      let user = await db.get_user({
+        user_id,
+        organization_id
+      });
+
+      if (await userHasRole(user[0], db.role.SUPER_ADMINISTRATOR)) {
+        isValidFirstUser(firstUser);
+
+        newOrganization = await db.create_organization(newOrganization);
+        newOrganization = newOrganization[0];
+
+        firstUser = await db.create_user({
+          ...firstUser,
+          organization_id: newOrganization.id
+        });
+
+        firstUser = firstUser[0];
+
+        return {
+          newOrganization,
+          firstUser
+        }
       }
 
-      throw new AuthorizationError(`User with id ${context.session.user_id} not allowed to access endpoint createOrganization`);
+      throw new AuthorizationError(`User with id ${session.user_id} not allowed to access endpoint createOrganization`);
     }
   }
 }

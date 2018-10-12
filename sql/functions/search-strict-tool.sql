@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION public.search_strict_tool (
   user_id         id_t             = NULL,
   brand_id        id_t             = NULL,
   type_id         id_t             = NULL,
-  tool_status     tool_status_type = NULL,
+  tool_status     tool_status      = NULL,
   page_size       integer          = NULL,
   page_number     integer          = 0
 )

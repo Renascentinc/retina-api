@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
 	model_number 			str_t 					 NOT NULL,
-	status 						tool_status_type NOT NULL,
+	status 						tool_status      NOT NULL,
 	organization_id 	id_t 						 NOT NULL,
 	serial_number 		str_t			 			 NOT NULL,
 	user_id 					id_t,

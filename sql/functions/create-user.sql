@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION public.create_user (
 	email						str_t,
 	phone_number		short_str_t,
 	password				str_t,
-	role				 		role_type,
-	status			 		user_status_type,
+	role				 		role,
+	status			 		user_status,
 	organization_id id_t
 ) RETURNS SETOF public.user
 AS $$
