@@ -27,7 +27,7 @@ let configurable_items = {
 let tool_statuses = [
   'AVAILABLE',
   'IN_USE',
-  'MAINTENENCE',
+  'MAINTENANCE',
   'OUT_OF_SERVICE'
 ]
 
@@ -168,7 +168,7 @@ for (var i = 0; i < numTools; i++) {
     status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: randOrgId,
-    location_id: dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId),
+    location_id: (Math.floor(Math.random() * 100) % 3 === 0) ? dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId) : null,
     price: null,
     photo: null,
     year: null,
