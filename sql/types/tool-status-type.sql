@@ -7,7 +7,7 @@ BEGIN
 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tool_status_type') THEN
     CREATE TYPE tool_status_type AS ENUM ('AVAILABLE',
                                           'IN_USE',
-                                          'MAINTENENCE',
+                                          'MAINTENANCE',
                                           'OUT_OF_SERVICE');
 END IF;
 

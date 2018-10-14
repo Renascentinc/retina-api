@@ -27,7 +27,7 @@ let configurable_items = {
 let tool_statuses = [
   'AVAILABLE',
   'IN_USE',
-  'MAINTENENCE',
+  'MAINTENANCE',
   'OUT_OF_SERVICE'
 ]
 
@@ -158,6 +158,7 @@ let numTools = 50;
 
 for (var i = 0; i < numTools; i++) {
   let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+  let assignedToLocation = dataUtil.getRandBool();
   let { objects, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
   data.tool.push({
     type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'TYPE') - 1] + 1,
@@ -168,11 +169,11 @@ for (var i = 0; i < numTools; i++) {
     status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: randOrgId,
-    location_id: dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId),
+    location_id: assignedToLocation ? dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId) : null,
     price: null,
     photo: null,
     year: null,
-    user_id: dataUtil.getRandIdFromObjectArrayWhere(data.user, 'organization_id', randOrgId)
+    user_id: assignedToLocation ? null : dataUtil.getRandIdFromObjectArrayWhere(data.user, 'organization_id', randOrgId)
   })
 }
 
