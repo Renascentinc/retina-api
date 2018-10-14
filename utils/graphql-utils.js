@@ -7,25 +7,32 @@ const { fileLoader, mergeTypes, mergeResolvers } = require('merge-graphql-schema
 function createSchema() {
   let resolvers = getResolvers();
   let typeDefs = getTypeDefs();
+  let schemaDirectives = getSchemaDirectives();
 
   return makeExecutableSchema({
-    typeDefs: typeDefs,
-    resolvers: resolvers
+    typeDefs,
+    resolvers,
+    schemaDirectives
   });
 }
 
 function getResolvers() {
-    let resolvers = fileLoader(appConfig['server.graphql.resolverDir']);
+    let resolvers = fileLoader(appConfig['server.graphql.resolverDir'], { recursive: true });
     resolvers = mergeResolvers(resolvers);
 
     return resolvers;
 }
 
+function getSchemaDirectives() {
+  let 
+}
+
 function getTypeDefs() {
   let schemaArray = fileLoader(appConfig['server.graphql.schemaDir']);
   let typesArray = fileLoader(appConfig['server.graphql.typeDir']);
+  let directivesArray = fileLoader(appConfig['server.graphql.directiveDir']);
 
-  let gqlArray = schemaArray.concat(typesArray);
+  let gqlArray = [].concat(schemaArray, typesArray, directivesArray);
   let gql = mergeTypes(gqlArray, { all: true });
 
   return gql;
