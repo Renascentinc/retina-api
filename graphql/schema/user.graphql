@@ -29,13 +29,13 @@ input UpdatedUser {
 }
 
 type Query {
-  getUser(user_id: ID!): User
+  getUser(user_id: ID!): User @requiresRole(requiredRole: ADMINISTRATOR)
   getAllUser(pagingParameters: PagingParameters): [User]!
   searchUser(query: String!, pagingParameters: PagingParameters): [User]!
 }
 
 type Mutation {
   createUser(newUser: NewUser!): User
-  updateUser(updatedUser: UpdatedUser!): User @requiresRole(requiredRole: ADMINISTRATOR)
+  updateUser(updatedUser: UpdatedUser!): User
   updatePassword(user_id: ID!, current_password: String!, new_password: String!): Boolean
 }

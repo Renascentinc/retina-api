@@ -1,7 +1,6 @@
-
+const appConfig = require(`app-config`);
 const { UserInputError, AuthenticationError } = require('apollo-server');
-
-const { InsufficientInformationError } = require('../../error');
+const { InsufficientInformationError } = require(`error`);
 
 module.exports = {
   Mutation: {

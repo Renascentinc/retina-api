@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node main",
-    "test": "ENVIRONMENT=test mocha --recursive tests"
+    "start": "NODE_PATH=. node main",
+    "test": "NODE_PATH=. ENVIRONMENT=test mocha --recursive tests"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
