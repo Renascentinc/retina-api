@@ -7,46 +7,60 @@ const { fileLoader, mergeTypes, mergeResolvers } = require('merge-graphql-schema
 const { SchemaDirectiveVisitor } = require('graphql-tools');
 
 function createSchema() {
-  let resolvers = getResolvers();
-  let typeDefs = getTypeDefs();
-  let schemaDirectives = getSchemaDirectives();
-
   return makeExecutableSchema({
-    typeDefs,
-    resolvers,
-    schemaDirectives
+    typeDefs: getTypeDefs(),
+    resolvers: getResolvers(),
+    schemaDirectives: getSchemaDirectives()
   });
 }
 
 function getResolvers() {
   let resolvers = fileLoader(appConfig['server.graphql.resolver.schemaDir']);
-  resolvers = mergeResolvers(resolvers);
-
-  return resolvers;
-}
-
-function getSchemaDirectives() {
-  let directiveResolvers = fileLoader(appConfig['server.graphql.resolver.directiveDir']);
-  let directiveResolversI = mergeResolvers(directiveResolvers);
-  let iggie = {};
-  for (let directiveName in directiveResolversI) {
-    let directive = directiveResolversI[directiveName];
-
-    let visitorClass = class extends SchemaDirectiveVisitor {}
-
-    for (let visitFunctionName in directive) {
-      visitorClass.prototype[visitFunctionName] = createVisitorFunction(directive[visitFunctionName]);
-    }
-
-    iggie[directiveName] = visitorClass;
-  }
-
-  return iggie;
+  return mergeResolvers(resolvers);
 }
 
 /**
- * The funciton returned here must be a vanilla javascript function, not a lambda
- * because with the lambda, you cannot access the `this` property of the class
+ * Convert directive resolvers into a format that apollo will accept.
+ *
+ * For each directive name, extract the resolvers associated with that name. For
+ * each of those resolvers, create a function to wrap that resolver and add the function
+ * to a class that extends SchemaDirectiveVisitor. Accumulate the classes in an object
+ * with the keys being the directive names; return this object
+ */
+function getSchemaDirectives() {
+  let directiveResolversArray = fileLoader(appConfig['server.graphql.resolver.directiveDir']);
+  let directiveResolversObject = mergeResolvers(directiveResolversArray);
+  let directiveClasses = {};
+
+  for (let directiveName in directiveResolversObject) {
+    let directiveResolvers = directiveResolversObject[directiveName];
+
+    let visitorClass = class extends SchemaDirectiveVisitor {}
+
+    for (let visitFunctionName in directiveResolvers) {
+      visitorClass.prototype[visitFunctionName] = createVisitorFunction(directiveResolvers[visitFunctionName]);
+    }
+
+    directiveClasses[directiveName] = visitorClass;
+  }
+
+  return directiveClasses;
+}
+
+/**
+ * Create a function that will wrap the passed-in visitor function. This created
+ * function takes care of the implementation details of apollo's implementation of
+ * directive resolvers.
+ *
+ * The created function first stores the original resolver for the annotated field. It
+ * then sets the field's `resolve` property to a function that calls the visitorFunction
+ * with all the properties the visitor function might need. Then, if the visitorFunction
+ * returned anything, that value is returned. Else, the result of the original resolver is
+ * returned, if the original resolver was defined.
+ *
+ * NOTE! -> The funciton returned here must be a vanilla javascript function, not a lambda,
+ * because with the lambda, you cannot access the `this` property of any class this
+ * function is attached to.
  */
 function createVisitorFunction(visitorFunction) {
   return function (field, fieldDetails) {
@@ -85,10 +99,9 @@ function getTypeDefs() {
   let typesArray = fileLoader(appConfig['server.graphql.typeDir']);
   let directivesArray = fileLoader(appConfig['server.graphql.directiveDir']);
 
-  let gqlArray = [].concat(schemaArray, typesArray, directivesArray);
-  let gql = mergeTypes(gqlArray, { all: true });
+  let gqlArray = [...schemaArray, ...typesArray, ...directivesArray];
 
-  return gql;
+  return mergeTypes(gqlArray, { all: true });
 }
 
 module.exports = {
