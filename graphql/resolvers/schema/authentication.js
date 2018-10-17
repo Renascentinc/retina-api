@@ -1,4 +1,3 @@
-const appConfig = require(`app-config`);
 const { UserInputError, AuthenticationError } = require('apollo-server');
 const { InsufficientInformationError } = require(`error`);
 

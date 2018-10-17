@@ -11,7 +11,7 @@ module.exports = {
       });
 
       if (user[0].role !== requiredRole) {
-        throw new Error("waga");
+        throw new Error(`User doesn't have required role ${requiredRole}`);
       }
     }
   }

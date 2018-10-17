@@ -1,5 +1,5 @@
 
-let rootDir = process.env.PWD;
+let rootDir = process.env.RETINA_API_ROOT;
 
 let appConfig = {
   'rootDir': rootDir,
