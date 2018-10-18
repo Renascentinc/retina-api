@@ -1,18 +1,23 @@
-// 
+
+let rootDir = process.env.RETINA_API_ROOT;
+
 let appConfig = {
+  'rootDir': rootDir,
   'db.port': 5432,
-  'db.extensionDir': `${process.env.PWD}/sql/extensions`,
-  'db.schemaDir': `${process.env.PWD}/sql/schema`,
-  'db.constraintDir': `${process.env.PWD}/sql/constraints`,
-  'db.functionDir': `${process.env.PWD}/sql/functions`,
-  'db.typeDir': `${process.env.PWD}/sql/types`,
-  'db.viewDir': `${process.env.PWD}/sql/views`,
+  'db.extensionDir': `${rootDir}/sql/extensions`,
+  'db.schemaDir': `${rootDir}/sql/schema`,
+  'db.constraintDir': `${rootDir}/sql/constraints`,
+  'db.functionDir': `${rootDir}/sql/functions`,
+  'db.typeDir': `${rootDir}/sql/types`,
+  'db.viewDir': `${rootDir}/sql/views`,
   'db.refreshSchema': false,
   'db.seed': false,
 
-  'server.graphql.resolverDir': `${process.env.PWD}/graphql/resolvers`,
-  'server.graphql.schemaDir': `${process.env.PWD}/graphql/schema`,
-  'server.graphql.typeDir': `${process.env.PWD}/graphql/types`,
+  'server.graphql.schemaDir': `${rootDir}/graphql/schema`,
+  'server.graphql.typeDir': `${rootDir}/graphql/types`,
+  'server.graphql.directiveDir': `${rootDir}/graphql/directives`,
+  'server.graphql.resolver.directiveDir': `${rootDir}/graphql/resolvers/directives`,
+  'server.graphql.resolver.schemaDir': `${rootDir}/graphql/resolvers/schema`,
   'server.port': process.env.PORT || 4000
 }
 

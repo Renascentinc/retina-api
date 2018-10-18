@@ -1,7 +1,7 @@
 const assert = require('assert');
 const rewire = require('rewire');
 
-const { createSchema }  = require(`${process.env.PWD}/utils/graphql-utils`);
+const { createSchema }  = require(`utils/graphql-utils`);
 
 describe('graphql-utils', function() {
 

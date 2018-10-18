@@ -1,7 +1,7 @@
-let locationResolvers = require('./location');
-let userResolvers = require('./user');
-let configurableItemResolvers = require('./configurable-item');
-let { preprocessQuery, objectHasTruthyValues } = require('../utils/data-utils');
+const locationResolvers = require('graphql/resolvers/schema/location');
+const userResolvers = require('graphql/resolvers/schema/user');
+const configurableItemResolvers = require('graphql/resolvers/schema/configurable-item');
+const { preprocessQuery, objectHasTruthyValues } = require(`utils/data-utils`);
 
 module.exports = {
   Query: {
