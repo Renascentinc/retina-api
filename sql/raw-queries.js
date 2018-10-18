@@ -14,7 +14,7 @@ module.exports = {
      WHERE extensions.extname != 'plpgsql'`,
 
   getDbTypes:
-    `SELECT t.typname AS enum_name, to_json(array_agg(e.enumlabel)) AS enum_values
+    `SELECT t.typname AS enum_name, array_to_json(array_agg(e.enumlabel)) AS enum_values
      FROM pg_type t
      JOIN pg_enum e ON t.oid = e.enumtypid
      GROUP BY enum_name`
