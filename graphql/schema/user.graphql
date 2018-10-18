@@ -29,7 +29,7 @@ input UpdatedUser {
 }
 
 type Query {
-  getUser(user_id: ID!): User @requiresRole(requiredRole: ADMINISTRATOR)
+  getUser(user_id: ID!): User
   getAllUser(pagingParameters: PagingParameters): [User]!
   searchUser(query: String!, pagingParameters: PagingParameters): [User]!
 }
