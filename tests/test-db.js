@@ -723,20 +723,13 @@ describe('Database creation and usage', async () => {
 
   });
 
-  // describe('db enums', () => {
-  //
-  //   it('successfully searches for tools', async () => {
-  //     let randTool = dataUtil.getRandFromArray(data.tool);
-  //     let tools = await dbFuncs.search_strict_fuzzy_tool({
-  //       organization_id: randTool.organization_id,
-  //       lexemes: [randTool.serial_number],
-  //       brand_id: randTool.brand_id
-  //     });
-  //
-  //     assert.ok(tools.length > 0);
-  //   });
+  describe.skip('db enum creation', () => {
 
-  // });
+    it('successfully creates the enums', async () => {
+
+    });
+
+  });
 
   after(async () => {
     await dbClient.disconnect();

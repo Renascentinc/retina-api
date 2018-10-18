@@ -1,18 +1,18 @@
 
 const assert = require('assert');
 
-const { userHasRole } = require(`../../../graphql/utils/authorization-utils`);
+const { userHasRole } = require(`graphql/utils/authorization-utils`);
 
-describe('graphql authorization-utils', () => {
+describe.skip('graphql authorization-utils', () => {
 
   describe('userHasRole()', () => {
 
-    it('should ', async () => {
-      // let query = 'A    QUERY with   Letters   ';
-      // let expectedLexemes = ['letters', 'query', 'with', 'a'];
-      //
-      // let lexemes = preprocessQuery(query);
-      // assert.deepEqual(lexemes, expectedLexemes);
+    it('should return true if a user has the given role', async () => {
+
+    });
+
+    it(`should return false if a user doesn't have the given role`, async () => {
+
     });
 
   });

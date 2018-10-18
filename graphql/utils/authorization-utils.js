@@ -1,4 +1,5 @@
 
+const { UserInputError } = require('apollo-server');
 
 /**
  * Determine if a user has the given role
@@ -11,11 +12,11 @@
 
  * @throws {DbError} - if the user does not exist
  */
-async function userHasRole(role, db, { organization_id, user_id } ) {
+async function userHasRole({ organization_id, user_id }, role, db) {
   let user = await db.get_user({ organization_id, user_id });
 
   if (user.length == 0) {
-    throw new DbError(`User with id ${user_id} does not exist`);
+    throw new UserInputError(`User with id ${user_id} does not exist`);
   }
 
   return db.role.fromString(user[0].role) === role;

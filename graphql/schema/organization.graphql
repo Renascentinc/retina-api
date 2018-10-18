@@ -3,19 +3,6 @@ type Organization {
   name: String!
 }
 
-type NewOrganizationInformation {
-  newOrganization: Organization!
-  firstUser: User!
-}
-
-input NewOrganization {
-  name: String!
-}
-
 type Query {
   getOrganization: Organization
-}
-
-type Mutation {
-  createOrganization(newOrganization: NewOrganization!, firstUser: NewUser!): NewOrganizationInformation @requiresRole(requiredRole: SUPER_ADMINISTRATOR)
 }
