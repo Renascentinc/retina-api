@@ -1,6 +1,6 @@
 
-const { userHasRole } = require('../utils/authorization-utils');
-const { AuthorizationError, DbError } = require('../../error');
+const { userHasRole } = require('graphql/utils/authorization-utils');
+const { AuthorizationError, DbError } = require('error');
 
 module.exports = {
   Query: {

@@ -1,5 +1,6 @@
 
 const { SchemaDirectiveVisitor } = require('graphql-tools');
+const { AuthorizationError } = require('error');
 
 module.exports = {
   requiresRole: {
@@ -10,8 +11,8 @@ module.exports = {
         organization_id: session.organization_id
       });
 
-      if (user[0].role !== requiredRole) {
-        throw new Error(`User doesn't have required role ${requiredRole}`);
+      if (db.role.fromString(user[0].role) !== db.role.fromString(requiredRole)) {
+        throw new AuthorizationError(`User doesn't have required role ${requiredRole}`);
       }
     }
   }

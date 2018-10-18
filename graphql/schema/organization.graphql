@@ -17,5 +17,5 @@ type Query {
 }
 
 type Mutation {
-  createOrganization(newOrganization: NewOrganization!, firstUser: NewUser!): NewOrganizationInformation
+  createOrganization(newOrganization: NewOrganization!, firstUser: NewUser!): NewOrganizationInformation @requiresRole(requiredRole: SUPER_ADMINISTRATOR)
 }

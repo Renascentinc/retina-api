@@ -81,7 +81,7 @@ async function createDbFunctions(dbClient) {
 }
 
 async function createDbTypes(dbClient) {
-  logger.info('Collecting Types')
+  logger.info('Collecting Db Types')
   let dbTypes = await dbClient.getDbTypes();
 
   for (let enumName in dbTypes) {
