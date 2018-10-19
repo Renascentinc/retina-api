@@ -9,8 +9,8 @@ const { UserInputError, AuthenticationError } = require('apollo-server');
 
 class Server {
 
-  constructor(dbFunctions) {
-    this.dbFunctions = dbFunctions;
+  constructor(db) {
+    this.db = db;
   }
 
   async start() {
@@ -48,7 +48,7 @@ class Server {
   async getContextFromRequest(req) {
     if (typeof req.headers.authorization !== 'string') {
       if (this.isLoginRoute(req)) {
-        return { db: this.dbFunctions }
+        return { db: this.db }
       }
 
       throw new AuthenticationError(`No 'Authorization' header is present`);
@@ -62,7 +62,7 @@ class Server {
 
     return {
       session,
-      db: this.dbFunctions
+      db: this.db
     };
   }
 
@@ -77,7 +77,7 @@ class Server {
       throw new UserInputError(`Token '${token}' is not a valid uuid`);
     }
 
-    let session = await this.dbFunctions.get_session_by_token({token});
+    let session = await this.db.get_session_by_token({token});
 
     return session[0];
   }
