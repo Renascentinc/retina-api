@@ -1,5 +1,5 @@
 const appConfig = require('../app-config');
-const { getDropFunctionsQueries, getDropExtensionsQueries } = require('../sql/raw-queries');
+const { getDropFunctionsQueriesQuery, getDropExtensionsQueriesQuery } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
@@ -154,7 +154,7 @@ async function dropExtensions(dbClient) {
 
   try {
     let dropExtensionsQueries = await dbClient.query({
-      text: getDropExtensionsQueries,
+      text: getDropExtensionsQueriesQuery,
       rowMode: 'array'
     });
 
@@ -170,7 +170,7 @@ async function dropFunctions(dbClient) {
   logger.info('Dropping Functions');
   try {
     let dropFunctionsQueries = await dbClient.query({
-      text: getDropFunctionsQueries,
+      text: getDropFunctionsQueriesQuery,
       rowMode: 'array'
     });
 

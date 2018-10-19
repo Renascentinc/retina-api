@@ -2,7 +2,7 @@ const { Client } = require('pg');
 var named = require('yesql').pg
 const appConfig = require('./app-config');
 const { ArgumentError, DbClientError, DbError } = require('./error.js')
-const { getDbFunctionNames, getDbTypes } = require('./sql/raw-queries');
+const { getDbFunctionNamesQuery, getDbTypesQuery } = require('./sql/raw-queries');
 const logger = require('./logger');
 const util = require('util');
 
@@ -131,7 +131,7 @@ class DbClient {
 
     try {
       let functionNames = await this.client.query({
-        text: getDbFunctionNames,
+        text: getDbFunctionNamesQuery,
         rowMode: 'array'
       });
 
@@ -149,7 +149,7 @@ class DbClient {
    */
   async getDbTypes() {
     let dbTypes = await this.client.query({
-      text: getDbTypes
+      text: getDbTypesQuery
     });
 
     let dbTypesObject = {};
