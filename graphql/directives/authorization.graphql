@@ -1,4 +1,2 @@
 
-# Example usage of directive: @requiresRole(requiredRole: ADMINISTRATOR)
-
 directive @requiresRole(requiredRole: Role!) on FIELD_DEFINITION

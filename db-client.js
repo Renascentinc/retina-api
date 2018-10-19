@@ -2,7 +2,7 @@ const { Client } = require('pg');
 var named = require('yesql').pg
 const appConfig = require('./app-config');
 const { ArgumentError, DbClientError, DbError } = require('./error.js')
-const { getDbFunctionNames } = require('./sql/raw-queries');
+const { getDbFunctionNamesQuery, getDbTypesQuery } = require('./sql/raw-queries');
 const logger = require('./logger');
 const util = require('util');
 
@@ -131,7 +131,7 @@ class DbClient {
 
     try {
       let functionNames = await this.client.query({
-        text: getDbFunctionNames,
+        text: getDbFunctionNamesQuery,
         rowMode: 'array'
       });
 
@@ -140,6 +140,25 @@ class DbClient {
       logger.error(`Error getting function names from db client \n${e}`);
       throw new DbClientError('Error getting function names from db client');
     }
+  }
+
+  /**
+   * Collect all the enum types from the db and their possible values
+   *
+   * @returns {Object { enum_name: Array[enum_value] }} - object with enum names mapping to array of possible values
+   */
+  async getDbTypes() {
+    let dbTypes = await this.client.query({
+      text: getDbTypesQuery
+    });
+
+    let dbTypesObject = {};
+
+    dbTypes.rows.forEach(dbType => {
+      dbTypesObject[dbType.enum_name] = dbType.enum_values
+    });
+
+    return dbTypesObject;
   }
 
 }

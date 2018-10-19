@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS public.user (
 	email						str_t						 NOT NULL,
 	phone_number		short_str_t			 NOT NULL,
 	password				str_t						 NOT NULL,
-	role				 		role_type				 NOT NULL,
-	status			 		user_status_type NOT NULL,
+	role				 		role				     NOT NULL,
+	status			 		user_status      NOT NULL,
 	organization_id id_t             NOT NULL,
   PRIMARY KEY (id, organization_id),
   CONSTRAINT user_unique_email UNIQUE (email, organization_id)

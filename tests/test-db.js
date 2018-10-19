@@ -723,6 +723,28 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('db enum creation', () => {
+
+    it('successfully creates the enums', async () => {
+      assert.ok(dbFuncs.role &&
+                dbFuncs.role.USER &&
+                dbFuncs.role.USER.name === 'USER');
+
+      assert.ok(dbFuncs.tool_status &&
+                dbFuncs.tool_status.IN_USE &&
+                dbFuncs.tool_status.IN_USE.name === 'IN_USE');
+
+      assert.ok(dbFuncs.configurable_item_type &&
+                dbFuncs.configurable_item_type.BRAND &&
+                dbFuncs.configurable_item_type.BRAND.name === 'BRAND');
+
+      assert.ok(dbFuncs.user_status &&
+                dbFuncs.user_status.INACTIVE &&
+                dbFuncs.user_status.INACTIVE.name === 'INACTIVE')
+    });
+
+  });
+
   after(async () => {
     await dbClient.disconnect();
     await dropDbIfExists(appConfig['db.database']);

@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION public.update_tool (
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,
-	status          	tool_status_type,
+	status          	tool_status,
 	serial_number			str_t,
 	organization_id		id_t,
 	date_purchased		date,
