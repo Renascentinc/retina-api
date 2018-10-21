@@ -47,10 +47,10 @@ input UpdatedTool {
 }
 
 input ToolFilter {
-  user_id:     ID
-  brand_id:    ID
-  type_id:     ID
-  tool_status: ToolStatus
+  brand_ids:     [ID!]
+  type_ids:      [ID!]
+  tool_statuses: [ToolStatus!]
+  user_ids:      [ID]
 }
 
 type Query {

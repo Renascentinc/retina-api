@@ -5,10 +5,10 @@
 CREATE OR REPLACE FUNCTION public.search_strict_fuzzy_tool (
   organization_id id_t,
   lexemes		      text[],
-  user_id         id_t             = NULL,
-  brand_id        id_t             = NULL,
-  type_id         id_t             = NULL,
-  tool_status     tool_status      = NULL,
+  user_ids        integer[]             = NULL,
+  brand_ids        integer[]             = NULL,
+  type_ids         integer[]             = NULL,
+  tool_statuses     tool_status[]      = NULL,
   page_size       integer          = NULL,
   page_number     integer          = 0
 )
@@ -19,10 +19,10 @@ AS $$
       RETURN QUERY
         SELECT * FROM search_strict_tool (
           organization_id := organization_id,
-          user_id := user_id,
-          brand_id := brand_id,
-          type_id := type_id,
-          tool_status := tool_status,
+          user_ids := user_ids,
+          brand_ids := brand_ids,
+          type_ids := type_ids,
+          tool_statuses := tool_statuses,
           page_size := page_size,
           page_number := page_number
         );
@@ -33,10 +33,10 @@ AS $$
       ARRAY (
         SELECT id FROM search_strict_tool (
           organization_id := organization_id,
-          user_id := user_id,
-          brand_id := brand_id,
-          type_id := type_id,
-          tool_status := tool_status
+          user_ids := user_ids,
+          brand_ids := brand_ids,
+          type_ids := type_ids,
+          tool_statuses := tool_statuses
         )
       ),
       page_size := page_size,
