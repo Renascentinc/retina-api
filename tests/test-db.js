@@ -670,6 +670,16 @@ describe('Database creation and usage', async () => {
       assert.equal(tools.length, 0);
     });
 
+    it('returns tools when an array filter contains null', async () => {
+      let expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'user_id', null).objects.length;
+      let tools = await dbFuncs.search_strict_tool({
+        user_ids: [null],
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
+
+      assert.equal(tools.length, expectedLength);
+    });
+
   });
 
   describe('search_fuzzy_ids_tool()', () => {
