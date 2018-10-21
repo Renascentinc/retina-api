@@ -680,6 +680,17 @@ describe('Database creation and usage', async () => {
       assert.equal(tools.length, expectedLength);
     });
 
+    it('ignores filters that are empty arrays', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
+      let tools = await dbFuncs.search_strict_tool({
+        user_ids: [],
+        organization_id: randOrgId
+      });
+
+      assert.equal(tools.length, expectedLength);
+    });
+
   });
 
   describe('search_fuzzy_ids_tool()', () => {
