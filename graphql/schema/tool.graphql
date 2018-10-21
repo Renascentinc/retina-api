@@ -62,4 +62,5 @@ type Query {
 type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
+  transferMultipleTool(tool_id_list: [ID!]!, to_user_id: ID!): [Tool]
 }
