@@ -5,6 +5,8 @@
  * Create a base query assuming all tools will be selected from an organization. Then append filters to
  * the base query based on what filter values aren't null.
  *
+ * Column user_id can be null, so search for NULL user_ids if the caller puts null in user_ids the filter
+ *
  * I'm assuming SQL injection won't be a problem here because only integers and enums are being passed in.
  */
 CREATE OR REPLACE FUNCTION public.search_strict_tool (
@@ -31,23 +33,14 @@ AS $$
 
     IF brand_ids IS NOT NULL THEN
       query = query || ' AND brand_id IN (SELECT id FROM unnest($2) as id)';
-      IF array_contains_null(brand_ids) THEN
-        query = query || ' OR brand_id IS NULL';
-      END IF;
     END IF;
 
     IF type_ids IS NOT NULL THEN
       query = query || ' AND type_id IN (SELECT id FROM unnest($3) as id)';
-      IF array_contains_null(type_ids) THEN
-        query = query || ' OR type_id IS NULL';
-      END IF;
     END IF;
 
     IF tool_statuses IS NOT NULL THEN
       query = query || ' AND status IN (SELECT status FROM unnest($4) as status)';
-      IF array_contains_null(tool_statuses) THEN
-        query = query || ' OR status IS NULL';
-      END IF;
     END IF;
 
     query = query ||
