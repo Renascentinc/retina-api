@@ -9,29 +9,58 @@
  */
 CREATE OR REPLACE FUNCTION public.search_strict_tool (
   organization_id id_t,
-  user_id         id_t             = NULL,
-  brand_id        id_t             = NULL,
-  type_id         id_t             = NULL,
-  tool_status     tool_status      = NULL,
-  page_size       integer          = NULL,
-  page_number     integer          = 0
+  user_ids        integer[]     = NULL,
+  brand_ids       integer[]     = NULL,
+  type_ids        integer[]     = NULL,
+  tool_statuses   tool_status[] = NULL,
+  page_size       integer       = NULL,
+  page_number     integer       = 0
 )
 RETURNS SETOF public.tool
 AS $$
   DECLARE
-    query text = 'SELECT * FROM public.tool WHERE organization_id = ' || search_strict_tool.organization_id;
+    query text = 'SELECT * FROM public.tool WHERE organization_id = ' || organization_id;
   BEGIN
 
-    query = query ||
-      (CASE WHEN search_strict_tool.user_id IS NULL THEN '' ELSE ' AND user_id =' || search_strict_tool.user_id END) ||
-      (CASE WHEN search_strict_tool.brand_id IS NULL THEN '' ELSE ' AND brand_id =' || search_strict_tool.brand_id END) ||
-      (CASE WHEN search_strict_tool.type_id IS NULL THEN '' ELSE ' AND type_id =' || search_strict_tool.type_id END) ||
-      (CASE WHEN search_strict_tool.tool_status IS NULL THEN '' ELSE ' AND status =' || quote_literal(search_strict_tool.tool_status) END) ||
-      ' ORDER BY tool.id ASC' ||
-      ' OFFSET $1' ||
-      ' LIMIT $2';
+    IF user_ids IS NOT NULL THEN
+      query = query || ' AND user_id IN (SELECT id FROM unnest($1) as id)';
+      IF array_contains_null(user_ids) THEN
+        query = query || ' OR user_id IS NULL';
+      END IF;
+    END IF;
 
-    RETURN QUERY EXECUTE query USING page_number*page_size, page_size;
+    IF brand_ids IS NOT NULL THEN
+      query = query || ' AND brand_id IN (SELECT id FROM unnest($2) as id)';
+      IF array_contains_null(brand_ids) THEN
+        query = query || ' OR brand_id IS NULL';
+      END IF;
+    END IF;
+
+    IF type_ids IS NOT NULL THEN
+      query = query || ' AND type_id IN (SELECT id FROM unnest($3) as id)';
+      IF array_contains_null(type_ids) THEN
+        query = query || ' OR type_id IS NULL';
+      END IF;
+    END IF;
+
+    IF tool_statuses IS NOT NULL THEN
+      query = query || ' AND status IN (SELECT status FROM unnest($4) as status)';
+      IF array_contains_null(tool_statuses) THEN
+        query = query || ' OR status IS NULL';
+      END IF;
+    END IF;
+
+    query = query ||
+      ' ORDER BY tool.id ASC' ||
+      ' OFFSET $5' ||
+      ' LIMIT $6';
+
+    RETURN QUERY EXECUTE query USING user_ids,
+                                     brand_ids,
+                                     type_ids,
+                                     tool_statuses,
+                                     page_number*page_size,
+                                     page_size;
 
   END;
 $$

@@ -620,8 +620,8 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools when only some filters are passed', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_tool({
-        user_id: randomTool.user_id,
-        type_id: undefined,
+        user_ids: [randomTool.user_id],
+        type_ids: undefined,
         organization_id: randomTool.organization_id
       });
 
@@ -639,10 +639,10 @@ describe('Database creation and usage', async () => {
       randomToolFromDb = randomToolFromDb[0];
 
       let tools = await dbFuncs.search_strict_tool({
-        user_id: randomToolFromDb.user_id,
-        type_id: randomToolFromDb.type_id,
-        brand_id: randomToolFromDb.brand_id,
-        tool_status: randomToolFromDb.status,
+        user_ids: [randomToolFromDb.user_id],
+        type_ids: [randomToolFromDb.type_id],
+        brand_ids: [randomToolFromDb.brand_id],
+        tool_statuses: [randomToolFromDb.status],
         organization_id: randomToolFromDb.organization_id
       });
 
@@ -663,7 +663,7 @@ describe('Database creation and usage', async () => {
     /// for an id that is 1 greater than the greatest id in the db
     it('returns no tools for a query with no filters that match existing tools', async () => {
       let tools = await dbFuncs.search_strict_tool({
-        type_id: data.configurable_item.length + 1,
+        type_ids: [data.configurable_item.length + 1],
         organization_id: dataUtil.getRandIdFromArray(data.organization)
       });
 
@@ -715,7 +715,7 @@ describe('Database creation and usage', async () => {
       let tools = await dbFuncs.search_strict_fuzzy_tool({
         organization_id: randTool.organization_id,
         lexemes: [randTool.serial_number],
-        brand_id: randTool.brand_id
+        brand_ids: [randTool.brand_id]
       });
 
       assert.ok(tools.length > 0);
