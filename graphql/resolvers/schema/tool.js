@@ -66,9 +66,23 @@ module.exports = {
     }
   },
 
+  Owner: {
+    __resolveType(obj, context, info) {
+      console.log(obj, context, info)
+    }
+  },
+  
   Tool: {
-    location: async ({ location_id }, _, ctx) => locationResolvers.Query.getLocation(undefined, { location_id }, ctx),
-    user: async ({ user_id }, _, ctx) => userResolvers.Query.getUser(undefined, { user_id }, ctx),
+    owner: async ({ location_id, user_id }, _, ctx) => {
+      if (user_id) {
+        return userResolvers.Query.getUser(undefined, { user_id }, ctx)
+      }
+
+      return locationResolvers.Query.getLocation(undefined, { location_id }, ctx);
+
+    },
+    // location: async ({ location_id }, _, ctx) => locationResolvers.Query.getLocation(undefined, { location_id }, ctx),
+    // user: async ({ user_id }, _, ctx) => userResolvers.Query.getUser(undefined, { user_id }, ctx),
     type: async ({ type_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: type_id }, ctx),
     brand: async ({ brand_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: brand_id }, ctx),
     purchased_from: async ({ purchased_from_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: purchased_from_id }, ctx)

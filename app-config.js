@@ -6,6 +6,7 @@ let appConfig = {
   'db.port': 5432,
   'db.extensionDir': `${rootDir}/sql/extensions`,
   'db.schemaDir': `${rootDir}/sql/schema`,
+  'db.baseSchemaDir': `${rootDir}/sql/schema/base_schema`,
   'db.constraintDir': `${rootDir}/sql/constraints`,
   'db.functionDir': `${rootDir}/sql/functions`,
   'db.typeDir': `${rootDir}/sql/types`,
@@ -30,8 +31,8 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
 }
 
 if (appConfig['environment'] == 'local') {
-  // appConfig['db.refreshSchema'] = true;
-  // appConfig['db.seed'] = true;
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
   process.env['DB_NAME'] = 'local_db';
 }
 

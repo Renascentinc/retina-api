@@ -19,7 +19,8 @@ AS $$
         password,
         role,
         status,
-        organization_id
+        organization_id,
+        type
       ) VALUES (
         first_name,
         last_name,
@@ -28,7 +29,8 @@ AS $$
         crypt(password, gen_salt('bf')),
         role,
         status,
-        organization_id
+        organization_id,
+        'USER'::owner_type
       ) RETURNING *;
   END;
 $$

@@ -19,7 +19,8 @@ AS $$
         organization_id,
         address_line_one,
         address_line_two,
-        name
+        name,
+        type
     	) VALUES (
         city,
         state,
@@ -27,7 +28,8 @@ AS $$
         organization_id,
         address_line_one,
         address_line_two,
-        name
+        name,
+        'LOCATION'::owner_type
     	) RETURNING *;
   END;
 $$

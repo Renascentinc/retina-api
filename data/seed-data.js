@@ -41,6 +41,11 @@ let roles = [
   'ADMINISTRATOR'
 ]
 
+let owner_type = [
+  'USER',
+  'LOCATION'
+]
+
 let user_info = [
   {
     first_name: 'Josiah',

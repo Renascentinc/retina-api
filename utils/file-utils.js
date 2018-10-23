@@ -13,11 +13,11 @@ const fs = require('fs');
 function readFilesFromDir(dirName) {
   dirName = normalizeDirectoryName(dirName);
 
-  let files = fs.readdirSync(dirName);
+  const fileNames = fs.readdirSync(dirName).filter(dirEntry => dirEntry.endsWith(".sql"));
 
   let fileTexts = [];
-  for (let i in files) {
-    fileTexts.push(fs.readFileSync(`${dirName}/${files[i]}`, {encoding: 'utf-8'}));
+  for (let i in fileNames) {
+    fileTexts.push(fs.readFileSync(`${dirName}/${fileNames[i]}`, {encoding: 'utf-8'}));
   }
 
   return fileTexts;
