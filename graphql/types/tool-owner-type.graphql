@@ -1,0 +1,5 @@
+
+enum ToolOwnerType {
+  USER
+  LOCATION
+}

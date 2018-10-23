@@ -1,6 +1,4 @@
 
-union Owner = Location | User
-
 type Tool {
   id:                ID!
   type:              ConfigurableItem!
@@ -10,7 +8,6 @@ type Tool {
 	status:            ToolStatus!
   purchased_from:    ConfigurableItem!
   date_purchased:    String
-  # user:              User
   owner:             Owner!
   photo:             String
   price:             Int
