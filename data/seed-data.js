@@ -85,6 +85,7 @@ let user_info = [
 ];
 
 let data = {};
+let metaData = {};
 
 data.organization = [
   {
@@ -158,6 +159,8 @@ for (let single_user_info of user_info) {
   });
 }
 
+metaData.tool_owner = [...data.location, ...data.user]
+
 data.tool = []
 let numTools = 50;
 
@@ -174,11 +177,10 @@ for (var i = 0; i < numTools; i++) {
     status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: randOrgId,
-    location_id: assignedToLocation ? dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId) : null,
+    owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId),
     price: null,
     photo: null,
     year: null,
-    user_id: assignedToLocation ? null : dataUtil.getRandIdFromObjectArrayWhere(data.user, 'organization_id', randOrgId)
   })
 }
 

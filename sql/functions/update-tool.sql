@@ -11,8 +11,7 @@ CREATE OR REPLACE FUNCTION public.update_tool (
 	price           	integer,
 	photo							long_str_t,
 	"year"						integer,
-	user_id						id_t,
-	location_id				id_t
+	owner_id  				id_t
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE
@@ -30,8 +29,7 @@ AS $$
         photo             = update_tool.photo,
         "year"            = update_tool.year,
         serial_number     = update_tool.serial_number,
-        user_id           = update_tool.user_id,
-        location_id       = update_tool.location_id
+        owner_id          = update_tool.owner_id
       WHERE public.tool.id = update_tool.id
         AND public.tool.organization_id = update_tool.organization_id
     RETURNING public.tool.id INTO updated_tool_id;

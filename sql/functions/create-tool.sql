@@ -10,8 +10,7 @@ CREATE OR REPLACE FUNCTION public.create_tool (
 	price           	integer       = NULL,
 	photo							long_str_t		= NULL,
 	"year"						integer				= NULL,
-	user_id						id_t					= NULL,
-	location_id				id_t					= NULL
+	owner_id				  id_t					= NULL
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE
@@ -28,9 +27,8 @@ AS $$
       photo,
       "year",
       serial_number,
-      user_id,
       organization_id,
-      location_id
+      owner_id
     )
     VALUES (
       type_id,
@@ -43,9 +41,8 @@ AS $$
       photo,
       "year",
       serial_number,
-      user_id,
       organization_id,
-      location_id
+      owner_id
     )
     RETURNING id INTO new_tool_id;
 
