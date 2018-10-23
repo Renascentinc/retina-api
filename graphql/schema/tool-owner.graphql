@@ -1,2 +1,2 @@
 
-union Owner = Location | User
+union ToolOwner = Location | User

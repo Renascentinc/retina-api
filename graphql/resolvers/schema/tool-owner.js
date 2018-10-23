@@ -2,7 +2,7 @@
 const { ArgumentError } = require(`error`);
 
 module.exports = {
-  Owner: {
+  ToolOwner: {
     __resolveType: async (object, { db }) => {
       if (db.owner_type.fromString(object.type) === db.owner_type.USER) {
         return 'User'
