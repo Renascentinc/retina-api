@@ -12,7 +12,7 @@ module.exports = {
         return 'Location'
       }
 
-      throw new ArgumentError(`Owner object type ${object.type} is not valid`);
+      throw new ArgumentError(`ToolOwner object type ${object.type} is not valid`);
     }
   }
 }
