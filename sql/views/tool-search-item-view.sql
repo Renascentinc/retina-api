@@ -4,7 +4,7 @@ BEGIN;
  * A view to simplify tool searching. It joins together all the fields that
  * a tool needs to be searched on. It also assures all fields will be of type text
  */
-/* CREATE OR REPLACE VIEW tool_search_item_view AS
+CREATE OR REPLACE VIEW tool_search_item_view AS
 	SELECT
   	COALESCE(public.user.first_name, '') AS user_first_name,
   	COALESCE(public.user.last_name, '') AS user_last_name,
@@ -17,9 +17,9 @@ BEGIN;
   	tool.status::text AS tool_status
   	FROM tool
 
-  	LEFT JOIN public.user on public.user.id = tool.user_id
-    LEFT JOIN public.location on public.location.id = tool.location_id
+    LEFT JOIN public.user ON public.user.id = tool.owner_id
+    LEFT JOIN public.location ON public.location.id = tool.owner_id
   	JOIN public.configurable_item AS brand ON brand.id = tool.brand_id
-  	JOIN public.configurable_item AS type ON type.id = tool.type_id; */
+  	JOIN public.configurable_item AS type ON type.id = tool.type_id;
 
 COMMIT;

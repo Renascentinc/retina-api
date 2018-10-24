@@ -159,7 +159,10 @@ for (let single_user_info of user_info) {
   });
 }
 
-metaData.tool_owner = [...data.location, ...data.user]
+metaData.tool_owner = [
+  ...(data.location.map(location => ({...location, type: 'LOCATION'}))),
+  ...(data.user.map(location => ({...location, type: 'USER'})))
+];
 
 data.tool = []
 let numTools = 50;
@@ -195,4 +198,4 @@ if (appConfig['environment'] == 'test') {
   }
 }
 
-module.exports = { data };
+module.exports = { data, metaData };
