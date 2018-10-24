@@ -61,8 +61,10 @@ module.exports = {
       return updatedTool[0];
     },
 
-    transferMultipleTool: async(_, { tool_id_list, to_user_id }, { db, session }) => {
-      // let transferredTools = await transfer_tool()
+    transferMultipleTool: async(_, transferArgs, { db, session }) => {
+      transferArgs['organization_id'] = session.organization_id;
+      let transferredTools = await db.transfer_tool(transferArgs);
+      return transferredTools;
     }
   },
 

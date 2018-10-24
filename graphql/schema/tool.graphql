@@ -47,17 +47,17 @@ input ToolFilter {
   brand_ids:     [ID!]
   type_ids:      [ID!]
   tool_statuses: [ToolStatus!]
-  owner_ids:      [ID]
+  owner_ids:     [ID!]
 }
 
 type Query {
   getTool(tool_id: ID!): Tool
-  getAllTool(pagingParameters: PagingParameters): [Tool]!
-  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool]
+  getAllTool(pagingParameters: PagingParameters): [Tool!]!
+  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool!]
 }
 
 type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
-  transferMultipleTool(tool_id_list: [ID!]!, to_user_id: ID!): [Tool]
+  transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
 }
