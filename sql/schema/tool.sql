@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	organization_id 	id_t 						 NOT NULL,
 	serial_number 		str_t			 			 NOT NULL,
   owner_id          id_t             NOT NULL,
+  owner_type        tool_owner_type  NOT NULL,
 	date_purchased 		date,
 	purchased_from_id id_t,
 	price 						integer,

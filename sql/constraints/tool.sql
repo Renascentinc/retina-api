@@ -1,8 +1,8 @@
-/* ALTER TABLE public.tool
+ALTER TABLE public.tool
 ADD FOREIGN KEY (owner_id, organization_id)
-REFERENCES public."tool_owner" (id, organization_id)
+REFERENCES public."tool_owner_id" (id, organization_id)
 	ON DELETE RESTRICT
-	ON UPDATE RESTRICT; */
+	ON UPDATE RESTRICT;
 
 ALTER TABLE public.tool
 ADD FOREIGN KEY (type_id, organization_id)

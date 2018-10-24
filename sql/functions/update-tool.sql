@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION public.update_tool (
 	status          	tool_status,
 	serial_number			str_t,
 	organization_id		id_t,
+  owner_id  				id_t,
 	date_purchased		date,
 	purchased_from_id	id_t,
 	price           	integer,
 	photo							long_str_t,
-	"year"						integer,
-	owner_id  				id_t
+	"year"						integer
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE

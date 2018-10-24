@@ -29,7 +29,7 @@ AS $$
         address_line_one,
         address_line_two,
         name,
-        'LOCATION'::owner_type
+        'LOCATION'::tool_owner_type
     	) RETURNING *;
   END;
 $$

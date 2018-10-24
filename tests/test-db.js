@@ -435,7 +435,7 @@ describe('Database creation and usage', async () => {
 
     it('a session can be retrieved by user id', async () => {
       let existingSession = await dbFuncs.get_session_by_user_id({
-        user_id: dataUtil.getRandIdFromArray(data.user)
+        user_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
       });
 
       assert.ok(existingSession.length >= 1);

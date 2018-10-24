@@ -1,5 +1,5 @@
 const appConfig = require('../app-config');
-const { getDropFunctionsQueriesQuery, getDropExtensionsQueriesQuery } = require('../sql/raw-queries');
+const { getDropFunctionsQueriesQuery, getDropExtensionsQueriesQuery, getDropTriggersQueriesQuery } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
@@ -145,6 +145,18 @@ async function createViews(dbClient) {
   }
 }
 
+async function loadTriggers(dbClient) {
+  logger.info('Loading Triggers');
+
+  try {
+    let functions = fileUtils.readFilesFromDir(appConfig['db.triggerDir']);
+    await dbClient.query(functions.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load triggers into database`);
+    throw e;
+  }
+}
+
 async function loadFunctions(dbClient) {
   logger.info('Loading Functions');
 
@@ -170,6 +182,22 @@ async function dropExtensions(dbClient) {
     await dbClient.query(dropExtensionsQueries);
   } catch (e) {
     logger.error(`Unable to drop extensions from database`);
+    throw e;
+  }
+}
+
+async function dropTriggers(dbClient) {
+  logger.info('Dropping Triggers');
+  try {
+    let dropTriggersQueries = await dbClient.query({
+      text: getDropTriggersQueriesQuery,
+      rowMode: 'array'
+    });
+
+    dropTriggersQueries = dropTriggersQueries.rows.map(row => row[0]).join('');
+    await dbClient.query(dropTriggersQueries);
+  } catch (e) {
+    logger.error(`Unable to drop triggers from database`);
     throw e;
   }
 }
@@ -206,4 +234,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient, loadTriggers, dropTriggers }

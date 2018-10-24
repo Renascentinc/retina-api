@@ -30,7 +30,7 @@ AS $$
         role,
         status,
         organization_id,
-        'USER'::owner_type
+        'USER'::tool_owner_type
       ) RETURNING *;
   END;
 $$

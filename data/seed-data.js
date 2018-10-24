@@ -41,11 +41,6 @@ let roles = [
   'ADMINISTRATOR'
 ]
 
-let owner_type = [
-  'USER',
-  'LOCATION'
-]
-
 let user_info = [
   {
     first_name: 'Josiah',
@@ -190,12 +185,15 @@ for (var i = 0; i < numTools; i++) {
 if (appConfig['environment'] == 'test') {
   data.session = [];
 
-  for (let i = 0; i < data.user.length; i++) {
+  let { objects: users, originalIndecies } = dataUtil.getFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
+
+  users.forEach((user, i) => {
+    let originalIndex = originalIndecies[i];
     data.session.push({
-      user_id: i + 1,
-      organization_id: data.user[i].organization_id
-    });
-  }
+      user_id: originalIndex + 1,
+      organization_id: metaData.tool_owner[originalIndex].organization_id
+    })
+  });
 }
 
 module.exports = { data, metaData };

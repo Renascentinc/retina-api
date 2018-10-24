@@ -20,10 +20,9 @@ input NewTool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
+  owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    String
-  user_id:           ID
-  location_id:       ID
   photo:             String
   price:             Int
   year:              Int
@@ -36,10 +35,9 @@ input UpdatedTool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
+  owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    String
-  user_id:           ID
-  location_id:       ID
   photo:             String
   price:             Int
   year:              Int
@@ -49,7 +47,7 @@ input ToolFilter {
   brand_ids:     [ID!]
   type_ids:      [ID!]
   tool_statuses: [ToolStatus!]
-  user_ids:      [ID]
+  owner_ids:      [ID]
 }
 
 type Query {

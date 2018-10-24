@@ -1,7 +1,6 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public."location" (
-  id                serial,
 	city							str_t 								NOT NULL,
 	state 						state_t			 					NOT NULL,
 	zip 							zip_t 								NOT NULL,

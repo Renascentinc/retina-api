@@ -9,6 +9,7 @@ let appConfig = {
   'db.baseSchemaDir': `${rootDir}/sql/schema/base_schema`,
   'db.constraintDir': `${rootDir}/sql/constraints`,
   'db.functionDir': `${rootDir}/sql/functions`,
+  'db.triggerDir': `${rootDir}/sql/triggers`,
   'db.typeDir': `${rootDir}/sql/types`,
   'db.viewDir': `${rootDir}/sql/views`,
   'db.refreshSchema': false,
@@ -31,8 +32,8 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
 }
 
 if (appConfig['environment'] == 'local') {
-  // appConfig['db.refreshSchema'] = true;
-  // appConfig['db.seed'] = true;
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
   process.env['DB_NAME'] = 'local_db';
 }
 
