@@ -1,4 +1,4 @@
-const fs = require('fs');
+const { readdirSync, statSync, readFileSync} = require('fs');
 
 /**
  * Read contents of each file into an array
@@ -13,11 +13,11 @@ const fs = require('fs');
 function readFilesFromDir(dirName) {
   dirName = normalizeDirectoryName(dirName);
 
-  const fileNames = fs.readdirSync(dirName).filter(dirEntry => dirEntry.endsWith(".sql"));
+  const fileNames = readdirSync(dirName).filter(dirEntry => !statSync(`${dirName}/${dirEntry}`).isDirectory());
 
   let fileTexts = [];
   for (let i in fileNames) {
-    fileTexts.push(fs.readFileSync(`${dirName}/${fileNames[i]}`, {encoding: 'utf-8'}));
+    fileTexts.push(readFileSync(`${dirName}/${fileNames[i]}`, {encoding: 'utf-8'}));
   }
 
   return fileTexts;

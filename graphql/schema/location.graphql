@@ -4,6 +4,7 @@ type Location {
   state:            String!
   zip:              String!
   address_line_one: String!
+  type:             ToolOwnerType!
   address_line_two: String
   name: 						String
 }
