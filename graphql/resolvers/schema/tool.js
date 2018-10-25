@@ -64,6 +64,9 @@ module.exports = {
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
       transferArgs['organization_id'] = session.organization_id;
       let transferredTools = await db.transfer_tool(transferArgs);
+
+      // Add some kind of warning if the number of transferred tools !== the number
+      // of tools that were requested to be transferred
       return transferredTools;
     }
   },

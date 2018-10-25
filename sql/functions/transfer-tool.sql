@@ -1,7 +1,8 @@
 CREATE OR REPLACE FUNCTION public.transfer_tool (
-	tool_id_list    integer[],
-	to_owner_id 	  id_t,
-  organization_id id_t
+	tool_id_list    integer[] NOT NULL,
+	to_owner_id 	  id_t      NOT NULL,
+  organization_id id_t      NOT NULL,
+  transferrer_id  id_t      NOT NULL
 )
 RETURNS SETOF public.tool
 AS $$
@@ -25,7 +26,14 @@ AS $$
               ELSE status
             END
         WHERE public.tool.id = tool_id
-          AND public.tool.organization_id = transfer_tool.organization_id;
+          AND public.tool.organization_id = transfer_tool.organization_id
+          AND public.tool.owner_id =
+            CASE
+              WHEN (SELECT role FROM public.user WHERE id = transferrer_id) = 'ADMINISTRATOR'::role OR
+                   (SELECT owner_type FROM public.tool WHERE id = tool_id) = 'LOCATION'::tool_owner_type
+              THEN public.tool.owner_id
+              ELSE transferrer_id
+            END;
     END LOOP;
 
     RETURN QUERY SELECT * FROM tool

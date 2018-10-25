@@ -61,6 +61,6 @@ type Mutation {
   updateTool(updatedTool: UpdatedTool!): Tool
   transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
 
-  # TODO: Add transfer tool test
+  # TODO: Add transfer tool tests
   # TODO: Figure out how users will be restricted from transferring tools they don't own
 }
