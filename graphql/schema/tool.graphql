@@ -6,8 +6,8 @@ type Tool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
-  purchased_from:    ConfigurableItem!
   owner:             ToolOwner!
+  purchased_from:    ConfigurableItem
   date_purchased:    String
   photo:             String
   price:             Int
