@@ -59,12 +59,26 @@ module.exports = {
       updatedTool['organization_id'] = session.organization_id;
       updatedTool = await db.update_tool(updatedTool);
       return updatedTool[0];
+    },
+
+    transferMultipleTool: async(_, transferArgs, { db, session }) => {
+      transferArgs['organization_id'] = session.organization_id;
+      transferArgs['transferrer_id'] = session.user_id;
+      let transferredTools = await db.transfer_tool(transferArgs);
+
+      return transferredTools;
     }
   },
 
   Tool: {
-    location: async ({ location_id }, _, ctx) => locationResolvers.Query.getLocation(undefined, { location_id }, ctx),
-    user: async ({ user_id }, _, ctx) => userResolvers.Query.getUser(undefined, { user_id }, ctx),
+    owner: async ({ owner_type, owner_id }, _, ctx) => {
+
+      if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.USER) {
+        return userResolvers.Query.getUser(undefined, { user_id: owner_id }, ctx)
+      }
+
+      return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+    },
     type: async ({ type_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: type_id }, ctx),
     brand: async ({ brand_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: brand_id }, ctx),
     purchased_from: async ({ purchased_from_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: purchased_from_id }, ctx)

@@ -4,6 +4,11 @@ module.exports = {
      FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
      WHERE ns.nspname = 'public';`,
 
+  getDropTriggersQueriesQuery:
+    `SELECT 'DROP TRIGGER ' || trigger_name || ' ON public.' || event_object_table || ';'
+     FROM information_schema.triggers
+     WHERE trigger_schema = 'public';`,
+
   getDbFunctionNamesQuery:
     `SELECT DISTINCT routine_name FROM information_schema.routines
      WHERE routine_type='FUNCTION' AND specific_schema='public'`,

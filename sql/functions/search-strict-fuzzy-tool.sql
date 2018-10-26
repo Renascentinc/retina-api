@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION public.search_strict_fuzzy_tool (
   organization_id id_t,
   lexemes		      text[],
-  user_ids        integer[]             = NULL,
+  owner_ids        integer[]             = NULL,
   brand_ids        integer[]             = NULL,
   type_ids         integer[]             = NULL,
   tool_statuses     tool_status[]      = NULL,
@@ -19,7 +19,7 @@ AS $$
       RETURN QUERY
         SELECT * FROM search_strict_tool (
           organization_id := organization_id,
-          user_ids := user_ids,
+          owner_ids := owner_ids,
           brand_ids := brand_ids,
           type_ids := type_ids,
           tool_statuses := tool_statuses,
@@ -33,7 +33,7 @@ AS $$
       ARRAY (
         SELECT id FROM search_strict_tool (
           organization_id := organization_id,
-          user_ids := user_ids,
+          owner_ids := owner_ids,
           brand_ids := brand_ids,
           type_ids := type_ids,
           tool_statuses := tool_statuses

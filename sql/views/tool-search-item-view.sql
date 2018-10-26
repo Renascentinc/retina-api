@@ -17,8 +17,8 @@ CREATE OR REPLACE VIEW tool_search_item_view AS
   	tool.status::text AS tool_status
   	FROM tool
 
-  	LEFT JOIN public.user on public.user.id = tool.user_id
-    LEFT JOIN public.location on public.location.id = tool.location_id
+    LEFT JOIN public.user ON public.user.id = tool.owner_id
+    LEFT JOIN public.location ON public.location.id = tool.owner_id
   	JOIN public.configurable_item AS brand ON brand.id = tool.brand_id
   	JOIN public.configurable_item AS type ON type.id = tool.type_id;
 

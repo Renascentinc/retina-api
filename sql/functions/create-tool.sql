@@ -5,13 +5,12 @@ CREATE OR REPLACE FUNCTION public.create_tool (
 	status          	tool_status,
 	serial_number			str_t,
 	organization_id		id_t,
+  owner_id				  id_t,
 	date_purchased		date          = NULL,
 	purchased_from_id	id_t					= NULL,
 	price           	integer       = NULL,
 	photo							long_str_t		= NULL,
-	"year"						integer				= NULL,
-	user_id						id_t					= NULL,
-	location_id				id_t					= NULL
+	"year"						integer				= NULL
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE
@@ -28,9 +27,9 @@ AS $$
       photo,
       "year",
       serial_number,
-      user_id,
       organization_id,
-      location_id
+      owner_id,
+      owner_type
     )
     VALUES (
       type_id,
@@ -43,9 +42,9 @@ AS $$
       photo,
       "year",
       serial_number,
-      user_id,
       organization_id,
-      location_id
+      owner_id,
+      (SELECT type from public.tool_owner where id = owner_id)
     )
     RETURNING id INTO new_tool_id;
 

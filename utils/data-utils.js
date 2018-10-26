@@ -30,6 +30,17 @@ class Util {
     return this.getRandFromArray(ids);
   }
 
+  getRandFromObjectArrayWhere(array, key, value) {
+    let objects = []
+    array.forEach((object, i) => {
+     if (object[key] == value) {
+       objects.push(object);
+     }
+    });
+
+    return this.getRandFromArray(objects);
+  }
+
   getFromObjectArrayWhere(array, key, value) {
     let objects = []
     let originalIndecies = []

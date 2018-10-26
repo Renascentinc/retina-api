@@ -45,41 +45,49 @@ let user_info = [
   {
     first_name: 'Josiah',
     last_name: 'Campbell',
-    organization_id: 1
+    organization_id: 1,
+    role: 'ADMINISTRATOR'
   },
   {
     first_name: 'Elias',
     last_name: 'Kraihanzel',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'Jeremy',
     last_name: 'Brown',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'Amos',
     last_name: 'Endersen',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'James',
     last_name: 'Alstrong',
-    organization_id: 2
+    organization_id: 2,
+    role: 'ADMINISTRATOR'
   },
   {
     first_name: 'Nathan',
     last_name: 'Powell',
-    organization_id: 1
+    organization_id: 2,
+    role: 'USER'
   },
   {
     first_name: 'Nathan',
     last_name: 'Powell',
-    organization_id: 3
+    organization_id: 3,
+    role: 'ADMINISTRATOR'
   }
 ];
 
 let data = {};
+let metaData = {};
 
 data.organization = [
   {
@@ -147,11 +155,16 @@ for (let single_user_info of user_info) {
     email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@renascentinc.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
-    role: dataUtil.getRandFromArray(roles),
+    role: single_user_info.role,
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: single_user_info.organization_id
   });
 }
+
+metaData.tool_owner = [
+  ...(data.location.map(location => ({...location, type: 'LOCATION'}))),
+  ...(data.user.map(location => ({...location, type: 'USER'})))
+];
 
 data.tool = []
 let numTools = 50;
@@ -169,23 +182,25 @@ for (var i = 0; i < numTools; i++) {
     status: dataUtil.getRandFromArray(tool_statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: randOrgId,
-    location_id: assignedToLocation ? dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId) : null,
+    owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId),
     price: null,
     photo: null,
     year: null,
-    user_id: assignedToLocation ? null : dataUtil.getRandIdFromObjectArrayWhere(data.user, 'organization_id', randOrgId)
   })
 }
 
 if (appConfig['environment'] == 'test') {
   data.session = [];
 
-  for (let i = 0; i < data.user.length; i++) {
+  let { objects: users, originalIndecies } = dataUtil.getFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
+
+  users.forEach((user, i) => {
+    let originalIndex = originalIndecies[i];
     data.session.push({
-      user_id: i + 1,
-      organization_id: data.user[i].organization_id
-    });
-  }
+      user_id: originalIndex + 1,
+      organization_id: metaData.tool_owner[originalIndex].organization_id
+    })
+  });
 }
 
-module.exports = { data };
+module.exports = { data, metaData };

@@ -1,6 +1,6 @@
 ALTER TABLE public.session
 ADD FOREIGN KEY (user_id, organization_id)
-  REFERENCES public."user" (id, organization_id)
+  REFERENCES public."user_id" (id, organization_id)
 	ON DELETE RESTRICT
 	ON UPDATE RESTRICT;
 

@@ -2,7 +2,7 @@ const assert = require('assert');
 
 const { initializeDb } = require('../db-initializer');
 const { dbClient } = require('../db-client');
-const { data } = require('../data/seed-data');
+const { data, metaData } = require('../data/seed-data');
 const dataUtil = require('../utils/data-utils');
 const appConfig = require('../app-config');
 const { getPostgresDbRawClient } = require('../utils/db-utils');
@@ -178,7 +178,7 @@ describe('Database creation and usage', async () => {
   describe('get_location()', () => {
 
     it('successfully gets a location', async () => {
-      let locationId = dataUtil.getRandIdFromArray(data.location);
+      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
       let location = data.location[locationId - 1];
       let retrievedLocation = await dbFuncs.get_location({
         location_id: locationId,
@@ -277,8 +277,8 @@ describe('Database creation and usage', async () => {
   describe('get_user()', () => {
 
     it('successfully gets a user', async () => {
-      let userId = dataUtil.getRandIdFromArray(data.user);
-      let user = data.user[userId - 1];
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
       let retrievedUser = await dbFuncs.get_user({
         user_id: userId,
         organization_id: user.organization_id
@@ -346,8 +346,9 @@ describe('Database creation and usage', async () => {
   describe('update_user()', () => {
 
     it('successfully updates a user for an organization', async () => {
-      let userId = dataUtil.getRandIdFromArray(data.user);
-      let user = data.user[userId - 1];
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
+      delete user['type'];
       user['id'] = userId;
       let updatedUserObject = {...user,
         ...{
@@ -368,8 +369,9 @@ describe('Database creation and usage', async () => {
   describe('update_location()', () => {
 
     it('successfully updates a location for an organization', async () => {
-      let locationId = dataUtil.getRandIdFromArray(data.location);
-      let location = data.location[locationId - 1];
+      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
+      let location = metaData.tool_owner[locationId - 1];
+      delete location['type'];
       location['id'] = locationId;
       let updatedLocationObject = {...location,
         ...{
@@ -433,7 +435,7 @@ describe('Database creation and usage', async () => {
 
     it('a session can be retrieved by user id', async () => {
       let existingSession = await dbFuncs.get_session_by_user_id({
-        user_id: dataUtil.getRandIdFromArray(data.user)
+        user_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
       });
 
       assert.ok(existingSession.length >= 1);
@@ -482,8 +484,8 @@ describe('Database creation and usage', async () => {
   describe('get_user_by_credentials_and_organization()', () => {
 
     it('a user can be retrieved, given their email, password, and org id', async () => {
-      let randomUserId = dataUtil.getRandIdFromArray(data.user);
-      let randomUser = data.user[randomUserId - 1];
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
       let validUser = await dbFuncs.get_user_by_credentials_and_organization({
         email: randomUser.email,
         password: randomUser.password,
@@ -530,8 +532,8 @@ describe('Database creation and usage', async () => {
     it(`successfully updates a user's password`, async () => {
       let newPassword = "New Password";
 
-      let randomUserId = dataUtil.getRandIdFromArray(data.user);
-      let randomUser = data.user[randomUserId - 1];
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
       let updatedUser = await dbFuncs.update_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
@@ -620,7 +622,7 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools when only some filters are passed', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_tool({
-        user_ids: [randomTool.user_id],
+        owner_ids: [randomTool.owner_id],
         type_ids: undefined,
         organization_id: randomTool.organization_id
       });
@@ -639,7 +641,7 @@ describe('Database creation and usage', async () => {
       randomToolFromDb = randomToolFromDb[0];
 
       let tools = await dbFuncs.search_strict_tool({
-        user_ids: [randomToolFromDb.user_id],
+        owner_ids: [randomToolFromDb.owner_id],
         type_ids: [randomToolFromDb.type_id],
         brand_ids: [randomToolFromDb.brand_id],
         tool_statuses: [randomToolFromDb.status],
@@ -670,21 +672,11 @@ describe('Database creation and usage', async () => {
       assert.equal(tools.length, 0);
     });
 
-    it('returns tools when an array filter contains null', async () => {
-      let expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'user_id', null).objects.length;
-      let tools = await dbFuncs.search_strict_tool({
-        user_ids: [null],
-        organization_id: dataUtil.getRandIdFromArray(data.organization)
-      });
-
-      assert.equal(tools.length, expectedLength);
-    });
-
     it('ignores filters that are empty arrays', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
       let expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
       let tools = await dbFuncs.search_strict_tool({
-        user_ids: [],
+        owner_ids: [],
         organization_id: randOrgId
       });
 
@@ -731,7 +723,33 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_fuzzy_tool()', () => {
 
-    it('successfully searches for tools', async () => {
+    it('successfully transfers a tool', async () => {
+      let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
+      let randOrgId = randAdmin.organization_id;
+      let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
+      let randAdminId = dataUtil.getRandIdFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR');
+      let randUserId = dataUtil.getRandFromArray(allUsers).id;
+      let randToolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId)
+
+      let transferredTools = await dbFuncs.transfer_tool({
+        organization_id: randOrgId,
+        tool_id_list: [randToolId],
+        transferrer_id: randAdminId,
+        to_owner_id: randUserId
+      });
+
+      assert.ok(transferredTools.length > 0);
+    });
+
+    it.skip(`doesn't transfer a tool a user doesn't own`, async () => {
+
+    });
+
+  });
+
+  describe('transfer_tool()', () => {
+
+    it('successfully transfers a tool', async () => {
       let randTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_fuzzy_tool({
         organization_id: randTool.organization_id,

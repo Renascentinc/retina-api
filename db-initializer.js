@@ -1,7 +1,15 @@
 const { dbClient } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
-const { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions } = require('./utils/db-utils');
+const { createDb,
+        loadSchema,
+        seedDb,
+        loadFunctions,
+        dropFunctions,
+        dropExtensions,
+        loadTriggers,
+        dropTriggers } = require('./utils/db-utils');
+        
 const Enum = require('enums');
 const logger = require('./logger');
 
@@ -24,9 +32,13 @@ async function initializeDb() {
   try {
     await dropExtensions(dbClient);
 
+    await dropTriggers(dbClient);
+
     await dropFunctions(dbClient);
 
     await loadSchema(dbClient);
+
+    await loadTriggers(dbClient);
 
     await loadFunctions(dbClient);
 
