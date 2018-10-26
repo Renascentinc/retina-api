@@ -723,7 +723,33 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_fuzzy_tool()', () => {
 
-    it('successfully searches for tools', async () => {
+    it('successfully transfers a tool', async () => {
+      let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
+      let randOrgId = randAdmin.organization_id;
+      let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
+      let randAdminId = dataUtil.getRandIdFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR');
+      let randUserId = dataUtil.getRandFromArray(allUsers).id;
+      let randToolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId)
+
+      let transferredTools = await dbFuncs.transfer_tool({
+        organization_id: randOrgId,
+        tool_id_list: [randToolId],
+        transferrer_id: randAdminId,
+        to_owner_id: randUserId
+      });
+
+      assert.ok(transferredTools.length > 0);
+    });
+
+    it.skip(`doesn't transfer a tool a user doesn't own`, async () => {
+
+    });
+
+  });
+
+  describe('transfer_tool()', () => {
+
+    it('successfully transfers a tool', async () => {
       let randTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_fuzzy_tool({
         organization_id: randTool.organization_id,

@@ -45,37 +45,44 @@ let user_info = [
   {
     first_name: 'Josiah',
     last_name: 'Campbell',
-    organization_id: 1
+    organization_id: 1,
+    role: 'ADMINISTRATOR'
   },
   {
     first_name: 'Elias',
     last_name: 'Kraihanzel',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'Jeremy',
     last_name: 'Brown',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'Amos',
     last_name: 'Endersen',
-    organization_id: 1
+    organization_id: 1,
+    role: 'USER'
   },
   {
     first_name: 'James',
     last_name: 'Alstrong',
-    organization_id: 2
+    organization_id: 2,
+    role: 'ADMINISTRATOR'
   },
   {
     first_name: 'Nathan',
     last_name: 'Powell',
-    organization_id: 1
+    organization_id: 2,
+    role: 'USER'
   },
   {
     first_name: 'Nathan',
     last_name: 'Powell',
-    organization_id: 3
+    organization_id: 3,
+    role: 'ADMINISTRATOR'
   }
 ];
 
@@ -148,7 +155,7 @@ for (let single_user_info of user_info) {
     email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@renascentinc.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
-    role: dataUtil.getRandFromArray(roles),
+    role: single_user_info.role,
     status: dataUtil.getRandFromArray(user_statuses),
     organization_id: single_user_info.organization_id
   });
