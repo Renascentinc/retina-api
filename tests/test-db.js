@@ -723,6 +723,21 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_fuzzy_tool()', () => {
 
+    it('successfully searches for tools when both lexemes and filters are passed', async () => {
+      let randTool = dataUtil.getRandFromArray(data.tool);
+      let tools = await dbFuncs.search_strict_fuzzy_tool({
+        organization_id: randTool.organization_id,
+        lexemes: [randTool.serial_number],
+        brand_ids: [randTool.brand_id]
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+  });
+
+  describe('transfer_tool()', () => {
+
     it('successfully transfers a tool', async () => {
       let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
       let randOrgId = randAdmin.organization_id;
@@ -743,21 +758,6 @@ describe('Database creation and usage', async () => {
 
     it.skip(`doesn't transfer a tool a user doesn't own`, async () => {
 
-    });
-
-  });
-
-  describe('transfer_tool()', () => {
-
-    it('successfully transfers a tool', async () => {
-      let randTool = dataUtil.getRandFromArray(data.tool);
-      let tools = await dbFuncs.search_strict_fuzzy_tool({
-        organization_id: randTool.organization_id,
-        lexemes: [randTool.serial_number],
-        brand_ids: [randTool.brand_id]
-      });
-
-      assert.ok(tools.length > 0);
     });
 
   });
