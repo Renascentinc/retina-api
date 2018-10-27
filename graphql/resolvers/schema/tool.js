@@ -52,6 +52,9 @@ module.exports = {
     createTool: async (_, { newTool }, { db, session }) => {
       newTool['organization_id'] = session.organization_id;
       newTool = await db.create_tool(newTool);
+
+      db.create_tool_history(newTool[0]);
+
       return newTool[0];
     },
 

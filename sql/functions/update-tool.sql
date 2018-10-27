@@ -34,8 +34,6 @@ AS $$
         AND public.tool.organization_id = update_tool.organization_id
     RETURNING public.tool.id INTO updated_tool_id;
 
-    -- TODO: Create a transaction
-
     RETURN QUERY SELECT * FROM public.tool WHERE public.tool.id = updated_tool_id;
   END;
 $$
