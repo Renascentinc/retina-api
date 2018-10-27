@@ -1,0 +1,10 @@
+
+"""
+Neither start nor end are required.
+If start is left empty, it defaults to the beginning of time
+If end is left empty, it defaults to the current time
+"""
+input TimeSpan {
+  start_time: String
+  end_time: String
+}

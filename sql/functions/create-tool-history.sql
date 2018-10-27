@@ -1,4 +1,4 @@
-CREATE FUNCTION public.create_tool_history (
+CREATE FUNCTION public.create_tool_snapshot (
   id                id_t,
 	type_id						id_t,
 	brand_id					id_t,
@@ -7,17 +7,17 @@ CREATE FUNCTION public.create_tool_history (
 	serial_number			str_t,
 	organization_id		id_t,
   owner_id				  id_t,
-  owner_type        tool_owner_type,
+  tool_action       tool_action,
 	date_purchased		date          = NULL,
 	purchased_from_id	id_t					= NULL,
 	price           	integer       = NULL,
 	photo							long_str_t		= NULL,
 	"year"						integer				= NULL
-) RETURNS SETOF public.tool_history
+) RETURNS SETOF public.tool_snapshot
 AS $$
   BEGIN
     RETURN QUERY
-      INSERT INTO public.tool_history (
+      INSERT INTO public.tool_snapshot (
         id,
         type_id,
         brand_id,
@@ -31,6 +31,7 @@ AS $$
         serial_number,
         organization_id,
         owner_id,
+        tool_action,
         owner_type
       )
       VALUES (
@@ -47,7 +48,8 @@ AS $$
         serial_number,
         organization_id,
         owner_id,
-        owner_type
+        tool_action,
+        (SELECT type from public.tool_owner where tool_owner.id = owner_id)
       )
       RETURNING *;
   END;
