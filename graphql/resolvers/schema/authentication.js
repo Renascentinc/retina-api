@@ -37,14 +37,18 @@ module.exports = {
         throw new UserInputError(`Email does not exist`);
       }
 
-      let passwordResetCode = await db.create_password_reset_code(passwordResetInfo);
+      let user = userArray[0];
+      passwordResetInfo['organization_id'] = user.organization_id;
+
+      let passwordResetCredentials= await db.create_password_reset_credentials(passwordResetInfo);
+      passwordResetCredentials = passwordResetCredentials[0];
 
       let mailer = new PasswordResetMailer();
 
       let sentEmailResult = await mailer.sendEmail({
         to: passwordResetInfo.email,
         subject: 'Response to Password Reset Request',
-        html: `https://${environmentName}.renascentinc.com/password-reset?code=${passwordResetCode.code}`
+        html: `https://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com/password-reset?code=${passwordResetCredentials.code}`
       });
 
       return sentEmailResult ? true : false;
