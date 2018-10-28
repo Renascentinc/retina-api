@@ -8,7 +8,7 @@ type PreviousToolSnapshotDiff {
 	status:         ToolStatus
   owner:          ToolOwner
   purchased_from: ConfigurableItem
-  date_purchased: String
+  date_purchased: Date
   photo:          String
   price:          Int
   year:           Int
@@ -16,14 +16,14 @@ type PreviousToolSnapshotDiff {
 
 type ToolHistoryEntry {
   tool_snapshot: Tool!
-  timestamp: String!
+  timestamp: Date!
   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
   tool_action: ToolAction!
 }
 
 input ToolHistoryFilter {
   tool_ids:     [ID!]
-  user_ids:     [ID!]
+  owner_ids:    [ID!]
   tool_actions: [ToolAction!]
   time_span:    TimeSpan
 }

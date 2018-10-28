@@ -1,5 +1,5 @@
 ALTER TABLE public.tool_snapshot
-ADD FOREIGN KEY (id, organization_id)
+ADD FOREIGN KEY (tool_id, organization_id)
 REFERENCES public."tool" (id, organization_id)
 	ON DELETE RESTRICT
 	ON UPDATE RESTRICT;

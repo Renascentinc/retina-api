@@ -1,5 +1,5 @@
 CREATE FUNCTION public.create_tool_snapshot (
-  id                id_t,
+  tool_id           id_t,
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,
@@ -18,7 +18,7 @@ AS $$
   BEGIN
     RETURN QUERY
       INSERT INTO public.tool_snapshot (
-        id,
+        tool_id,
         type_id,
         brand_id,
         date_purchased,
@@ -35,7 +35,7 @@ AS $$
         owner_type
       )
       VALUES (
-        id,
+        tool_id,
         type_id,
         brand_id,
         date_purchased,

@@ -202,7 +202,7 @@ for (var i = 0; i < numToolHistory; i++) {
   let { objects: configurableItems, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
   let randomOwnerId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId);
   data.tool_snapshot.push({
-    id: dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId),
+    tool_id: dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId),
     type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'TYPE') - 1] + 1,
     brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'BRAND') - 1] + 1,
     purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,

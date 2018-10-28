@@ -11,6 +11,7 @@
     "chalk": "^2.4.1",
     "enums": "https://github.com/ekraihan/enums.git",
     "graphql": "^0.13.2",
+    "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.9.2",
     "merge-graphql-schemas": "^1.5.3",
     "pg": "^7.4.3",

@@ -1,8 +1,8 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
-	id 								id_t             NOT NULL,
-  time              timestamp        DEFAULT now(),
+	tool_id 					id_t             NOT NULL,
+  timestamp         timestamp        DEFAULT now(),
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
 	model_number 			str_t 					 NOT NULL,
@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	"year" 						integer
 );
 
-CREATE INDEX ON public.tool_snapshot (id);
+CREATE INDEX ON public.tool_snapshot (tool_id);
 CREATE INDEX ON public.tool_snapshot (organization_id);
-CREATE INDEX ON public.tool_snapshot (id, organization_id);
+CREATE INDEX ON public.tool_snapshot (tool_id, organization_id);
 
 COMMIT;

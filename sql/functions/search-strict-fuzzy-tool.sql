@@ -5,12 +5,12 @@
 CREATE OR REPLACE FUNCTION public.search_strict_fuzzy_tool (
   organization_id id_t,
   lexemes		      text[],
-  owner_ids        integer[]             = NULL,
-  brand_ids        integer[]             = NULL,
-  type_ids         integer[]             = NULL,
-  tool_statuses     tool_status[]      = NULL,
-  page_size       integer          = NULL,
-  page_number     integer          = 0
+  owner_ids       integer[]     = NULL,
+  brand_ids       integer[]     = NULL,
+  type_ids        integer[]     = NULL,
+  tool_statuses   tool_status[] = NULL,
+  page_size       integer       = NULL,
+  page_number     integer       = 0
 )
 RETURNS SETOF public.tool
 AS $$
