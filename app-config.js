@@ -20,6 +20,7 @@ let appConfig = {
   'server.graphql.directiveDir': `${rootDir}/graphql/directives`,
   'server.graphql.resolver.directiveDir': `${rootDir}/graphql/resolvers/directives`,
   'server.graphql.resolver.schemaDir': `${rootDir}/graphql/resolvers/schema`,
+  'server.graphql.resolver.scalarDir': `${rootDir}/graphql/resolvers/scalars`,
   'server.port': process.env.PORT || 4000
 }
 

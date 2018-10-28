@@ -100,6 +100,28 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('create_tool_snapshot()', () => {
+
+    it('successfully creates a tool snapshot', async () => {
+      let toolId = dataUtil.getRandIdFromArray(data.tool);
+      let tool = data.tool[toolId - 1];
+
+      tool = await dbFuncs.get_tool({
+        tool_id: toolId,
+        organization_id: tool.organization_id
+      });
+
+      let toolSnapshot = await dbFuncs.create_tool_snapshot(
+      {
+        ...tool[0],
+        tool_action: dbFuncs.tool_action.UPDATE.name
+      });
+
+      assert.equal(toolSnapshot.length, 1);
+    });
+
+  });
+
   describe('create_session()', () => {
 
     it('successfully creates several sessions', async () => {
@@ -352,7 +374,7 @@ describe('Database creation and usage', async () => {
       user['id'] = userId;
       let updatedUserObject = {...user,
         ...{
-          role: 'ADMINISTRATOR',
+          phone_number: '(123) 456-7890',
           status: 'ACTIVE'
         }
       };
@@ -741,10 +763,13 @@ describe('Database creation and usage', async () => {
     it('successfully transfers a tool', async () => {
       let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
       let randOrgId = randAdmin.organization_id;
+
       let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
-      let randAdminId = dataUtil.getRandIdFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR');
-      let randUserId = dataUtil.getRandFromArray(allUsers).id;
-      let randToolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId)
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randAdminId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR').id;
+      let randUserId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'USER').id;
+      let randToolId = dataUtil.getRandFromObjectArrayWhere(allTools, 'owner_id', randAdminId).id;
 
       let transferredTools = await dbFuncs.transfer_tool({
         organization_id: randOrgId,
@@ -757,6 +782,14 @@ describe('Database creation and usage', async () => {
     });
 
     it.skip(`doesn't transfer a tool a user doesn't own`, async () => {
+
+    });
+
+  });
+
+  describe('search_strict_tool_snapshot()', () => {
+
+    it.skip('successfully searches for tool snapshots', async () => {
 
     });
 

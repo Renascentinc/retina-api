@@ -8,7 +8,7 @@ type Tool {
 	status:            ToolStatus!
   owner:             ToolOwner!
   purchased_from:    ConfigurableItem
-  date_purchased:    String
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
@@ -22,7 +22,7 @@ input NewTool {
 	status:            ToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
-  date_purchased:    String
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
@@ -37,7 +37,7 @@ input UpdatedTool {
 	status:            ToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
-  date_purchased:    String
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
@@ -60,7 +60,4 @@ type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
   transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
-
-  # TODO: Add transfer tool tests
-  # TODO: Figure out how users will be restricted from transferring tools they don't own
 }

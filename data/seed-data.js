@@ -41,6 +41,12 @@ let roles = [
   'ADMINISTRATOR'
 ]
 
+let tool_actions = [
+  'ADD',
+  'UPADTE',
+  'TRANSFER'
+]
+
 let user_info = [
   {
     first_name: 'Josiah',
@@ -83,6 +89,12 @@ let user_info = [
     last_name: 'Powell',
     organization_id: 3,
     role: 'ADMINISTRATOR'
+  },
+  {
+    first_name: 'Henry',
+    last_name: 'Hauler',
+    organization_id: 3,
+    role: 'USER'
   }
 ];
 
@@ -171,12 +183,11 @@ let numTools = 50;
 
 for (var i = 0; i < numTools; i++) {
   let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-  let assignedToLocation = dataUtil.getRandBool();
-  let { objects, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
+  let { objects: configurableItems, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
   data.tool.push({
-    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'TYPE') - 1] + 1,
-    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'BRAND') - 1] + 1,
-    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(objects, 'type', 'PURCHASED_FROM') - 1] + 1,
+    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'TYPE') - 1] + 1,
+    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'BRAND') - 1] + 1,
+    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,
     date_purchased: dataUtil.createRandomDate(),
     model_number: dataUtil.createRandomId(),
     status: dataUtil.getRandFromArray(tool_statuses),

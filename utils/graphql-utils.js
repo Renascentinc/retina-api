@@ -15,8 +15,9 @@ function createSchema() {
 }
 
 function getResolvers() {
-  let resolvers = fileLoader(appConfig['server.graphql.resolver.schemaDir']);
-  return mergeResolvers(resolvers);
+  let schemaResolvers = fileLoader(appConfig['server.graphql.resolver.schemaDir']);
+  let scalarResolvers = fileLoader(appConfig['server.graphql.resolver.scalarDir']);
+  return mergeResolvers([...schemaResolvers, ...scalarResolvers]);
 }
 
 /**

@@ -27,7 +27,7 @@
      		WITH greatest_scores AS (
      			SELECT tool_search_item_view.tool_id::id_t as tool_id,
          		GREATEST (
-             	similarity(tool_search_item_view.tool_id,lexeme),
+             	 similarity(tool_search_item_view.tool_id,lexeme),
                similarity(user_first_name,lexeme),
                similarity(user_last_name,lexeme),
                similarity(brand_name,lexeme),

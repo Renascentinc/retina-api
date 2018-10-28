@@ -1,5 +1,6 @@
 
-var TimSort = require('timsort');
+const TimSort = require('timsort');
+const equal = require('fast-deep-equal');
 
 /**
  * Preprocess query by
@@ -46,4 +47,8 @@ function objectHasTruthyValues(object = {}) {
   return Boolean(object) && Object.values(object).some(value => Boolean(value));
 }
 
-module.exports = { preprocessQuery, objectHasTruthyValues }
+function deepEqual(o1, o2) {
+  return equal(o1, o2);
+}
+
+module.exports = { preprocessQuery, objectHasTruthyValues, deepEqual }
