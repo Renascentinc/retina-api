@@ -28,30 +28,59 @@ module.exports = {
       return deletedToken[0] ? true : false;
     },
 
-    requestPasswordReset: async (_, passwordResetInfo, { db }) => {
-      let userArray = passwordResetInfo.organization_name ?
-        await getUserByEmailAndOrganization(passwordResetInfo, db) :
-        await getUserByEmail(passwordResetInfo, db);
+    requestPasswordReset: async (_, passwordResetRequestInfo, { db }) => {
+      let userArray = passwordResetRequestInfo.organization_name ?
+        await getUserByEmailAndOrganization(passwordResetRequestInfo, db) :
+        await getUserByEmail(passwordResetRequestInfo, db);
 
       if (userArray.length === 0) {
         throw new UserInputError(`Email does not exist`);
       }
 
       let user = userArray[0];
-      passwordResetInfo['organization_id'] = user.organization_id;
 
-      let passwordResetCredentials= await db.create_password_reset_credentials(passwordResetInfo);
+      let passwordResetCredentials = await db.create_password_reset_credentials({
+        user_id: user.id,
+        organization_id: user.organization_id
+      });
+
       passwordResetCredentials = passwordResetCredentials[0];
 
-      let mailer = new PasswordResetMailer();
 
-      let sentEmailResult = await mailer.sendEmail({
-        to: passwordResetInfo.email,
+      let sentEmailResult = await new PasswordResetMailer().sendEmail({
+        to: user.email,
         subject: 'Response to Password Reset Request',
         html: `https://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com/password-reset?code=${passwordResetCredentials.code}`
       });
 
       return sentEmailResult ? true : false;
+    },
+
+    resetPassword: async (_, { new_password, password_reset_code }, { db }) => {
+      let passwordResetCredentials = await db.get_password_reset_credentials_by_code({ password_reset_code });
+
+      if (passwordResetCredentials.length === 0) {
+        throw new AuthenticationError('Password reset token is invalid');
+      }
+
+      passwordResetCredentials = passwordResetCredentials[0];
+
+      let updatedUser = db.update_user_password_by_id({
+        new_password,
+        organization_id: passwordResetCredentials.organization_id,
+        user_id: passwordResetCredentials.user_id
+      });
+
+      if (updatedUser.length === 0) {
+        return false;
+      }
+
+      db.delete_password_reset_credentials_by_id({
+        organization_id: passwordResetCredentials.organization_id,
+        user_id: passwordResetCredentials.user_id
+      })
+
+      return true;
     }
   }
 };
