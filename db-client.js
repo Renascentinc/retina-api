@@ -105,7 +105,7 @@ class DbClient {
 
     let namedParams = [];
     for (let key in params) {
-      namedParams.push(`${key} := :${[key]}`);
+      namedParams.push(`"${key}" := :${[key]}`);
     }
     namedParams = namedParams.join(', ');
 

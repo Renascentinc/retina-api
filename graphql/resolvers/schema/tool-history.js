@@ -1,3 +1,4 @@
+const { Tool: ToolFieldResolvers } = require('graphql/resolvers/schema/tool');
 
 module.exports = {
   Query: {
@@ -25,7 +26,9 @@ module.exports = {
 
       return toolHistoryEntries;
     }
-  }
+  },
+
+  PreviousToolSnapshotDiff: ToolFieldResolvers
 }
 
 function createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapshot) {
@@ -44,7 +47,6 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   let previousToolSnapshotDiff;
 
   if (!previousToolSnapshot || previousToolSnapshot.tool_id !== currentToolSnapshot.tool_id) {
-    console.log(`${currentToolSnapshot.timestamp}`)
     previousToolSnapshot = await db.get_previous_tool_snapshot({
       tool_id: currentToolSnapshot.tool_id,
       timestamp: currentToolSnapshot.timestamp
@@ -55,17 +57,15 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
     previousToolSnapshotDiff = createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapshot);
   }
 
+  let toolSnapshot = { ...currentToolSnapshot };
+  toolSnapshot['id'] = toolSnapshot.tool_id;
+
   let toolHistoryEntry = {
-    timestamp: currentToolSnapshot.timestamp,
-    tool_action: currentToolSnapshot.tool_action,
-    previous_tool_snapshot_diff: previousToolSnapshotDiff
+    timestamp: toolSnapshot.timestamp,
+    tool_action: toolSnapshot.tool_action,
+    previous_tool_snapshot_diff: previousToolSnapshotDiff,
+    tool_snapshot: toolSnapshot
   }
-
-  currentToolSnapshot['id'] = currentToolSnapshot.tool_id;
-  delete currentToolSnapshot.tool_id;
-  delete currentToolSnapshot.tool_action;
-
-  toolHistoryEntry['tool_snapshot'] = currentToolSnapshot;
 
   return toolHistoryEntry;
 }
