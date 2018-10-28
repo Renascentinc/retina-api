@@ -1,7 +1,7 @@
 const locationResolvers = require('graphql/resolvers/schema/location');
 const userResolvers = require('graphql/resolvers/schema/user');
 const configurableItemResolvers = require('graphql/resolvers/schema/configurable-item');
-const { preprocessQuery, objectHasTruthyValues } = require(`graphql/utils/data-utils`);
+const { preprocessQuery, objectHasTruthyValues, deepEqual } = require(`graphql/utils/data-utils`);
 
 module.exports = {
   Query: {
@@ -53,14 +53,34 @@ module.exports = {
       newTool['organization_id'] = session.organization_id;
       newTool = await db.create_tool(newTool);
 
-      db.create_tool_snapshot(newTool[0]);
+      db.create_tool_snapshot({
+        ...newTool[0],
+        tool_action: db.tool_action.CREATE.name
+      });
 
       return newTool[0];
     },
 
+    /**
+     * Update tool and only add the tool to tool_snapshot if the
+     * updated tool is different than the original tool
+     */
     updateTool: async (_, { updatedTool }, { db, session }) => {
+      let originalTool = await db.get_tool({
+        tool_id: updatedTool.id,
+        organization_id: session.organization_id
+      });
+
       updatedTool['organization_id'] = session.organization_id;
       updatedTool = await db.update_tool(updatedTool);
+
+      if (!deepEqual(originalTool[0], updatedTool[0])) {
+        db.create_tool_snapshot({
+          ...updatedTool[0],
+          tool_action: db.tool_action.UPDATE.name
+        });
+      }
+
       return updatedTool[0];
     },
 
@@ -68,6 +88,13 @@ module.exports = {
       transferArgs['organization_id'] = session.organization_id;
       transferArgs['transferrer_id'] = session.user_id;
       let transferredTools = await db.transfer_tool(transferArgs);
+
+      transferredTools.forEach(transferredTool => {
+        db.create_tool_snapshot({
+          ...transferredTool,
+          tool_action: db.tool_action.TRANSFER.name
+        });
+      });
 
       return transferredTools;
     }

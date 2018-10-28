@@ -1,11 +1,13 @@
 
-
 /**
- * For each passed in tool id, update only those tools that are in the organization
- * and those tools that are owned by the transferrer, if the transferrer is not
- * an admin and the tool owner type is not a location; else, all tools can be transferred
+ * For each passed in tool id, update only those tools that are
+ * - in the organization
+ * - owned by the transferrer (unless the transferrer is an admin, or the tool
+ *   owner type is a location, in which case any tool can be transferred)
+ * - do not already belong to the owner being transferred to
+ *
  * Each tool that is updated is added to the updated_tool_ids list. Finally,
- * return all the tools that were updated.
+ * all the updated tools are returned.
  */
 CREATE OR REPLACE FUNCTION public.transfer_tool (
 	tool_id_list    integer[],
@@ -40,6 +42,7 @@ AS $$
             END
         WHERE public.tool.id = tool_id
           AND public.tool.organization_id = transfer_tool.organization_id
+          AND public.tool.owner_id != to_owner_id
           AND public.tool.owner_id =
             CASE
               WHEN (SELECT role FROM public.user WHERE id = transferrer_id) != 'ADMINISTRATOR'::role AND

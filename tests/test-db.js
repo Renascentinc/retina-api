@@ -352,7 +352,7 @@ describe('Database creation and usage', async () => {
       user['id'] = userId;
       let updatedUserObject = {...user,
         ...{
-          role: 'ADMINISTRATOR',
+          phone_number: '(123) 456-7890',
           status: 'ACTIVE'
         }
       };
@@ -741,10 +741,13 @@ describe('Database creation and usage', async () => {
     it('successfully transfers a tool', async () => {
       let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
       let randOrgId = randAdmin.organization_id;
+
       let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
-      let randAdminId = dataUtil.getRandIdFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR');
-      let randUserId = dataUtil.getRandFromArray(allUsers).id;
-      let randToolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId)
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randAdminId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR').id;
+      let randUserId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'USER').id;
+      let randToolId = dataUtil.getRandFromObjectArrayWhere(allTools, 'owner_id', randAdminId).id;
 
       let transferredTools = await dbFuncs.transfer_tool({
         organization_id: randOrgId,

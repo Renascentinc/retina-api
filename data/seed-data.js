@@ -89,6 +89,12 @@ let user_info = [
     last_name: 'Powell',
     organization_id: 3,
     role: 'ADMINISTRATOR'
+  },
+  {
+    first_name: 'Henry',
+    last_name: 'Hauler',
+    organization_id: 3,
+    role: 'USER'
   }
 ];
 
@@ -193,32 +199,6 @@ for (var i = 0; i < numTools; i++) {
     year: null,
   })
 }
-
-data.tool_snapshot = []
-let numToolHistory = 100
-let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-
-for (var i = 0; i < numToolHistory; i++) {
-  let { objects: configurableItems, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
-  let randomOwnerId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId);
-  data.tool_snapshot.push({
-    tool_id: dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'organization_id', randOrgId),
-    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'TYPE') - 1] + 1,
-    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'BRAND') - 1] + 1,
-    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,
-    date_purchased: dataUtil.createRandomDate(),
-    model_number: dataUtil.createRandomId(),
-    status: dataUtil.getRandFromArray(tool_statuses),
-    serial_number: dataUtil.createRandomId(),
-    organization_id: randOrgId,
-    owner_id: randomOwnerId,
-    tool_action: dataUtil.getRandFromArray(tool_actions),
-    price: null,
-    photo: null,
-    year: null,
-  })
-}
-
 
 if (appConfig['environment'] == 'test') {
   data.session = [];
