@@ -6,10 +6,9 @@ type Tool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
-  purchased_from:    ConfigurableItem!
-  date_purchased:    String
-  user:              User
-  location:          Location
+  owner:             ToolOwner!
+  purchased_from:    ConfigurableItem
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
@@ -21,10 +20,9 @@ input NewTool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
+  owner_id:          ID!
   purchased_from_id: ID
-  date_purchased:    String
-  user_id:           ID
-  location_id:       ID
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
@@ -37,29 +35,29 @@ input UpdatedTool {
 	model_number:      String!
   serial_number:     String!
 	status:            ToolStatus!
+  owner_id:          ID!
   purchased_from_id: ID
-  date_purchased:    String
-  user_id:           ID
-  location_id:       ID
+  date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
 }
 
 input ToolFilter {
-  user_id:     ID
-  brand_id:    ID
-  type_id:     ID
-  tool_status: ToolStatus
+  brand_ids:     [ID!]
+  type_ids:      [ID!]
+  tool_statuses: [ToolStatus!]
+  owner_ids:     [ID!]
 }
 
 type Query {
   getTool(tool_id: ID!): Tool
-  getAllTool(pagingParameters: PagingParameters): [Tool]!
-  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool]
+  getAllTool(pagingParameters: PagingParameters): [Tool!]!
+  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool!]
 }
 
 type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
+  transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
 }

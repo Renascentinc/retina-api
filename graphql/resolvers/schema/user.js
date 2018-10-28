@@ -1,5 +1,5 @@
 
-let { preprocessQuery } = require('../utils/data-utils');
+let { preprocessQuery } = require(`graphql/utils/data-utils`);
 
 module.exports = {
   Query: {

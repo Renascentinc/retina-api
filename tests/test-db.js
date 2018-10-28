@@ -2,7 +2,7 @@ const assert = require('assert');
 
 const { initializeDb } = require('../db-initializer');
 const { dbClient } = require('../db-client');
-const { data } = require('../data/seed-data');
+const { data, metaData } = require('../data/seed-data');
 const dataUtil = require('../utils/data-utils');
 const appConfig = require('../app-config');
 const { getPostgresDbRawClient } = require('../utils/db-utils');
@@ -100,6 +100,28 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('create_tool_snapshot()', () => {
+
+    it('successfully creates a tool snapshot', async () => {
+      let toolId = dataUtil.getRandIdFromArray(data.tool);
+      let tool = data.tool[toolId - 1];
+
+      tool = await dbFuncs.get_tool({
+        tool_id: toolId,
+        organization_id: tool.organization_id
+      });
+
+      let toolSnapshot = await dbFuncs.create_tool_snapshot(
+      {
+        ...tool[0],
+        tool_action: dbFuncs.tool_action.UPDATE.name
+      });
+
+      assert.equal(toolSnapshot.length, 1);
+    });
+
+  });
+
   describe('create_session()', () => {
 
     it('successfully creates several sessions', async () => {
@@ -178,7 +200,7 @@ describe('Database creation and usage', async () => {
   describe('get_location()', () => {
 
     it('successfully gets a location', async () => {
-      let locationId = dataUtil.getRandIdFromArray(data.location);
+      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
       let location = data.location[locationId - 1];
       let retrievedLocation = await dbFuncs.get_location({
         location_id: locationId,
@@ -277,8 +299,8 @@ describe('Database creation and usage', async () => {
   describe('get_user()', () => {
 
     it('successfully gets a user', async () => {
-      let userId = dataUtil.getRandIdFromArray(data.user);
-      let user = data.user[userId - 1];
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
       let retrievedUser = await dbFuncs.get_user({
         user_id: userId,
         organization_id: user.organization_id
@@ -346,12 +368,13 @@ describe('Database creation and usage', async () => {
   describe('update_user()', () => {
 
     it('successfully updates a user for an organization', async () => {
-      let userId = dataUtil.getRandIdFromArray(data.user);
-      let user = data.user[userId - 1];
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
+      delete user['type'];
       user['id'] = userId;
       let updatedUserObject = {...user,
         ...{
-          role: 'ADMINISTRATOR',
+          phone_number: '(123) 456-7890',
           status: 'ACTIVE'
         }
       };
@@ -368,8 +391,9 @@ describe('Database creation and usage', async () => {
   describe('update_location()', () => {
 
     it('successfully updates a location for an organization', async () => {
-      let locationId = dataUtil.getRandIdFromArray(data.location);
-      let location = data.location[locationId - 1];
+      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
+      let location = metaData.tool_owner[locationId - 1];
+      delete location['type'];
       location['id'] = locationId;
       let updatedLocationObject = {...location,
         ...{
@@ -433,7 +457,7 @@ describe('Database creation and usage', async () => {
 
     it('a session can be retrieved by user id', async () => {
       let existingSession = await dbFuncs.get_session_by_user_id({
-        user_id: dataUtil.getRandIdFromArray(data.user)
+        user_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
       });
 
       assert.ok(existingSession.length >= 1);
@@ -482,8 +506,8 @@ describe('Database creation and usage', async () => {
   describe('get_user_by_credentials_and_organization()', () => {
 
     it('a user can be retrieved, given their email, password, and org id', async () => {
-      let randomUserId = dataUtil.getRandIdFromArray(data.user);
-      let randomUser = data.user[randomUserId - 1];
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
       let validUser = await dbFuncs.get_user_by_credentials_and_organization({
         email: randomUser.email,
         password: randomUser.password,
@@ -545,8 +569,8 @@ describe('Database creation and usage', async () => {
     it(`successfully updates a user's password`, async () => {
       let newPassword = "New Password";
 
-      let randomUserId = dataUtil.getRandIdFromArray(data.user);
-      let randomUser = data.user[randomUserId - 1];
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
       let updatedUser = await dbFuncs.update_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
@@ -635,8 +659,8 @@ describe('Database creation and usage', async () => {
     it('successfully searches for tools when only some filters are passed', async () => {
       let randomTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_tool({
-        user_id: randomTool.user_id,
-        type_id: undefined,
+        owner_ids: [randomTool.owner_id],
+        type_ids: undefined,
         organization_id: randomTool.organization_id
       });
 
@@ -654,10 +678,10 @@ describe('Database creation and usage', async () => {
       randomToolFromDb = randomToolFromDb[0];
 
       let tools = await dbFuncs.search_strict_tool({
-        user_id: randomToolFromDb.user_id,
-        type_id: randomToolFromDb.type_id,
-        brand_id: randomToolFromDb.brand_id,
-        tool_status: randomToolFromDb.status,
+        owner_ids: [randomToolFromDb.owner_id],
+        type_ids: [randomToolFromDb.type_id],
+        brand_ids: [randomToolFromDb.brand_id],
+        tool_statuses: [randomToolFromDb.status],
         organization_id: randomToolFromDb.organization_id
       });
 
@@ -678,11 +702,22 @@ describe('Database creation and usage', async () => {
     /// for an id that is 1 greater than the greatest id in the db
     it('returns no tools for a query with no filters that match existing tools', async () => {
       let tools = await dbFuncs.search_strict_tool({
-        type_id: data.configurable_item.length + 1,
+        type_ids: [data.configurable_item.length + 1],
         organization_id: dataUtil.getRandIdFromArray(data.organization)
       });
 
       assert.equal(tools.length, 0);
+    });
+
+    it('ignores filters that are empty arrays', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let expectedLength = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).objects.length;
+      let tools = await dbFuncs.search_strict_tool({
+        owner_ids: [],
+        organization_id: randOrgId
+      });
+
+      assert.equal(tools.length, expectedLength);
     });
 
   });
@@ -725,15 +760,74 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_fuzzy_tool()', () => {
 
-    it('successfully searches for tools', async () => {
+    it('successfully searches for tools when both lexemes and filters are passed', async () => {
       let randTool = dataUtil.getRandFromArray(data.tool);
       let tools = await dbFuncs.search_strict_fuzzy_tool({
         organization_id: randTool.organization_id,
         lexemes: [randTool.serial_number],
-        brand_id: randTool.brand_id
+        brand_ids: [randTool.brand_id]
       });
 
       assert.ok(tools.length > 0);
+    });
+
+  });
+
+  describe('transfer_tool()', () => {
+
+    it('successfully transfers a tool', async () => {
+      let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
+      let randOrgId = randAdmin.organization_id;
+
+      let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randAdminId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR').id;
+      let randUserId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'USER').id;
+      let randToolId = dataUtil.getRandFromObjectArrayWhere(allTools, 'owner_id', randAdminId).id;
+
+      let transferredTools = await dbFuncs.transfer_tool({
+        organization_id: randOrgId,
+        tool_id_list: [randToolId],
+        transferrer_id: randAdminId,
+        to_owner_id: randUserId
+      });
+
+      assert.ok(transferredTools.length > 0);
+    });
+
+    it.skip(`doesn't transfer a tool a user doesn't own`, async () => {
+
+    });
+
+  });
+
+  describe('search_strict_tool_snapshot()', () => {
+
+    it.skip('successfully searches for tool snapshots', async () => {
+
+    });
+
+  });
+
+  describe('db enum creation', () => {
+
+    it('successfully creates the enums', async () => {
+      assert.ok(dbFuncs.role &&
+                dbFuncs.role.USER &&
+                dbFuncs.role.USER.name === 'USER');
+
+      assert.ok(dbFuncs.tool_status &&
+                dbFuncs.tool_status.IN_USE &&
+                dbFuncs.tool_status.IN_USE.name === 'IN_USE');
+
+      assert.ok(dbFuncs.configurable_item_type &&
+                dbFuncs.configurable_item_type.BRAND &&
+                dbFuncs.configurable_item_type.BRAND.name === 'BRAND');
+
+      assert.ok(dbFuncs.user_status &&
+                dbFuncs.user_status.INACTIVE &&
+                dbFuncs.user_status.INACTIVE.name === 'INACTIVE')
     });
 
   });

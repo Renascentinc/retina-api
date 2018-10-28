@@ -1,8 +1,16 @@
 const { dbClient } = require('./db-client');
 const appConfig = require('./app-config');
 const fileUtils = require('./utils/file-utils');
-const { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions } = require('./utils/db-utils');
-
+const { createDb,
+        loadSchema,
+        seedDb,
+        loadFunctions,
+        dropFunctions,
+        dropExtensions,
+        loadTriggers,
+        dropTriggers } = require('./utils/db-utils');
+        
+const Enum = require('enums');
 const logger = require('./logger');
 
 async function initializeDb() {
@@ -13,7 +21,7 @@ async function initializeDb() {
     logger.error('Could not create database');
     throw e;
   }
-  
+
   try {
     await dbClient.connect();
   } catch (e) {
@@ -24,9 +32,13 @@ async function initializeDb() {
   try {
     await dropExtensions(dbClient);
 
+    await dropTriggers(dbClient);
+
     await dropFunctions(dbClient);
 
     await loadSchema(dbClient);
+
+    await loadTriggers(dbClient);
 
     await loadFunctions(dbClient);
 
@@ -48,7 +60,16 @@ async function initializeDb() {
     throw e;
   }
 
-  return dbFunctions;
+  let dbTypes;
+  try {
+    dbTypes = await createDbTypes(dbClient);
+  } catch (e) {
+    logger.error('Could not get database types');
+    await dbClient.disconnect();
+    throw e;
+  }
+
+  return { ...dbFunctions, ...dbTypes};
 }
 
 async function createDbFunctions(dbClient) {
@@ -69,6 +90,17 @@ async function createDbFunctions(dbClient) {
   });
 
   return dbFunctions;
+}
+
+async function createDbTypes(dbClient) {
+  logger.info('Collecting Db Types')
+  let dbTypes = await dbClient.getDbTypes();
+
+  for (let enumName in dbTypes) {
+    dbTypes[enumName] = new Enum(dbTypes[enumName]);
+  }
+
+  return dbTypes;
 }
 
 module.exports = { initializeDb }

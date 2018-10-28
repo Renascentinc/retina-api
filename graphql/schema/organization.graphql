@@ -1,0 +1,8 @@
+
+type Organization {
+  name: String!
+}
+
+type Query {
+  getOrganization: Organization
+}

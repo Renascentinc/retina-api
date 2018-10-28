@@ -1,7 +1,7 @@
-let locationResolvers = require('./location');
-let userResolvers = require('./user');
-let configurableItemResolvers = require('./configurable-item');
-let { preprocessQuery, objectHasTruthyValues } = require('../utils/data-utils');
+const locationResolvers = require('graphql/resolvers/schema/location');
+const userResolvers = require('graphql/resolvers/schema/user');
+const configurableItemResolvers = require('graphql/resolvers/schema/configurable-item');
+const { preprocessQuery, objectHasTruthyValues, deepEqual } = require(`graphql/utils/data-utils`);
 
 module.exports = {
   Query: {
@@ -52,19 +52,63 @@ module.exports = {
     createTool: async (_, { newTool }, { db, session }) => {
       newTool['organization_id'] = session.organization_id;
       newTool = await db.create_tool(newTool);
+
+      db.create_tool_snapshot({
+        ...newTool[0],
+        tool_action: db.tool_action.CREATE.name
+      });
+
       return newTool[0];
     },
 
+    /**
+     * Update tool and only add the tool to tool_snapshot if the
+     * updated tool is different than the original tool
+     */
     updateTool: async (_, { updatedTool }, { db, session }) => {
+      let originalTool = await db.get_tool({
+        tool_id: updatedTool.id,
+        organization_id: session.organization_id
+      });
+
       updatedTool['organization_id'] = session.organization_id;
       updatedTool = await db.update_tool(updatedTool);
+
+      if (!deepEqual(originalTool[0], updatedTool[0])) {
+        db.create_tool_snapshot({
+          ...updatedTool[0],
+          tool_action: db.tool_action.UPDATE.name
+        });
+      }
+
       return updatedTool[0];
+    },
+
+    transferMultipleTool: async(_, transferArgs, { db, session }) => {
+      transferArgs['organization_id'] = session.organization_id;
+      transferArgs['transferrer_id'] = session.user_id;
+      let transferredTools = await db.transfer_tool(transferArgs);
+
+      transferredTools.forEach(transferredTool => {
+        db.create_tool_snapshot({
+          ...transferredTool,
+          tool_action: db.tool_action.TRANSFER.name
+        });
+      });
+
+      return transferredTools;
     }
   },
 
   Tool: {
-    location: async ({ location_id }, _, ctx) => locationResolvers.Query.getLocation(undefined, { location_id }, ctx),
-    user: async ({ user_id }, _, ctx) => userResolvers.Query.getUser(undefined, { user_id }, ctx),
+    owner: async ({ owner_type, owner_id }, _, ctx) => {
+
+      if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.USER) {
+        return userResolvers.Query.getUser(undefined, { user_id: owner_id }, ctx)
+      }
+
+      return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+    },
     type: async ({ type_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: type_id }, ctx),
     brand: async ({ brand_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: brand_id }, ctx),
     purchased_from: async ({ purchased_from_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: purchased_from_id }, ctx)

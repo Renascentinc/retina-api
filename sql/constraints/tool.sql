@@ -1,12 +1,6 @@
 ALTER TABLE public.tool
-ADD FOREIGN KEY (user_id, organization_id)
-REFERENCES public."user" (id, organization_id)
-	ON DELETE RESTRICT
-	ON UPDATE RESTRICT;
-
-ALTER TABLE public.tool
-ADD FOREIGN KEY (location_id, organization_id)
-REFERENCES public."location" (id, organization_id)
+ADD FOREIGN KEY (owner_id, organization_id)
+REFERENCES public."tool_owner_id" (id, organization_id)
 	ON DELETE RESTRICT
 	ON UPDATE RESTRICT;
 

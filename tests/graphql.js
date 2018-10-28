@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { createSchema } = require('../utils/graphql-utils');
+const { createSchema } = require('utils/graphql-utils');
 const { graphql } = require('graphql');
 
 describe('Api usage', async () => {

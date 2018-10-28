@@ -1,5 +1,5 @@
 const appConfig = require('../app-config');
-const { getDropFunctionsQueries, getDropExtensionsQueries } = require('../sql/raw-queries');
+const { getDropFunctionsQueriesQuery, getDropExtensionsQueriesQuery, getDropTriggersQueriesQuery } = require('../sql/raw-queries');
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
@@ -107,10 +107,18 @@ async function createTypes(dbClient) {
   }
 }
 
+/**
+ * Create the database schema from the schema .sql files.
+ *
+ * NOTE: A bit of a hack here is putting the base_schema before the
+ * regular schema so that all the base tables will be loaded up first
+ */
 async function createSchema(dbClient) {
   try {
     let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
-    await dbClient.query(schemas.join(';'));
+    let base_schemas = fileUtils.readFilesFromDir(appConfig['db.baseSchemaDir']);
+    let all_schemas = [...base_schemas, ...schemas]
+    await dbClient.query(all_schemas.join(';'));
   } catch (e) {
     logger.error(`Unable to load schema into database  \n${e}`);
     throw new Error('Unable to load schema into database');
@@ -137,6 +145,18 @@ async function createViews(dbClient) {
   }
 }
 
+async function loadTriggers(dbClient) {
+  logger.info('Loading Triggers');
+
+  try {
+    let functions = fileUtils.readFilesFromDir(appConfig['db.triggerDir']);
+    await dbClient.query(functions.join(';'));
+  } catch (e) {
+    logger.error(`Unable to load triggers into database`);
+    throw e;
+  }
+}
+
 async function loadFunctions(dbClient) {
   logger.info('Loading Functions');
 
@@ -154,7 +174,7 @@ async function dropExtensions(dbClient) {
 
   try {
     let dropExtensionsQueries = await dbClient.query({
-      text: getDropExtensionsQueries,
+      text: getDropExtensionsQueriesQuery,
       rowMode: 'array'
     });
 
@@ -166,11 +186,27 @@ async function dropExtensions(dbClient) {
   }
 }
 
+async function dropTriggers(dbClient) {
+  logger.info('Dropping Triggers');
+  try {
+    let dropTriggersQueries = await dbClient.query({
+      text: getDropTriggersQueriesQuery,
+      rowMode: 'array'
+    });
+
+    dropTriggersQueries = dropTriggersQueries.rows.map(row => row[0]).join('');
+    await dbClient.query(dropTriggersQueries);
+  } catch (e) {
+    logger.error(`Unable to drop triggers from database`);
+    throw e;
+  }
+}
+
 async function dropFunctions(dbClient) {
   logger.info('Dropping Functions');
   try {
     let dropFunctionsQueries = await dbClient.query({
-      text: getDropFunctionsQueries,
+      text: getDropFunctionsQueriesQuery,
       rowMode: 'array'
     });
 
@@ -198,4 +234,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient, loadTriggers, dropTriggers }

@@ -6,6 +6,7 @@ type User {
   phone_number: String!
   role:         Role!
   status:       UserStatus!
+  type:         ToolOwnerType!
 }
 
 input NewUser {

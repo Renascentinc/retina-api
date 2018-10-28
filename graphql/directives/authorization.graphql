@@ -1,0 +1,2 @@
+
+directive @requiresRole(requiredRole: Role!) on FIELD_DEFINITION

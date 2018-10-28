@@ -1,16 +1,18 @@
 {
   "name": "retina-api",
-  "version": "0.0.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "node main",
-    "test": "ENVIRONMENT=test mocha --recursive tests"
+    "start": "NODE_PATH=. RETINA_API_ROOT=`pwd` node main",
+    "test": "NODE_PATH=. RETINA_API_ROOT=`pwd` ENVIRONMENT=test mocha --recursive tests --bail"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
     "chalk": "^2.4.1",
-    "faker": "^4.1.0",
+    "enums": "https://github.com/ekraihan/enums.git",
+    "fast-deep-equal": "^2.0.1",
     "graphql": "^0.13.2",
+    "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.9.2",
     "merge-graphql-schemas": "^1.5.3",
     "nodemailer": "^4.6.8",
@@ -19,7 +21,8 @@
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3",
     "winston": "^3.0.0",
-    "yesql": "^3.2.1"
+    "yesql": "^3.2.1",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
