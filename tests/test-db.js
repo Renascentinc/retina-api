@@ -787,6 +787,14 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('search_strict_tool_snapshot()', () => {
+
+    it.skip('successfully searches for tool snapshots', async () => {
+
+    });
+
+  });
+
   describe('db enum creation', () => {
 
     it('successfully creates the enums', async () => {
