@@ -75,7 +75,7 @@ class Util {
  }
 
  getRandPhoneNumber() {
-   return faker.phone.phoneNumber('(###) ###-####');
+   return faker.phone.phoneNumber('##########');
  }
 
  getRandPassword() {

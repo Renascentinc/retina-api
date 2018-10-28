@@ -122,7 +122,7 @@ for (var i = 0; i < data.organization.length; i++) {
       data.configurable_item.push({
         type: configurable_item_type,
         name: configurable_item_type_name,
-        sanctioned: dataUtil.getRandBool(),
+        sanctioned: true,
         organization_id: i + 1
       })
     }
@@ -164,7 +164,7 @@ for (let single_user_info of user_info) {
   data.user.push({
     first_name: single_user_info.first_name,
     last_name: single_user_info.last_name,
-    email: `${single_user_info.first_name.toLowerCase()}.${single_user_info.last_name.toLowerCase()}@renascentinc.com`,
+    email: `${single_user_info.first_name.toLowerCase()}@renascentinc.com`,
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
     role: single_user_info.role,
