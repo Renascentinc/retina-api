@@ -17,6 +17,7 @@ module.exports = {
 
       let toolHistoryEntries = []
 
+      // This indexing assumes that toolSnapshots are ordered by id and then timestamp
       for (let i in toolSnapshots) {
         let previousToolSnapshot = toolSnapshots[i-1];
         let toolSnapshot = toolSnapshots[i];
