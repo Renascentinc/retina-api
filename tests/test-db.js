@@ -100,6 +100,28 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('create_tool_snapshot()', () => {
+
+    it('successfully creates a tool snapshot', async () => {
+      let toolId = dataUtil.getRandIdFromArray(data.tool);
+      let tool = data.tool[toolId - 1];
+
+      tool = await dbFuncs.get_tool({
+        tool_id: toolId,
+        organization_id: tool.organization_id
+      });
+
+      let toolSnapshot = await dbFuncs.create_tool_snapshot(
+      {
+        ...tool[0],
+        tool_action: dbFuncs.tool_action.UPDATE.name
+      });
+
+      assert.equal(toolSnapshot.length, 1);
+    });
+
+  });
+
   describe('create_session()', () => {
 
     it('successfully creates several sessions', async () => {
