@@ -28,10 +28,10 @@ module.exports = {
       return deletedToken[0] ? true : false;
     },
 
-    requestPasswordReset: async (_, passwordResetRequestInfo, { db }) => {
-      let userArray = passwordResetRequestInfo.organization_name ?
-        await getUserByEmailAndOrganization(passwordResetRequestInfo, db) :
-        await getUserByEmail(passwordResetRequestInfo, db);
+    requestPasswordReset: async (_, { email, organization_name }, { db }) => {
+      let userArray = Boolean(organization_name) ?
+        await getUserByEmailAndOrganization(email, organization_name, db) :
+        await getUserByEmail(email, db);
 
       if (userArray.length === 0) {
         throw new UserInputError(`Email does not exist`);
@@ -63,12 +63,12 @@ module.exports = {
         throw new AuthenticationError('Password reset token is invalid');
       }
 
-      passwordResetCredentials = passwordResetCredentials[0];
+      let { user_id, organization_id } = passwordResetCredentials[0];
 
-      let updatedUser = db.update_user_password_by_id({
+      let updatedUser = await db.update_user_password_by_id({
         new_password,
-        organization_id: passwordResetCredentials.organization_id,
-        user_id: passwordResetCredentials.user_id
+        organization_id,
+        user_id
       });
 
       if (updatedUser.length === 0) {
@@ -76,8 +76,8 @@ module.exports = {
       }
 
       db.delete_password_reset_credentials_by_id({
-        organization_id: passwordResetCredentials.organization_id,
-        user_id: passwordResetCredentials.user_id
+        organization_id,
+        user_id
       })
 
       return true;
@@ -90,7 +90,7 @@ module.exports = {
  *
  * @throws InsufficientInformationError if email is not unique
  */
-async function getUserByEmail({ email }, db) {
+async function getUserByEmail(email , db) {
   let userArray = await db.get_user_by_email({
     email
   });
@@ -107,7 +107,7 @@ async function getUserByEmail({ email }, db) {
  *
  * @throws UserInputError if org does not exist
  */
-async function getUserByEmailAndOrganization({ email, organization_name }, db) {
+async function getUserByEmailAndOrganization(email, organization_name , db) {
   let organization = await db.get_organization_by_name({
     organization_name
   });

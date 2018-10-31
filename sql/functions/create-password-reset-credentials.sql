@@ -1,4 +1,10 @@
 
+/**
+ * Add user_id and organization_id to the password_reset_credentials table,
+ * generating a random key for the code. If there is a conflict on the
+ * unique_password_reset_credentials constaint for table password_reset_credentials,
+ * simply update the code with a new random key
+ */
 CREATE FUNCTION public.create_password_reset_credentials (
   user_id         id_t,
   organization_id id_t
