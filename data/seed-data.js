@@ -42,7 +42,7 @@ let roles = [
 ]
 
 let tool_actions = [
-  'ADD',
+  'CREATE',
   'UPADTE',
   'TRANSFER'
 ]
