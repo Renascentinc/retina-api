@@ -7,8 +7,7 @@ AS $$
   BEGIN
     RETURN QUERY
       SELECT * FROM public.password_reset_credentials
-        WHERE code = password_reset_code
-        AND expiration_date > now();
+        WHERE code = password_reset_code;
   END;
 $$
 LANGUAGE plpgsql;

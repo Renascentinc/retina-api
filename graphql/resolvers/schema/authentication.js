@@ -60,10 +60,19 @@ module.exports = {
       let passwordResetCredentials = await db.get_password_reset_credentials_by_code({ password_reset_code });
 
       if (passwordResetCredentials.length === 0) {
-        throw new AuthenticationError('Password reset token is invalid or has expired');
+        throw new AuthenticationError('Password reset token is invalid');
       }
 
-      let { user_id, organization_id } = passwordResetCredentials[0];
+      let { user_id, organization_id, expiration_date } = passwordResetCredentials[0];
+
+      if (new Date(expiration_date) < Date.now()) {
+        db.delete_password_reset_credentials({
+          organization_id,
+          user_id
+        });
+
+        throw new AuthenticationError('Password reset token has expired');
+      }
 
       let updatedUser = await db.update_user_password_by_id({
         new_password,
@@ -75,7 +84,7 @@ module.exports = {
         return false;
       }
 
-      db.delete_password_reset_credentials_by_id({
+      db.delete_password_reset_credentials({
         organization_id,
         user_id
       })
