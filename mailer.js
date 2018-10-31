@@ -4,8 +4,8 @@ const appConfig = require('app-config');
 const { MailError } = require('error');
 
 class Mailer {
-  constructor(config) {
-    this.transporter = nodemailer.createTransport(config);
+  constructor(mailConfig) {
+    this.transporter = nodemailer.createTransport(mailConfig);
   }
 
   async sendEmail(mailOptions) {
