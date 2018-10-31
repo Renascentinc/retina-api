@@ -21,7 +21,10 @@ let appConfig = {
   'server.graphql.resolver.directiveDir': `${rootDir}/graphql/resolvers/directives`,
   'server.graphql.resolver.schemaDir': `${rootDir}/graphql/resolvers/schema`,
   'server.graphql.resolver.scalarDir': `${rootDir}/graphql/resolvers/scalars`,
-  'server.port': process.env.PORT || 4000
+  'server.port': process.env.PORT || 4000,
+
+  'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
+  'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
 }
 
 appConfig['environment'] = process.env.ENVIRONMENT || 'local';
@@ -33,8 +36,8 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
 }
 
 if (appConfig['environment'] == 'local') {
-  // appConfig['db.refreshSchema'] = true;
-  // appConfig['db.seed'] = true;
+  appConfig['db.refreshSchema'] = true;
+  appConfig['db.seed'] = true;
   process.env['DB_NAME'] = 'local_db';
 }
 

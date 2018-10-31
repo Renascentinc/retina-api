@@ -1,4 +1,7 @@
-var nodemailer = require('nodemailer');
+
+const nodemailer = require('nodemailer');
+const appConfig = require('app-config');
+const { MailError } = require('error');
 
 class Mailer {
   constructor(config) {
@@ -17,11 +20,16 @@ class PasswordResetMailer extends Mailer {
   }
 
   constructor() {
+    if (!Boolean(appConfig['email.resetPassword.password']) ||
+        !Boolean(appConfig['email.resetPassword.address'])) {
+      throw new MailError('Reset-password sender email address and password were not supplied')
+    }
+
     super({
       service: "Outlook365",
       auth: {
-        user: PasswordResetMailer.email,
-        pass: 'ek2193!!'
+        user: appConfig['email.resetPassword.address'],
+        pass: appConfig['email.resetPassword.password']
       }
     });
   }

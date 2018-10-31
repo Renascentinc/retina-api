@@ -60,7 +60,7 @@ module.exports = {
       let passwordResetCredentials = await db.get_password_reset_credentials_by_code({ password_reset_code });
 
       if (passwordResetCredentials.length === 0) {
-        throw new AuthenticationError('Password reset token is invalid');
+        throw new AuthenticationError('Password reset token is invalid or has expired');
       }
 
       let { user_id, organization_id } = passwordResetCredentials[0];
