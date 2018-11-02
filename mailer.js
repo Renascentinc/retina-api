@@ -9,20 +9,20 @@ class Mailer {
   }
 
   async sendEmail(mailOptions) {
-    return await this.transporter.sendMail(mailOptions);
+    try {
+      return await this.transporter.sendMail(mailOptions);
+    } catch (e) {
+      throw new MailError(`Failed to send email with error\n${e}`);
+    }
   }
 }
 
 class PasswordResetMailer extends Mailer {
 
-  static get email() {
-    return 'elias@renascentinc.com';
-  }
-
   constructor() {
     if (!Boolean(appConfig['email.resetPassword.password']) ||
         !Boolean(appConfig['email.resetPassword.address'])) {
-      throw new MailError('Reset-password sender email address and password were not supplied')
+      throw new MailError('Reset-password sender email address and password were not supplied');
     }
 
     super({
@@ -34,10 +34,6 @@ class PasswordResetMailer extends Mailer {
     });
   }
 
-  async sendEmail(mailOptions) {
-    mailOptions['from'] = this.email;
-    return await super.sendEmail(mailOptions);
-  }
 }
 
 module.exports = { PasswordResetMailer }

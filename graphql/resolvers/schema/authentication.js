@@ -28,6 +28,14 @@ module.exports = {
       return deletedToken[0] ? true : false;
     },
 
+    /**
+     * @param {String} email - email of user requesting password reset
+     * @param {String} organization_name - organization name of user requesting password reset
+     *
+     * Get user by email and organization name, if provided. Create the password
+     * reset credentials based upon the user id and organization id. Send an
+     * email to the user who is requesting a password reset.
+     */
     requestPasswordReset: async (_, { email, organization_name }, { db }) => {
       let userArray = Boolean(organization_name) ?
         await getUserByEmailAndOrganization(email, organization_name, db) :
@@ -46,7 +54,6 @@ module.exports = {
 
       passwordResetCredentials = passwordResetCredentials[0];
 
-
       let sentEmailResult = await new PasswordResetMailer().sendEmail({
         to: user.email,
         subject: 'Response to Password Reset Request',
@@ -56,6 +63,15 @@ module.exports = {
       return sentEmailResult ? true : false;
     },
 
+    /**
+     * @param {String} new_password - user's new password
+     * @param {ID} password_reset_code - code used to reset user's password
+     *
+     * If there are no credentials associated with the password_reset_code,
+     * throw an error. If the expiration date on the reset credentials is past
+     * the current date, delete the credentials and throw an error. Else, update the
+     * user's password, and asynchronously delete the user's password reset credentials
+     */
     resetPassword: async (_, { new_password, password_reset_code }, { db }) => {
       let passwordResetCredentials = await db.get_password_reset_credentials_by_code({ password_reset_code });
 
