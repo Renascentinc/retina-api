@@ -57,7 +57,13 @@ module.exports = {
       let sentEmailResult = await new PasswordResetMailer().sendEmail({
         to: user.email,
         subject: 'Response to Password Reset Request',
-        html: `https://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com/password-reset?code=${passwordResetCredentials.code}`
+        html: `
+          <a href='https://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com/password-reset?code=${passwordResetCredentials.code}'>
+            Click here to reset your password
+          </a>
+
+          Note this link expires in 2 hours
+        `
       });
 
       return sentEmailResult ? true : false;
