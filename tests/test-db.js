@@ -1,12 +1,12 @@
 const assert = require('assert');
 
-const { initializeDb } = require('../db-initializer');
-const { dbClient } = require('../db-client');
-const { data, metaData } = require('../data/seed-data');
-const dataUtil = require('../utils/data-utils');
-const appConfig = require('../app-config');
-const { getPostgresDbRawClient } = require('../utils/db-utils');
-const logger = require('../logger');
+const { initializeDb } = require('db-initializer');
+const { dbClient } = require('db-client');
+const { data, metaData } = require('data/seed-data');
+const dataUtil = require('utils/data-utils');
+const appConfig = require('app-config');
+const { getPostgresDbRawClient } = require('utils/db-utils');
+const logger = require('logger');
 
 async function dropDbIfExists(dbName) {
   let postgresClient = getPostgresDbRawClient();
@@ -24,6 +24,7 @@ async function dropDbIfExists(dbName) {
 }
 
 describe('Database creation and usage', async () => {
+  // This is initialized in describe('db-initializer.initializeDb()')
   let dbFuncs;
 
   before(async () => {
@@ -130,6 +131,20 @@ describe('Database creation and usage', async () => {
         newSessions.push(await dbFuncs.create_session(session));
       }
       assert.equal(newSessions.length, data.session.length);
+    });
+
+  });
+
+  describe('create_password_reset_credentials()', () => {
+
+    it('successfully creates password reset credentials', async () => {
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randUser = metaData.tool_owner[randUserId - 1];
+      let passwordResetCredentials = await dbFuncs.create_password_reset_credentials({
+        user_id: randUserId,
+        organization_id: randUser.organization_id
+      })
+      assert.equal(passwordResetCredentials.length, 1);
     });
 
   });
@@ -310,176 +325,23 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('update_organization()', () => {
+  describe('get_password_reset_credentials_by_code()', () => {
 
-    it('successfully updates an organization', async () => {
-      let newOrgName = "New Organization";
-      let updatedOrg = await dbFuncs.update_organization({
-        id: dataUtil.getRandIdFromArray(data.organization),
-        name: newOrgName
+    it('successfully retrieves password reset credentials by code', async () => {
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randUser = metaData.tool_owner[randUserId - 1];
+      let passwordResetCredentials = await dbFuncs.create_password_reset_credentials({
+        user_id: randUserId,
+        organization_id: randUser.organization_id
       });
-      assert.equal(updatedOrg.length, 1);
-      assert.equal(updatedOrg[0].name, newOrgName);
-    });
+      passwordResetCredentials = passwordResetCredentials[0];
 
-  });
-
-  describe('update_configurable_item()', () => {
-
-    it('successfully updates a configurable item for an organization', async () => {
-      let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
-      let item = data.configurable_item[itemId - 1];
-      let updatedItemObject = {
-        id: itemId,
-        name: 'New Item Name',
-        sanctioned: true,
-        organization_id: item.organization_id
-      };
-      let updatedItem = await dbFuncs.update_configurable_item(updatedItemObject);
-
-      assert.equal(updatedItem.length, 1);
-      assert.equal(updatedItem[0].name, updatedItemObject.name);
-      assert.equal(updatedItem[0].sanctioned, updatedItemObject.sanctioned);
-    });
-
-  });
-
-  describe('update_tool()', () => {
-
-    it('successfully updates a tool for an organization', async () => {
-      let toolId = dataUtil.getRandIdFromArray(data.tool);
-      let tool = data.tool[toolId - 1];
-      tool['id'] = toolId;
-      let updatedToolObject = {...tool,
-        ...{
-          model_number: dataUtil.createRandomId(),
-          status: 'OUT_OF_SERVICE'
-        }
-      };
-      let updatedTool = await dbFuncs.update_tool(updatedToolObject);
-
-      assert.equal(updatedTool.length, 1);
-      assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
-      assert.equal(updatedTool[0].status, updatedToolObject.status);
-    });
-
-  });
-
-  describe('update_user()', () => {
-
-    it('successfully updates a user for an organization', async () => {
-      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
-      let user = metaData.tool_owner[userId - 1];
-      delete user['type'];
-      user['id'] = userId;
-      let updatedUserObject = {...user,
-        ...{
-          phone_number: '(123) 456-7890',
-          status: 'ACTIVE'
-        }
-      };
-      delete updatedUserObject.password;
-      let updatedUser = await dbFuncs.update_user(updatedUserObject);
-
-      assert.equal(updatedUser.length, 1);
-      assert.equal(updatedUser[0].role, updatedUserObject.role);
-      assert.equal(updatedUser[0].status, updatedUserObject.status);
-    });
-
-  });
-
-  describe('update_location()', () => {
-
-    it('successfully updates a location for an organization', async () => {
-      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
-      let location = metaData.tool_owner[locationId - 1];
-      delete location['type'];
-      location['id'] = locationId;
-      let updatedLocationObject = {...location,
-        ...{
-          state: 'NY',
-          name: 'New Location'
-        }
-      };
-      let updatedLocation = await dbFuncs.update_location(updatedLocationObject);
-
-      assert.equal(updatedLocation.length, 1);
-      assert.equal(updatedLocation[0].state, updatedLocationObject.state);
-      assert.equal(updatedLocation[0].name, updatedLocationObject.name);
-    });
-
-  });
-
-  describe('delete_configurable_item()', () => {
-
-    it('successfully deletes a location for an organization', async () => {
-      let newItem = await dbFuncs.create_configurable_item({
-        type: 'BRAND',
-        name: 'A New Brand',
-        sanctioned: true,
-        organization_id: dataUtil.getRandIdFromArray(data.organization)
-      });
-      newItem = newItem[0];
-      let deletedItem = await dbFuncs.delete_configurable_item({
-        configurable_item_id: newItem.id,
-        organization_id: newItem.organization_id
+      let retrievedPasswordResetCredentials = await dbFuncs.get_password_reset_credentials_by_code({
+        password_reset_code: passwordResetCredentials.code
       });
 
-      assert.equal(deletedItem.length, 1);
-      assert.equal(newItem.id, deletedItem[0].id);
-    });
+      assert.equal(retrievedPasswordResetCredentials.length, 1);
 
-  });
-
-  describe('get_session_by_token()', () => {
-
-    it('successfully gets an existing session by token', async () => {
-      let randSession = dataUtil.getRandFromArray(data.session);
-      let session = await dbFuncs.get_session_by_user_id({
-        user_id: randSession.user_id
-      });
-      session = session[0];
-
-      let sessionFromToken = await dbFuncs.get_session_by_token({token: session.token});
-      assert.equal(sessionFromToken.length, 1);
-      assert.equal(sessionFromToken[0].user_id, session.user_id);
-    });
-
-
-    it('fails to get a token does not exist', async () => {
-      session = await dbFuncs.get_session_by_token({token: dataUtil.createRandomUuid()});
-      assert.equal(session.length, 0);
-    });
-
-  });
-
-  describe('get_session_by_user_id()', () => {
-
-    it('a session can be retrieved by user id', async () => {
-      let existingSession = await dbFuncs.get_session_by_user_id({
-        user_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
-      });
-
-      assert.ok(existingSession.length >= 1);
-    });
-
-  });
-
-  describe('delete_session()', () => {
-
-    it('successfully deletes a session', async () => {
-      let randSession = dataUtil.getRandFromArray(data.session);
-      let session = await dbFuncs.get_session_by_user_id({
-        user_id: randSession.user_id
-      });
-      session = session[0];
-
-      let deletedSession = await dbFuncs.delete_session({
-        token: session.token
-      });
-
-      assert.equal(deletedSession.length, 1);
-      assert.equal(session.token, deletedSession[0].token);
     });
 
   });
@@ -564,53 +426,36 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('update_password()', () => {
+  describe('get_session_by_token()', () => {
 
-    it(`successfully updates a user's password`, async () => {
-      let newPassword = "New Password";
-
-      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
-      let randomUser = metaData.tool_owner[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
-        user_id: randomUserId,
-        organization_id: randomUser.organization_id,
-        current_password: randomUser.password,
-        new_password: newPassword
+    it('successfully gets an existing session by token', async () => {
+      let randSession = dataUtil.getRandFromArray(data.session);
+      let session = await dbFuncs.get_session_by_user_id({
+        user_id: randSession.user_id
       });
+      session = session[0];
 
-      assert.equal(updatedUser.length, 1);
-
-      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
-        email: randomUser.email,
-        password: newPassword,
-        organization_id: randomUser.organization_id
-      });
-
-      assert.equal(validUser.length, 1);
-      assert.equal(validUser[0].id, randomUserId);
+      let sessionFromToken = await dbFuncs.get_session_by_token({token: session.token});
+      assert.equal(sessionFromToken.length, 1);
+      assert.equal(sessionFromToken[0].user_id, session.user_id);
     });
 
-    it(`does not update a user's password if the wrong current password is given`, async () => {
-      let wontBeSetNewPassword = "Won't Be Set New Password";
 
-      let randomUserId = dataUtil.getRandIdFromArray(data.user);
-      let randomUser = data.user[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
-        user_id: randomUserId,
-        organization_id: randomUser.organization_id,
-        current_password: "Wrong Password",
-        new_password: wontBeSetNewPassword
+    it('fails to get a token does not exist', async () => {
+      session = await dbFuncs.get_session_by_token({token: dataUtil.createRandomUuid()});
+      assert.equal(session.length, 0);
+    });
+
+  });
+
+  describe('get_session_by_user_id()', () => {
+
+    it('a session can be retrieved by user id', async () => {
+      let existingSession = await dbFuncs.get_session_by_user_id({
+        user_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER')
       });
 
-      assert.equal(updatedUser.length, 0);
-
-      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
-        email: randomUser.email,
-        password: wontBeSetNewPassword,
-        organization_id: randomUser.organization_id
-      });
-
-      assert.equal(validUser.length, 0);
+      assert.ok(existingSession.length >= 1);
     });
 
   });
@@ -773,6 +618,192 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('search_strict_tool_snapshot()', () => {
+
+    it.skip('successfully searches for tool snapshots', async () => {
+
+    });
+
+  });
+
+  describe('update_organization()', () => {
+
+    it('successfully updates an organization', async () => {
+      let newOrgName = "New Organization";
+      let updatedOrg = await dbFuncs.update_organization({
+        id: dataUtil.getRandIdFromArray(data.organization),
+        name: newOrgName
+      });
+      assert.equal(updatedOrg.length, 1);
+      assert.equal(updatedOrg[0].name, newOrgName);
+    });
+
+  });
+
+  describe('update_configurable_item()', () => {
+
+    it('successfully updates a configurable item for an organization', async () => {
+      let itemId = dataUtil.getRandIdFromArray(data.configurable_item);
+      let item = data.configurable_item[itemId - 1];
+      let updatedItemObject = {
+        id: itemId,
+        name: 'New Item Name',
+        sanctioned: true,
+        organization_id: item.organization_id
+      };
+      let updatedItem = await dbFuncs.update_configurable_item(updatedItemObject);
+
+      assert.equal(updatedItem.length, 1);
+      assert.equal(updatedItem[0].name, updatedItemObject.name);
+      assert.equal(updatedItem[0].sanctioned, updatedItemObject.sanctioned);
+    });
+
+  });
+
+  describe('update_tool()', () => {
+
+    it('successfully updates a tool for an organization', async () => {
+      let toolId = dataUtil.getRandIdFromArray(data.tool);
+      let tool = data.tool[toolId - 1];
+      tool['id'] = toolId;
+      let updatedToolObject = {...tool,
+        ...{
+          model_number: dataUtil.createRandomId(),
+          status: 'OUT_OF_SERVICE'
+        }
+      };
+      let updatedTool = await dbFuncs.update_tool(updatedToolObject);
+
+      assert.equal(updatedTool.length, 1);
+      assert.equal(updatedTool[0].model_number, updatedToolObject.model_number);
+      assert.equal(updatedTool[0].status, updatedToolObject.status);
+    });
+
+  });
+
+  describe('update_user()', () => {
+
+    it('successfully updates a user for an organization', async () => {
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
+      delete user['type'];
+      user['id'] = userId;
+      let updatedUserObject = {...user,
+        ...{
+          phone_number: '1234567890',
+          status: 'ACTIVE'
+        }
+      };
+      delete updatedUserObject.password;
+      let updatedUser = await dbFuncs.update_user(updatedUserObject);
+
+      assert.equal(updatedUser.length, 1);
+      assert.equal(updatedUser[0].role, updatedUserObject.role);
+      assert.equal(updatedUser[0].status, updatedUserObject.status);
+    });
+
+  });
+
+  describe('update_location()', () => {
+
+    it('successfully updates a location for an organization', async () => {
+      let locationId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'LOCATION');
+      let location = metaData.tool_owner[locationId - 1];
+      delete location['type'];
+      location['id'] = locationId;
+      let updatedLocationObject = {...location,
+        ...{
+          state: 'NY',
+          name: 'New Location'
+        }
+      };
+      let updatedLocation = await dbFuncs.update_location(updatedLocationObject);
+
+      assert.equal(updatedLocation.length, 1);
+      assert.equal(updatedLocation[0].state, updatedLocationObject.state);
+      assert.equal(updatedLocation[0].name, updatedLocationObject.name);
+    });
+
+  });
+
+  describe('update_password()', () => {
+
+    it(`successfully updates a user's password`, async () => {
+      let newPassword = "New Password";
+
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
+      let updatedUser = await dbFuncs.update_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        current_password: randomUser.password,
+        new_password: newPassword
+      });
+
+      assert.equal(updatedUser.length, 1);
+
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
+        email: randomUser.email,
+        password: newPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
+    });
+
+    it(`does not update a user's password if the wrong current password is given`, async () => {
+      let wontBeSetNewPassword = "Won't Be Set New Password";
+
+      let randomUserId = dataUtil.getRandIdFromArray(data.user);
+      let randomUser = data.user[randomUserId - 1];
+      let updatedUser = await dbFuncs.update_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        current_password: "Wrong Password",
+        new_password: wontBeSetNewPassword
+      });
+
+      assert.equal(updatedUser.length, 0);
+
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
+        email: randomUser.email,
+        password: wontBeSetNewPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 0);
+    });
+
+  });
+
+  describe('update_user_password_by_id()', () => {
+
+    it(`successfully updates a user's password, given user id and organization id`, async () => {
+      let userId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let user = metaData.tool_owner[userId - 1];
+      let newPassword = "NewPassword";
+
+      let updatedUser = await dbFuncs.update_user_password_by_id({
+        organization_id: user.organization_id,
+        user_id: userId,
+        new_password: newPassword
+      });
+
+      updatedUser = updatedUser[0];
+
+      let waja = {
+        email: updatedUser.email,
+        password: newPassword,
+        organization_id: updatedUser.organization_id
+      }
+      let authenticatedUser = await dbFuncs.get_user_by_credentials_and_organization(waja);
+
+      assert.equal(authenticatedUser.length, 1);
+    });
+
+  });
+
   describe('transfer_tool()', () => {
 
     it('successfully transfers a tool', async () => {
@@ -802,10 +833,63 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('search_strict_tool_snapshot()', () => {
+  describe('delete_configurable_item()', () => {
 
-    it.skip('successfully searches for tool snapshots', async () => {
+    it('successfully deletes a location for an organization', async () => {
+      let newItem = await dbFuncs.create_configurable_item({
+        type: 'BRAND',
+        name: 'A New Brand',
+        sanctioned: true,
+        organization_id: dataUtil.getRandIdFromArray(data.organization)
+      });
+      newItem = newItem[0];
+      let deletedItem = await dbFuncs.delete_configurable_item({
+        configurable_item_id: newItem.id,
+        organization_id: newItem.organization_id
+      });
 
+      assert.equal(deletedItem.length, 1);
+      assert.equal(newItem.id, deletedItem[0].id);
+    });
+
+  });
+
+  describe('delete_session()', () => {
+
+    it('successfully deletes a session', async () => {
+      let randSession = dataUtil.getRandFromArray(data.session);
+      let session = await dbFuncs.get_session_by_user_id({
+        user_id: randSession.user_id
+      });
+      session = session[0];
+
+      let deletedSession = await dbFuncs.delete_session({
+        token: session.token
+      });
+
+      assert.equal(deletedSession.length, 1);
+      assert.equal(session.token, deletedSession[0].token);
+    });
+
+  });
+
+  describe('delete_password_reset_credentials()', () => {
+
+    it('successfully deletes password reset credentials', async () => {
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randUser = metaData.tool_owner[randUserId - 1];
+      let passwordResetCredentials = await dbFuncs.create_password_reset_credentials({
+        user_id: randUserId,
+        organization_id: randUser.organization_id
+      });
+      passwordResetCredentials = passwordResetCredentials[0];
+
+      let deletedPasswordResetCredentials = await dbFuncs.delete_password_reset_credentials({
+        user_id: passwordResetCredentials.user_id,
+        organization_id: passwordResetCredentials.organization_id
+      });
+
+      assert.equal(deletedPasswordResetCredentials.length, 1);
     });
 
   });
