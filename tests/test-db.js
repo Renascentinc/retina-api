@@ -353,7 +353,7 @@ describe('Database creation and usage', async () => {
       let updatedToolObject = {...tool,
         ...{
           model_number: dataUtil.createRandomId(),
-          status: 'LOST_OR_STOLEN'
+          serial_number: dataUtil.createRandomId(),
         }
       };
       let updatedTool = await dbFuncs.update_tool(updatedToolObject);
