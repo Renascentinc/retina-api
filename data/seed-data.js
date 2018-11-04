@@ -28,7 +28,8 @@ let tool_statuses = [
   'AVAILABLE',
   'IN_USE',
   'MAINTENANCE',
-  'OUT_OF_SERVICE'
+  'BEYOND_REPAIR',
+  'LOST_OR_STOLEN'
 ]
 
 let user_statuses = [
