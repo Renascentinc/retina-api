@@ -44,9 +44,18 @@ class AuthorizationError extends ApolloError
   }
 }
 
+class MailError extends ApolloError
+{
+  constructor(message) {
+    super(message, 'UNABLE_TO_SEND_EMAIL');
+    this.name = 'MailError';
+  }
+}
+
 module.exports = { ArgumentError,
                    DbClientError,
                    DbError,
                    GraphQlError,
                    InsufficientInformationError,
-                   AuthorizationError }
+                   AuthorizationError,
+                   MailError }

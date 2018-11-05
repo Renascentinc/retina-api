@@ -21,7 +21,10 @@ let appConfig = {
   'server.graphql.resolver.directiveDir': `${rootDir}/graphql/resolvers/directives`,
   'server.graphql.resolver.schemaDir': `${rootDir}/graphql/resolvers/schema`,
   'server.graphql.resolver.scalarDir': `${rootDir}/graphql/resolvers/scalars`,
-  'server.port': process.env.PORT || 4000
+  'server.port': process.env.PORT || 4000,
+
+  'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
+  'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
 }
 
 appConfig['environment'] = process.env.ENVIRONMENT || 'local';

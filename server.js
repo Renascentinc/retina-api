@@ -11,6 +11,11 @@ class Server {
 
   constructor(db) {
     this.db = db;
+
+    // TODO: This is a hacked way of doing unauthenticated routes. We should probably be doing
+    // this with directives, where we have @authenticated indicating authenticated routes,
+    // and then everything else is unauthenticated
+    this.unauthenticatedRoutes = ['login', 'requestPasswordReset', 'resetPassword'];
   }
 
   async start() {
@@ -47,7 +52,7 @@ class Server {
 
   async getContextFromRequest(req) {
     if (typeof req.headers.authorization !== 'string') {
-      if (this.isLoginRoute(req)) {
+      if (this.isUnauthenticatedRoute(req)) {
         return { db: this.db }
       }
 
@@ -82,12 +87,12 @@ class Server {
     return session[0];
   }
 
-  isLoginRoute(req) {
+  isUnauthenticatedRoute(req) {
     try {
       const parsedRequest = gql(req.body.query);
       return parsedRequest.definitions.length == 1 &&
              parsedRequest.definitions[0].selectionSet.selections.length == 1 &&
-             parsedRequest.definitions[0].selectionSet.selections[0].name.value == 'login'
+             this.unauthenticatedRoutes.includes(parsedRequest.definitions[0].selectionSet.selections[0].name.value)
     } catch (_) {
       return false
     }

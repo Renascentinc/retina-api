@@ -5,6 +5,26 @@ type LoginResponse {
 }
 
 type Mutation {
+  """
+  throws UNAUTHENTICATED - if user credentials are invalid
+
+  throws INSUFFICIENT_INFORMATION - if email is not unique accross organizations and no organization name is supplied
+  """
   login(email: String!, password: String!, organization_name: String): LoginResponse
+
   logout: Boolean
+
+  """
+  throws UNABLE_TO_SEND_EMAIL - if password reset email failed to send
+
+  throws USER_INPUT_ERROR - if organization name or email do not exist
+
+  throws INSUFFICIENT_INFORMATION - if email is not unique accross organizations and no organization name was supplied
+  """
+  requestPasswordReset(email: String!, organization_name: String): Boolean
+
+  """
+  throws UNAUTHENTICATED - if password reset token is invalid or has expired
+  """
+  resetPassword(new_password: String!, password_reset_code: ID!): Boolean
 }
