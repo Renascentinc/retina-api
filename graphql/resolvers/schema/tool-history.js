@@ -2,7 +2,14 @@ const { Tool: ToolFieldResolvers } = require('graphql/resolvers/schema/tool');
 
 module.exports = {
   Query: {
-    searchToolHistory: async (_, { toolHistoryFilter, pagingParameters = {} }, { db, session }) => {
+
+    /**
+     * Pull out and delete the time_span parameter of toolHistoryFilter. Then
+     * pass in the remaining toolHistoryFilter (along with time span and other params)
+     * to search_strict_tool_snapshot. For each snapshot returned, create a tool history
+     * entry based off of the current snapshot and the previous snapshot.
+     */
+    searchToolHistory: async (_, { toolHistoryFilter = {}, pagingParameters = {} }, { db, session }) => {
       let timeSpan = toolHistoryFilter.time_span;
       delete toolHistoryFilter.time_span;
 
