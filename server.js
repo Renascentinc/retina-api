@@ -15,7 +15,7 @@ class Server {
     // TODO: This is a hacked way of doing unauthenticated routes. We should probably be doing
     // this with directives, where we have @authenticated indicating authenticated routes,
     // and then everything else is unauthenticated
-    this.unauthenticatedRoutes = ['login', 'requestPasswordReset', 'resetPassword'];
+    this.unauthenticatedRoutes = ['login', 'requestPasswordReset', 'resetPassword', 'isPasswordResetCodeValid'];
   }
 
   async start() {

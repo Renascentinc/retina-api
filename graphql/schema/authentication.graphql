@@ -4,6 +4,10 @@ type LoginResponse {
   user: User!
 }
 
+type Query {
+  isPasswordResetCodeValid(password_reset_code: ID!): Boolean
+}
+
 type Mutation {
   """
   throws UNAUTHENTICATED - if user credentials are invalid

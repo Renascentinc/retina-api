@@ -3,6 +3,36 @@ const { PasswordResetMailer } = require('mailer');
 const { InsufficientInformationError } = require(`error`);
 
 module.exports = {
+  Query: {
+
+    /*
+     * If there are no credentials associated with the password_reset_code,
+     * return false. If the expiration date on the reset credentials is past
+     * the current date, delete the credentials and return false. Else return true.
+     */
+    isPasswordResetCodeValid: async (_, { password_reset_code }, { db }) => {
+      let passwordResetCredentials = await db.get_password_reset_credentials_by_code({ password_reset_code });
+
+      if (passwordResetCredentials.length === 0) {
+        return false;
+      }
+
+      let { user_id, organization_id, expiration_date } = passwordResetCredentials[0];
+
+      if (new Date(expiration_date) < Date.now()) {
+        db.delete_password_reset_credentials({
+          organization_id,
+          user_id
+        });
+
+        return false;
+      }
+
+      return true;
+    }
+
+  },
+
   Mutation: {
     /**
      * First, look up the user based on their credentials, with or without using
