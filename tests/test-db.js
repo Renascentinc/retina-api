@@ -806,22 +806,57 @@ describe('Database creation and usage', async () => {
 
   describe('transfer_tool()', () => {
 
+    /**
+     * First ensure that a tool has a user owner with a known id. Then
+     * have that user transfer the tool to a different user
+     */
     it('successfully transfers a tool', async () => {
-      let randAdmin = dataUtil.getRandFromObjectArrayWhere(metaData.tool_owner, 'role', 'ADMINISTRATOR');
-      let randOrgId = randAdmin.organization_id;
-
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
       let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
       let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
 
-      let randAdminId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'ADMINISTRATOR').id;
-      let randUserId = dataUtil.getRandFromObjectArrayWhere(allUsers, 'role', 'USER').id;
-      let randToolId = dataUtil.getRandFromObjectArrayWhere(allTools, 'owner_id', randAdminId).id;
+      let randTool = dataUtil.getRandFromArray(allTools);
+      let toolOwnerId = allUsers.pop().id;
+      randTool.owner_id = toolOwnerId
+
+      delete randTool.owner_type;
+      await dbFuncs.update_tool(randTool);
+
+      let newToolOwnerId = dataUtil.getRandFromArray(allUsers).id;
 
       let transferredTools = await dbFuncs.transfer_tool({
         organization_id: randOrgId,
-        tool_id_list: [randToolId],
-        transferrer_id: randAdminId,
-        to_owner_id: randUserId
+        tool_id_list: [randTool.id],
+        transferrer_id: toolOwnerId,
+        to_owner_id: newToolOwnerId
+      });
+
+      assert.ok(transferredTools.length > 0);
+    });
+
+    /**
+     * First ensure that a tool has a user owner with a known id. Then
+     * have that user transfer the tool to a different location
+     */
+    it('successfully transfers a tool to a location', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let allUsers = await dbFuncs.get_all_user({ organization_id: randOrgId });
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randTool = dataUtil.getRandFromArray(allTools);
+      let toolOwnerId = allUsers.pop().id;
+      randTool.owner_id = toolOwnerId
+
+      delete randTool.owner_type;
+      await dbFuncs.update_tool(randTool);
+
+      let newLocationId = dataUtil.getRandIdFromObjectArrayWhere(data.location, 'organization_id', randOrgId);
+
+      let transferredTools = await dbFuncs.transfer_tool({
+        organization_id: randOrgId,
+        tool_id_list: [randTool.id],
+        transferrer_id: toolOwnerId,
+        to_owner_id: newLocationId
       });
 
       assert.ok(transferredTools.length > 0);
