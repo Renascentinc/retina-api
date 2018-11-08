@@ -2,6 +2,7 @@ const locationResolvers = require('graphql/resolvers/schema/location');
 const userResolvers = require('graphql/resolvers/schema/user');
 const configurableItemResolvers = require('graphql/resolvers/schema/configurable-item');
 const { preprocessQuery, objectHasTruthyValues, deepEqual } = require(`graphql/utils/data-utils`);
+const { ArgumentError } = require(`error`);
 
 module.exports = {
   Query: {
@@ -107,7 +108,11 @@ module.exports = {
         return userResolvers.Query.getUser(undefined, { user_id: owner_id }, ctx)
       }
 
-      return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+      if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.LOCATION) {
+        return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+      }
+
+      throw new ArgumentError(`Argument 'owner_type' with value ${owner_type} is not a valid owner type`);
     },
     type: async ({ type_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: type_id }, ctx),
     brand: async ({ brand_id }, _, ctx) => configurableItemResolvers.Query.getConfigurableItem(undefined, { configurable_item_id: brand_id }, ctx),
