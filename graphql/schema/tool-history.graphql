@@ -1,6 +1,7 @@
 
 
 type PreviousToolSnapshotDiff {
+  id:             ID!
   type:           ConfigurableItem
 	brand:          ConfigurableItem
 	model_number:   String
