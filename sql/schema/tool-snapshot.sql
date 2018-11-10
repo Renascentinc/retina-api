@@ -1,6 +1,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
+  id                SERIAL,
 	tool_id 					id_t             NOT NULL,
   timestamp         timestamp        DEFAULT now(),
 	type_id 					id_t 						 NOT NULL,
