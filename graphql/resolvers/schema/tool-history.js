@@ -70,6 +70,7 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   previousToolSnapshotDiff['owner_type'] = toolSnapshot.owner_type;
 
   let toolHistoryEntry = {
+    id: currentToolSnapshot.id,
     timestamp: toolSnapshot.timestamp,
     tool_action: toolSnapshot.tool_action,
     previous_tool_snapshot_diff: previousToolSnapshotDiff,

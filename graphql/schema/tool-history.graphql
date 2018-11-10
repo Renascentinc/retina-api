@@ -1,7 +1,6 @@
 
 
 type PreviousToolSnapshotDiff {
-  id:             ID!
   type:           ConfigurableItem
 	brand:          ConfigurableItem
 	model_number:   String
@@ -16,6 +15,7 @@ type PreviousToolSnapshotDiff {
 }
 
 type ToolHistoryEntry {
+  id: ID!
   tool_snapshot: Tool!
   timestamp: Date!
   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
