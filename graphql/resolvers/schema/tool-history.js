@@ -70,7 +70,7 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
       timestamp: currentToolSnapshot.timestamp
     });
 
-    previousToolSnapshot = previousToolSnapshot[0] || [];
+    previousToolSnapshot = previousToolSnapshot[0] || {};
 
     previousToolSnapshotDiff = createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapshot);
   } else {
