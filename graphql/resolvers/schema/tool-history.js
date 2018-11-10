@@ -39,6 +39,10 @@ module.exports = {
   PreviousToolSnapshotDiff: ToolFieldResolvers
 }
 
+/*
+ * For each key in the current tool snapshot, check to see if the previous tool
+ * snapshot has a different value for that key
+ */
 function createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapshot) {
   let previousToolSnapshotDiff = {}
 
@@ -51,6 +55,12 @@ function createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapsho
   return previousToolSnapshotDiff
 }
 
+/**
+ * If the previous tool snapshot doesn't exist or the previous snapshot has a
+ * different tool id than the current tool snapshot, then retrieve the current
+ * snapshot's true predecessor snapshot. Create the previous tool snapshot's diff
+ * with the current tool and massage the tool snaphot and diff objects for returning
+ */
 async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot, db) {
   let previousToolSnapshotDiff;
 
@@ -59,6 +69,8 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
       tool_id: currentToolSnapshot.tool_id,
       timestamp: currentToolSnapshot.timestamp
     });
+
+    previousToolSnapshot = previousToolSnapshot[0] || [];
 
     previousToolSnapshotDiff = createPreviousToolSnapshotDiff(previousToolSnapshot, currentToolSnapshot);
   } else {
