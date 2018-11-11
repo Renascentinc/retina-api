@@ -21,7 +21,7 @@ function getPostgresDbRawClient() {
   });
 }
 
-async function createDb(dbClient) {
+async function createDb() {
   let postgresDbClient = getPostgresDbRawClient();
 
   try {
@@ -46,12 +46,6 @@ async function createDb(dbClient) {
 
 async function loadSchema(dbClient) {
   try {
-
-    if (appConfig['db.refreshSchema']) {
-      logger.info('Dropping Schema');
-      await dropSchema(dbClient);
-    }
-
     logger.info('Creating Extensions');
     await createExtensions(dbClient);
 
@@ -234,4 +228,4 @@ async function seedDb(dbClient) {
   }
 }
 
-module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient, loadTriggers, dropTriggers }
+module.exports = { createDb, loadSchema, seedDb, loadFunctions, dropFunctions, dropExtensions, getPostgresDbRawClient, loadTriggers, dropTriggers, dropSchema }

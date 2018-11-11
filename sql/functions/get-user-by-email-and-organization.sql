@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION public.get_user_by_email_and_organization (
-  email           str_t,
+  email           citext,
   organization_id id_t
 )
 RETURNS SETOF public.user

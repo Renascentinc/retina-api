@@ -8,8 +8,9 @@ const { createDb,
         dropFunctions,
         dropExtensions,
         loadTriggers,
-        dropTriggers } = require('./utils/db-utils');
-        
+        dropTriggers,
+        dropSchema } = require('./utils/db-utils');
+
 const Enum = require('enums');
 const logger = require('./logger');
 
@@ -30,11 +31,17 @@ async function initializeDb() {
   }
 
   try {
-    await dropExtensions(dbClient);
+
+    if (appConfig['db.refreshSchema']) {
+      logger.info('Dropping Schema');
+      await dropSchema(dbClient);
+    }
 
     await dropTriggers(dbClient);
 
     await dropFunctions(dbClient);
+
+    await dropExtensions(dbClient);
 
     await loadSchema(dbClient);
 
@@ -45,6 +52,7 @@ async function initializeDb() {
     if (appConfig['db.seed']) {
       await seedDb(dbClient);
     }
+
   } catch (e) {
     logger.error(`Unable to initialize database`);
     await dbClient.disconnect();

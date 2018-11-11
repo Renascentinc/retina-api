@@ -24,7 +24,7 @@ AS $$
       ) VALUES (
         first_name,
         last_name,
-        email,
+        LOWER(email),
         phone_number,
         crypt(password, gen_salt('bf')),
         role,

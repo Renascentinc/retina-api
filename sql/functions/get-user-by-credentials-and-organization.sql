@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION public.get_user_by_credentials_and_organization (
-  email           str_t,
+  email           citext,
   password        str_t,
   organization_id id_t
 )
