@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot_metadata (
   tool_snapshot_id       id_t             NOT NULL,
   tool_action            tool_action      NOT NULL,
   timestamp              timestamp        DEFAULT now(), --maybe NOT NULL?
-  creator_id             id_t,
+  actor_id               id_t             NOT NULL,
 	out_of_service_reason  text
 );
 

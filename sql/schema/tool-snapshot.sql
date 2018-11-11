@@ -1,7 +1,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
-  id                SERIAL,
+  id                SERIAL           PRIMARY KEY,
 	tool_id 					id_t             NOT NULL,
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
