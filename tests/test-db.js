@@ -460,6 +460,26 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_all_tool_by_configurable_item_id()', () => {
+
+    it('tools can be retrieved by configurable item id', async () => {
+      let randTool = dataUtil.getRandFromArray(data.tool);
+
+      let randomConfigurableItemIdType = dataUtil.getRandFromArray(['brand_id', 'type_id', 'purchased_from_id']);
+      let randomConfigurableItemId = randTool[randomConfigurableItemIdType];
+      let randomConfigurableItem = data.configurable_item[randomConfigurableItemId - 1];
+
+      let tools = await dbFuncs.get_all_tool_by_configurable_item_id({
+        configurable_item_id: randomConfigurableItemId,
+        organization_id: randomConfigurableItem.organization_id
+      });
+
+      assert.ok(tools.length > 0);
+    });
+
+  });
+
+
   describe('search_fuzzy_tool()', () => {
 
     it('successfully searches for tools', async () => {
