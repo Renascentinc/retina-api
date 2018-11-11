@@ -56,7 +56,8 @@ module.exports = {
 
       db.create_tool_snapshot({
         ...newTool[0],
-        tool_action: db.tool_action.CREATE.name
+        tool_action: db.tool_action.CREATE.name,
+        actor_id: session.user_id
       });
 
       return newTool[0];
@@ -78,7 +79,8 @@ module.exports = {
       if (!deepEqual(originalTool[0], updatedTool[0])) {
         db.create_tool_snapshot({
           ...updatedTool[0],
-          tool_action: db.tool_action.UPDATE.name
+          tool_action: db.tool_action.UPDATE.name,
+          actor_id: session.user_id
         });
       }
 
@@ -93,7 +95,8 @@ module.exports = {
       transferredTools.forEach(transferredTool => {
         db.create_tool_snapshot({
           ...transferredTool,
-          tool_action: db.tool_action.TRANSFER.name
+          tool_action: db.tool_action.TRANSFER.name,
+          actor_id: session.user_id
         });
       });
 

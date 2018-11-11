@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	"year" 						integer,
 
   ---------------- Snapshot Metadata ------------------
-  tool_action            tool_action      NOT NULL,
-  timestamp              timestamp        DEFAULT now() NOT NULL,
-  actor_id               id_t             NOT NULL,
+  timestamp              timestamp   NOT NULL DEFAULT now(),
+  tool_action            tool_action NOT NULL,
+  actor_id               id_t        NOT NULL,
   out_of_service_reason  text,
   CHECK (
     (out_of_service_reason IS NULL AND NOT is_out_of_service_status(status)) OR

@@ -115,6 +115,7 @@ describe('Database creation and usage', async () => {
       });
 
       tool = tool[0];
+      tool['status'] = 'LOST_OR_STOLEN';
 
       let toolSnapshot = await dbFuncs.create_tool_snapshot(
       {
