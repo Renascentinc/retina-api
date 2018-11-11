@@ -3,7 +3,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.user (
 	first_name			str_t						 NOT NULL,
 	last_name				str_t						 NOT NULL,
-	email						citext						 NOT NULL,
+	email						citext					 NOT NULL,
 	phone_number		short_str_t			 NOT NULL,
 	password				str_t						 NOT NULL,
 	role				 		role				     NOT NULL,
