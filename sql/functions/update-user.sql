@@ -16,7 +16,7 @@ AS $$
     	SET
         first_name   = update_user.first_name,
         last_name    = update_user.last_name,
-        email        = update_user.email,
+        email        = LOWER(update_user.email),
         phone_number = update_user.phone_number,
         role         = update_user.role,
         status       = update_user.status

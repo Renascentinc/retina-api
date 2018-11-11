@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION public.get_user_by_email (
-  email           str_t
+  email           citext
 )
 RETURNS SETOF public.user
 AS $$
