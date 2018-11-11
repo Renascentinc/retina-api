@@ -1,6 +1,6 @@
 
 CREATE OR REPLACE FUNCTION public.get_user_by_credentials (
-  email           str_t,
+  email           citext,
   password        str_t
 )
 RETURNS SETOF public.user
