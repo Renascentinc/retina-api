@@ -9,7 +9,8 @@ AS $$
   BEGIN
     RETURN QUERY
     	SELECT * FROM public.configurable_item
-    	WHERE public.configurable_item.organization_id = get_all_configurable_item.organization_id
+    	  WHERE public.configurable_item.organization_id = get_all_configurable_item.organization_id
+          AND NOT configurable_item.deleted
       OFFSET page_number*page_size
       LIMIT page_size;
   END;
