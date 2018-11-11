@@ -25,6 +25,8 @@ let appConfig = {
 
   'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
   'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
+
+  'ui.url': 'http://localhost:4200'
 }
 
 appConfig['environment'] = process.env.ENVIRONMENT || 'local';
@@ -49,6 +51,7 @@ if (appConfig['environment'] == 'test') {
 if (appConfig['environment'] == 'develop') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
+  appConfig['ui.url'] = 'http://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com';
 }
 
 if (appConfig['environment'] == 'release') {

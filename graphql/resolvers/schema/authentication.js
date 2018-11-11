@@ -1,6 +1,7 @@
 const { UserInputError, AuthenticationError } = require('apollo-server');
 const { PasswordResetMailer } = require('mailer');
 const { InsufficientInformationError } = require(`error`);
+const appConfig = require('app-config');
 
 module.exports = {
   Query: {
@@ -88,7 +89,7 @@ module.exports = {
         to: user.email,
         subject: 'Response to Password Reset Request',
         html: `
-          <a href='https://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com/password-reset?code=${passwordResetCredentials.code}'>
+          <a href='${appConfig['ui.url']}/#/password-reset?code=${passwordResetCredentials.code}'>
             Click here to reset your password
           </a>
 
