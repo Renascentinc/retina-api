@@ -1,5 +1,5 @@
-const locationResolvers = require('graphql/resolvers/schema/location');
-const userResolvers = require('graphql/resolvers/schema/user');
+const { Query: locationQueryResolvers } = require('graphql/resolvers/schema/location');
+const { Query: userQueryResolvers} = require('graphql/resolvers/schema/user');
 const { Tool: toolFieldResolvers } = require('graphql/resolvers/schema/tool');
 
 module.exports = {
@@ -49,11 +49,11 @@ module.exports = {
     owner: async ({ owner_type, owner_id }, _, ctx) => {
 
       if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.USER) {
-        return userResolvers.Query.getUser(undefined, { user_id: owner_id }, ctx)
+        return userQueryResolvers.getUser(undefined, { user_id: owner_id }, ctx)
       }
 
       if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.LOCATION) {
-        return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+        return locationQueryResolvers.getLocation(undefined, { location_id: owner_id }, ctx);
       }
 
       if (!Boolean(owner_id)) {
