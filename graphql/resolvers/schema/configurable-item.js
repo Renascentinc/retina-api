@@ -28,6 +28,29 @@ module.exports = {
       updatedConfigurableItem['organization_id'] = session.organization_id;
       updatedConfigurableItem = await db.update_configurable_item(updatedConfigurableItem);
       return updatedConfigurableItem[0];
+    },
+
+    deleteConfigurableItem: async (_, { configurable_item_id }, { db, session }) => {
+
+      let configurableItemIdParameters = {
+        configurable_item_id,
+        organization_id: session.organization_id
+      };
+
+      let toolsWithConfigurableItem = await db.get_all_tool_by_configurable_item_id(configurableItemIdParameters);
+
+      if (toolsWithConfigurableItem.length > 0) {
+          return {
+            toolsWithConfigurableItem
+          }
+      }
+
+      deletedConfigurableItem = await db.delete_configurable_item(configurableItemIdParameters);
+      deletedConfigurableItem = deletedConfigurableItem[0];
+
+      return {
+        deletedConfigurableItem
+      }
     }
   }
 };
