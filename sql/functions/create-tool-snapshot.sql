@@ -15,7 +15,7 @@ CREATE FUNCTION public.create_tool_snapshot (
 	price           	    integer       = NULL,
 	photo							    long_str_t		= NULL,
 	"year"						    integer				= NULL,
-  out_of_service_reason text          = NULL
+  decomission_reason    text          = NULL
 ) RETURNS SETOF public.tool_snapshot
 AS $$
   BEGIN
@@ -37,7 +37,7 @@ AS $$
         tool_action,
         owner_type,
         actor_id,
-        out_of_service_reason
+        decomission_reason
       )
       VALUES (
         id,
@@ -56,7 +56,7 @@ AS $$
         tool_action,
         owner_type,
         actor_id,
-        out_of_service_reason
+        decomission_reason
       )
       RETURNING *;
   END;

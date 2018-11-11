@@ -45,7 +45,8 @@ let roles = [
 let tool_actions = [
   'CREATE',
   'UPDATE',
-  'TRANSFER'
+  'TRANSFER',
+  'DECOMISSION'
 ]
 
 let user_info = [

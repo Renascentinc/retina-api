@@ -87,6 +87,19 @@ module.exports = {
       return updatedTool[0];
     },
 
+    decomissionTool: async (_, decomissionToolArgs, { db, session }) => {
+      decomissionToolArgs['organization_id'] = session.organization_id;
+      let decomissionedTool = await db.decomission_tool(decomissionToolArgs);
+
+      db.create_tool_snapshot({
+        ...updatedTool[0],
+        tool_action: db.tool_action.DECOMISSION.name,
+        actor_id: session.user_id
+      });
+
+      return decomissionedTool[0];
+    },
+
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
       transferArgs['organization_id'] = session.organization_id;
       transferArgs['transferrer_id'] = session.user_id;

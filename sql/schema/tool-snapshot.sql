@@ -23,10 +23,10 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   timestamp              timestamp   NOT NULL DEFAULT now(),
   tool_action            tool_action NOT NULL,
   actor_id               id_t        NOT NULL,
-  out_of_service_reason  text,
+  decomission_reason     text,
   CHECK (
-    (out_of_service_reason IS NULL AND NOT is_out_of_service_status(status)) OR
-    (out_of_service_reason IS NOT NULL AND is_out_of_service_status(status))
+    (decomission_reason IS NULL AND NOT is_decomissioned_status(status)) OR
+    (decomission_reason IS NOT NULL AND is_decomissioned_status(status))
   )
 );
 

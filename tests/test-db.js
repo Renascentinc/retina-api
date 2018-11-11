@@ -104,25 +104,27 @@ describe('Database creation and usage', async () => {
   describe('create_tool_snapshot()', () => {
 
     it('successfully creates a tool snapshot', async () => {
-      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
-      let randUser = metaData.tool_owner[randUserId - 1];
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
 
-      let toolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'owner_id', randUserId);
+      let tools = await dbFuncs.get_all_tool({
+        organization_id: randOrgId
+      })
 
-      let tool = await dbFuncs.get_tool({
-        tool_id: toolId,
-        organization_id: randUser.organization_id
+      let users = await dbFuncs.get_all_user({
+        organization_id: randOrgId
       });
 
-      tool = tool[0];
-      tool['status'] = 'LOST_OR_STOLEN';
+      let randomTool = dataUtil.getRandFromArray(tools);
+      let randActorId = dataUtil.getRandFromArray(users).id;
+
+      randomTool['status'] = 'LOST_OR_STOLEN';
 
       let toolSnapshot = await dbFuncs.create_tool_snapshot(
       {
-        ...tool,
-        tool_action: dbFuncs.tool_action.UPDATE.name,
-        actor_id: tool.owner_id,
-        out_of_service_reason: "The tool was stolen by Billy the Kid"
+        ...randomTool,
+        tool_action: dbFuncs.tool_action.DECOMISSION.name,
+        actor_id: randActorId,
+        decomission_reason: "The tool was stolen by Billy the Kid"
       });
 
       assert.equal(toolSnapshot.length, 1);
@@ -956,6 +958,25 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('decomission_tool()', () => {
+
+    it('successfully decomissions a tool', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randomToolId = dataUtil.getRandFromArray(allTools).id;
+
+      let decomissionedTool = await dbFuncs.decomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        decomissioned_status: 'LOST_OR_STOLEN'
+      })
+
+      assert.equal(decomissionedTool.length, 1);
+    });
+
+  });
+
   describe('db enum creation', () => {
 
     it('successfully creates the enums', async () => {
@@ -974,6 +995,14 @@ describe('Database creation and usage', async () => {
       assert.ok(dbFuncs.user_status &&
                 dbFuncs.user_status.INACTIVE &&
                 dbFuncs.user_status.INACTIVE.name === 'INACTIVE')
+    });
+
+  });
+
+  describe('is_decomissioned_status()', () => {
+
+    it.skip('indicates whether or not a tool status is a decomissioned type status', async () => {
+
     });
 
   });

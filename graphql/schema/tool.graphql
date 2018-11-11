@@ -60,4 +60,5 @@ type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
   transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
+  decomissionTool(tool_id: ID!, decomissioned_status: DecomissionedToolStatus!, decomission_reason: String!): Tool
 }
