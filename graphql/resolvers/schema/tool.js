@@ -56,7 +56,8 @@ module.exports = {
 
       db.create_tool_snapshot({
         ...newTool[0],
-        tool_action: db.tool_action.CREATE.name
+        tool_action: db.tool_action.CREATE.name,
+        actor_id: session.user_id
       });
 
       return newTool[0];
@@ -78,11 +79,29 @@ module.exports = {
       if (!deepEqual(originalTool[0], updatedTool[0])) {
         db.create_tool_snapshot({
           ...updatedTool[0],
-          tool_action: db.tool_action.UPDATE.name
+          tool_action: db.tool_action.UPDATE.name,
+          actor_id: session.user_id
         });
       }
 
       return updatedTool[0];
+    },
+
+    decomissionTool: async (_, { tool_id, decomissioned_status, decomission_reason }, { db, session }) => {
+      let decomissionedTool = await db.decomission_tool({
+        tool_id,
+        decomissioned_status,
+        organization_id: session.organization_id
+      });
+
+      db.create_tool_snapshot({
+        ...decomissionedTool[0],
+        tool_action: db.tool_action.DECOMISSION.name,
+        actor_id: session.user_id,
+        decomission_reason
+      });
+
+      return decomissionedTool[0];
     },
 
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
@@ -93,7 +112,8 @@ module.exports = {
       transferredTools.forEach(transferredTool => {
         db.create_tool_snapshot({
           ...transferredTool,
-          tool_action: db.tool_action.TRANSFER.name
+          tool_action: db.tool_action.TRANSFER.name,
+          actor_id: session.user_id
         });
       });
 

@@ -1,19 +1,21 @@
 CREATE FUNCTION public.create_tool_snapshot (
-  id                id_t,
-	type_id						id_t,
-	brand_id					id_t,
-	model_number    	str_t,
-	status          	tool_status,
-	serial_number			str_t,
-	organization_id		id_t,
-  owner_id				  id_t,
-  tool_action       tool_action,
-  owner_type        tool_owner_type,
-	date_purchased		date          = NULL,
-	purchased_from_id	id_t					= NULL,
-	price           	integer       = NULL,
-	photo							long_str_t		= NULL,
-	"year"						integer				= NULL
+  id                    id_t,
+	type_id						    id_t,
+	brand_id					    id_t,
+	model_number    	    str_t,
+	status          	    tool_status,
+	serial_number			    str_t,
+	organization_id		    id_t,
+  owner_id				      id_t,
+  tool_action           tool_action,
+  owner_type            tool_owner_type,
+  actor_id              id_t,
+	date_purchased		    date          = NULL,
+	purchased_from_id	    id_t					= NULL,
+	price           	    integer       = NULL,
+	photo							    long_str_t		= NULL,
+	"year"						    integer				= NULL,
+  decomission_reason    text          = NULL
 ) RETURNS SETOF public.tool_snapshot
 AS $$
   BEGIN
@@ -33,7 +35,9 @@ AS $$
         organization_id,
         owner_id,
         tool_action,
-        owner_type
+        owner_type,
+        actor_id,
+        decomission_reason
       )
       VALUES (
         id,
@@ -50,7 +54,9 @@ AS $$
         organization_id,
         owner_id,
         tool_action,
-        owner_type
+        owner_type,
+        actor_id,
+        decomission_reason
       )
       RETURNING *;
   END;

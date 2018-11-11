@@ -16,7 +16,9 @@ module.exports = {
   getDropExtensionsQueriesQuery:
     `SELECT 'DROP EXTENSION IF EXISTS "' || extensions.extname || '";'
      FROM pg_extension as extensions
-     WHERE extensions.extname != 'plpgsql'`,
+     WHERE extensions.extname != 'plpgsql'
+      AND extensions.extname != 'citext';`, // This is a hack to get around some circular
+                                            // function <==> extension dependencies for citext
 
   getDbTypesQuery:
     `SELECT t.typname AS enum_name, array_to_json(array_agg(e.enumlabel)) AS enum_values
