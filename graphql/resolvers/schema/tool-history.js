@@ -1,6 +1,9 @@
-const { Tool: ToolFieldResolvers } = require('graphql/resolvers/schema/tool');
+const locationResolvers = require('graphql/resolvers/schema/location');
+const userResolvers = require('graphql/resolvers/schema/user');
+const { Tool: toolFieldResolvers } = require('graphql/resolvers/schema/tool');
 
 module.exports = {
+
   Query: {
 
     /**
@@ -36,7 +39,35 @@ module.exports = {
     }
   },
 
-  PreviousToolSnapshotDiff: ToolFieldResolvers
+  PreviousToolSnapshotDiff: {
+
+    /*
+     * First check for a valid owner type and query for that owner. If the owner type
+     * is not valid, it is possible that the previous tool snapshot diff had no owner
+     * so if there is no owner id, return null. Else, throw an ArgumentError.
+     */
+    owner: async ({ owner_type, owner_id }, _, ctx) => {
+
+      if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.USER) {
+        return userResolvers.Query.getUser(undefined, { user_id: owner_id }, ctx)
+      }
+
+      if (ctx.db.tool_owner_type.fromString(owner_type) === ctx.db.tool_owner_type.LOCATION) {
+        return locationResolvers.Query.getLocation(undefined, { location_id: owner_id }, ctx);
+      }
+
+      if (!Boolean(owner_id)) {
+        return null;
+      }
+
+      throw new ArgumentError(`Argument 'owner_type' with value ${owner_type} is not a valid owner type`);
+    },
+    type: toolFieldResolvers.type,
+    brand: toolFieldResolvers.brand,
+    purchased_from: toolFieldResolvers.purchased_from
+
+  }
+
 }
 
 /*
@@ -80,8 +111,8 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   let toolSnapshot = { ...currentToolSnapshot };
   toolSnapshot['id'] = toolSnapshot.tool_id;
 
-  previousToolSnapshotDiff['id'] = toolSnapshot.tool_id;
-  previousToolSnapshotDiff['owner_type'] = toolSnapshot.owner_type;
+  previousToolSnapshotDiff['id'] = currentToolSnapshot.tool_id;
+  previousToolSnapshotDiff['owner_type'] = previousToolSnapshot.owner_type;
 
   let toolHistoryEntry = {
     id: currentToolSnapshot.id,
