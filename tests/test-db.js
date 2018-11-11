@@ -104,18 +104,24 @@ describe('Database creation and usage', async () => {
   describe('create_tool_snapshot()', () => {
 
     it('successfully creates a tool snapshot', async () => {
-      let toolId = dataUtil.getRandIdFromArray(data.tool);
-      let tool = data.tool[toolId - 1];
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randUser = metaData.tool_owner[randUserId - 1];
 
-      tool = await dbFuncs.get_tool({
+      let toolId = dataUtil.getRandIdFromObjectArrayWhere(data.tool, 'owner_id', randUserId);
+
+      let tool = await dbFuncs.get_tool({
         tool_id: toolId,
-        organization_id: tool.organization_id
+        organization_id: randUser.organization_id
       });
+
+      tool = tool[0];
 
       let toolSnapshot = await dbFuncs.create_tool_snapshot(
       {
-        ...tool[0],
-        tool_action: dbFuncs.tool_action.UPDATE.name
+        ...tool,
+        tool_action: dbFuncs.tool_action.UPDATE.name,
+        actor_id: tool.owner_id,
+        out_of_service_reason: "The tool was stolen by Billy the Kid"
       });
 
       assert.equal(toolSnapshot.length, 1);
@@ -973,6 +979,6 @@ describe('Database creation and usage', async () => {
 
   after(async () => {
     await dbClient.disconnect();
-    await dropDbIfExists(appConfig['db.database']);
+    // await dropDbIfExists(appConfig['db.database']);
   })
 });

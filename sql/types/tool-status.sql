@@ -13,3 +13,16 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tool_status') THEN
 END IF;
 
 END $$;
+
+CREATE FUNCTION public.is_out_of_service_status(
+	tool_status tool_status
+)
+ RETURNS BOOL
+AS $$
+  BEGIN
+    RETURN
+      is_out_of_service_status.tool_status = 'BEYOND_REPAIR'::tool_status OR
+      is_out_of_service_status.tool_status = 'LOST_OR_STOLEN'::tool_status;
+  END;
+$$
+LANGUAGE plpgsql;

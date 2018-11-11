@@ -2,6 +2,8 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   id                SERIAL           PRIMARY KEY,
+
+  ---------------- Tool Data ------------------
 	tool_id 					id_t             NOT NULL,
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
@@ -15,7 +17,17 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	purchased_from_id id_t,
 	price 						integer,
 	photo 						long_str_t,
-	"year" 						integer
+	"year" 						integer,
+
+  ---------------- Snapshot Metadata ------------------
+  tool_action            tool_action      NOT NULL,
+  timestamp              timestamp        DEFAULT now() NOT NULL,
+  actor_id               id_t             NOT NULL,
+  out_of_service_reason  text,
+  CHECK (
+    (out_of_service_reason IS NULL AND NOT is_out_of_service_status(status)) OR
+    (out_of_service_reason IS NOT NULL AND is_out_of_service_status(status))
+  )
 );
 
 CREATE INDEX ON public.tool_snapshot (tool_id);
