@@ -3,7 +3,6 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   id                SERIAL,
 	tool_id 					id_t             NOT NULL,
-  timestamp         timestamp        DEFAULT now(),
 	type_id 					id_t 						 NOT NULL,
 	brand_id 					id_t 						 NOT NULL,
 	model_number 			str_t 					 NOT NULL,
@@ -12,7 +11,6 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	serial_number 		str_t			 			 NOT NULL,
   owner_id          id_t             NOT NULL,
   owner_type        tool_owner_type  NOT NULL,
-  tool_action       tool_action      NOT NULL,
 	date_purchased 		date,
 	purchased_from_id id_t,
 	price 						integer,
