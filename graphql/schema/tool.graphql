@@ -19,7 +19,7 @@ input NewTool {
 	brand_id:          ID!
 	model_number:      String!
   serial_number:     String!
-	status:            ToolStatus!
+	status:            InServiceToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    Date
@@ -34,7 +34,7 @@ input UpdatedTool {
 	brand_id:          ID!
 	model_number:      String!
   serial_number:     String!
-	status:            ToolStatus!
+	status:            InServiceToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    Date
@@ -46,7 +46,7 @@ input UpdatedTool {
 input ToolFilter {
   brand_ids:     [ID!]
   type_ids:      [ID!]
-  tool_statuses: [ToolStatus!]
+  tool_statuses: [InServiceToolStatus!]
   owner_ids:     [ID!]
 }
 
@@ -60,5 +60,5 @@ type Mutation {
   createTool(newTool: NewTool!): Tool
   updateTool(updatedTool: UpdatedTool!): Tool
   transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
-  decomissionTool(tool_id: ID!, decomissioned_status: DecomissionedToolStatus!, decomission_reason: String!): Tool
+  decomissionTool(tool_id: ID!, decomissioned_status: DecomissionedToolStatus!, decomission_reason: String!): Tool @requiresRole(requiredRole: ADMINISTRATOR)
 }

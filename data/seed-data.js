@@ -32,6 +32,12 @@ let tool_statuses = [
   'LOST_OR_STOLEN'
 ]
 
+let in_service_tool_statuses = [
+  'AVAILABLE',
+  'IN_USE',
+  'MAINTENANCE'
+]
+
 let user_statuses = [
   'ACTIVE',
   'INACTIVE'
@@ -170,7 +176,7 @@ for (let single_user_info of user_info) {
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
     role: single_user_info.role,
-    status: dataUtil.getRandFromArray(user_statuses),
+    status: 'ACTIVE',
     organization_id: single_user_info.organization_id
   });
 }
@@ -192,7 +198,7 @@ for (var i = 0; i < numTools; i++) {
     purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,
     date_purchased: dataUtil.createRandomDate(),
     model_number: dataUtil.createRandomId(),
-    status: dataUtil.getRandFromArray(tool_statuses),
+    status: dataUtil.getRandFromArray(in_service_tool_statuses),
     serial_number: dataUtil.createRandomId(),
     organization_id: randOrgId,
     owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId),

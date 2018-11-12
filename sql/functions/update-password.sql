@@ -15,6 +15,7 @@ AS $$
     	WHERE public.user.id = update_password.user_id
         AND public.user.organization_id = update_password.organization_id
         AND public.user.password = crypt(update_password.current_password, public.user.password)
+        AND public.user.status = 'ACTIVE'::user_status
     RETURNING *;
   END;
 $$

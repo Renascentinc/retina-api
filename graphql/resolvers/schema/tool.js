@@ -105,6 +105,12 @@ module.exports = {
     },
 
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
+      let toOwnerIsActive = (await db.is_user_active({ user_id: transferArgs.to_owner_id }))[0].is_user_inactive;
+
+      if (!toOwnerIsActive) {
+          return [];
+      }
+
       transferArgs['organization_id'] = session.organization_id;
       transferArgs['transferrer_id'] = session.user_id;
       let transferredTools = await db.transfer_tool(transferArgs);
