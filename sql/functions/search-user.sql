@@ -8,7 +8,7 @@
  * 3) Join the resulting ids in summed_scores with the user table, selecting only the top 25 results (or the requested page of results, once paging is implemented)
  */
 CREATE OR REPLACE FUNCTION public.search_user(
-	lexemes		     text[],
+	lexemes		      text[],
 	organization_id integer,
   page_size       integer = NULL,
   page_number     integer = 0
