@@ -18,6 +18,7 @@ type PreviousToolSnapshotDiff {
 type ToolSnapshotMetadata {
   timestamp: Date!
   tool_action: ToolAction!
+  actor: User!
   action_note: String
 }
 

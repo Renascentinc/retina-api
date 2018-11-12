@@ -66,6 +66,14 @@ module.exports = {
     brand: toolFieldResolvers.brand,
     purchased_from: toolFieldResolvers.purchased_from
 
+  },
+
+  ToolSnapshotMetadata: {
+
+    actor: async ({ actor_id }, _, ctx) => {
+      return userQueryResolvers.getUser(undefined, { user_id: actor_id }, ctx)
+    }
+
   }
 
 }
@@ -117,7 +125,8 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   let toolSnapshotMetadata = {
     timestamp: toolSnapshot.timestamp,
     tool_action: toolSnapshot.tool_action,
-    action_note: toolSnapshot.action_note
+    action_note: toolSnapshot.action_note,
+    actor_id: toolSnapshot.actor_id
   }
 
   let toolHistoryEntry = {
