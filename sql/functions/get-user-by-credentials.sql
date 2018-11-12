@@ -12,7 +12,7 @@ AS $$
       SELECT * FROM public.user
 		    WHERE public.user.email = get_user_by_credentials.email
         AND public.user.password = crypt(get_user_by_credentials.password, public.user.password)
-        AND is_user_active(public.user.id);
+        AND public.user.status = 'ACTIVE'::user_status;
   END;
 $$
 LANGUAGE plpgsql;

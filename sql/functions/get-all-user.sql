@@ -9,7 +9,7 @@ AS $$
     RETURN QUERY
     	SELECT * FROM public.user
     	WHERE public.user.organization_id = get_all_user.organization_id
-        AND is_user_active(public.user.id)
+        AND public.user.status = 'ACTIVE'::user_status
       ORDER BY public.user.last_name ASC
       OFFSET page_number*page_size
       LIMIT page_size;

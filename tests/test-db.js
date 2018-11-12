@@ -999,9 +999,25 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('is_decomissioned_status()', () => {
+  describe('is_in_service_status()', () => {
 
-    it.skip('indicates whether or not a tool status is a decomissioned type status', async () => {
+    it.skip('indicates whether or not a tool status is an in-service type status', async () => {
+
+    });
+
+  });
+
+  describe('is_user_active()', () => {
+
+    it.skip('indicates whether or not a user is active, given their id', async () => {
+
+    });
+
+  });
+
+  describe('array_contains_null()', () => {
+
+    it.skip('indicates whether or not an array contains at least one null value', async () => {
 
     });
 

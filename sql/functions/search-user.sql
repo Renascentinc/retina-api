@@ -21,7 +21,7 @@ AS $$
   	CREATE TEMP TABLE summed_scores ON COMMIT DROP AS
       SELECT id, 0.0 AS score FROM public.user
         WHERE public.user.organization_id = search_user.organization_id
-          AND is_user_active(public.user.id);
+          AND public.user.status = 'ACTIVE'::user_status;
 
     FOREACH lexeme IN ARRAY lexemes LOOP
     	WITH scores as (
