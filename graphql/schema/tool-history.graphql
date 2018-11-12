@@ -15,12 +15,17 @@ type PreviousToolSnapshotDiff {
   year:           Int
 }
 
+type ToolSnapshotMetadata {
+  timestamp: Date!
+  tool_action: ToolAction!
+  action_note: String
+}
+
 type ToolHistoryEntry {
   id: ID!
   tool_snapshot: Tool!
-  timestamp: Date!
+  tool_snapshot_metadata: ToolSnapshotMetadata!
   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
-  tool_action: ToolAction!
 }
 
 input ToolHistoryFilter {
