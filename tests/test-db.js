@@ -117,17 +117,21 @@ describe('Database creation and usage', async () => {
       let randomTool = dataUtil.getRandFromArray(tools);
       let randActorId = dataUtil.getRandFromArray(users).id;
 
-      randomTool['status'] = 'LOST_OR_STOLEN';
+      randomTool['status'] = 'IN_USE';
 
       let toolSnapshot = await dbFuncs.create_tool_snapshot(
       {
         ...randomTool,
-        tool_action: dbFuncs.tool_action.DECOMISSION.name,
+        tool_action: dbFuncs.tool_action.CREATE.name,
         actor_id: randActorId,
-        decomission_reason: "The tool was stolen by Billy the Kid"
+        action_note: "This is the coolest tool ever!"
       });
 
       assert.equal(toolSnapshot.length, 1);
+    });
+
+    it.skip('fails to create a tool snapshot when the tool is being decomissioned, but there is no action note', async () => {
+
     });
 
   });

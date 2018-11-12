@@ -23,10 +23,9 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   timestamp              timestamp   NOT NULL DEFAULT now(),
   tool_action            tool_action NOT NULL,
   actor_id               id_t        NOT NULL,
-  decomission_reason     text,
+  action_note            text,
   CHECK (
-    (decomission_reason IS NULL AND NOT is_decomissioned_status(status)) OR
-    (decomission_reason IS NOT NULL AND is_decomissioned_status(status))
+    (CASE WHEN is_decomissioned_status(status) THEN action_note IS NOT NULL END)
   )
 );
 
