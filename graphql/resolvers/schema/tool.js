@@ -98,7 +98,7 @@ module.exports = {
         ...decomissionedTool[0],
         tool_action: db.tool_action.DECOMISSION.name,
         actor_id: session.user_id,
-        decomission_reason
+        action_note: decomission_reason
       });
 
       return decomissionedTool[0];
