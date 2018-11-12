@@ -11,7 +11,8 @@ AS $$
     RETURN QUERY
       SELECT * FROM public.user
 		    WHERE public.user.email = get_user_by_email_and_organization.email
-        AND public.user.organization_id = get_user_by_email_and_organization.organization_id;
+        AND public.user.organization_id = get_user_by_email_and_organization.organization_id
+        AND is_user_active(public.user.id);
   END;
 $$
 LANGUAGE plpgsql;

@@ -11,7 +11,8 @@ AS $$
     RETURN QUERY
       SELECT * FROM public.user
 		    WHERE public.user.email = get_user_by_credentials.email
-        AND public.user.password = crypt(get_user_by_credentials.password, public.user.password);
+        AND public.user.password = crypt(get_user_by_credentials.password, public.user.password)
+        AND is_user_active(public.user.id);
   END;
 $$
 LANGUAGE plpgsql;

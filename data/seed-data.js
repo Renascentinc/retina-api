@@ -170,7 +170,7 @@ for (let single_user_info of user_info) {
     phone_number: dataUtil.getRandPhoneNumber(),
     password: 'Test1234!',
     role: single_user_info.role,
-    status: dataUtil.getRandFromArray(user_statuses),
+    status: 'ACTIVE',
     organization_id: single_user_info.organization_id
   });
 }

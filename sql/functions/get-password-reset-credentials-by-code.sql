@@ -7,7 +7,8 @@ AS $$
   BEGIN
     RETURN QUERY
       SELECT * FROM public.password_reset_credentials
-        WHERE code = password_reset_code;
+        WHERE code = password_reset_code
+        AND is_user_active(public.password_reset_credentials.user_id);
   END;
 $$
 LANGUAGE plpgsql;
