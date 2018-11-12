@@ -25,12 +25,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   actor_id               id_t        NOT NULL,
   action_note            text,
   CHECK (
-<<<<<<< HEAD
-    (decomission_reason IS NULL AND is_in_service_status(status)) OR
-    (decomission_reason IS NOT NULL AND NOT is_in_service_status(status))
-=======
     (CASE WHEN is_decomissioned_status(status) THEN action_note IS NOT NULL END)
->>>>>>> develop
   )
 );
 
