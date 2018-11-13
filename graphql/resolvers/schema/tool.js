@@ -105,9 +105,9 @@ module.exports = {
     },
 
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
-      let toOwnerIsActive = (await db.is_user_active({ user_id: transferArgs.to_owner_id }))[0].is_user_inactive;
+      let toOwnerIsActive = (await db.is_user_active({ user_id: transferArgs.to_owner_id }))[0].is_user_active;
 
-      if (!toOwnerIsActive) {
+      if (toOwnerIsActive != null && !toOwnerIsActive) {
           return [];
       }
 
