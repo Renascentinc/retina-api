@@ -14,6 +14,8 @@ let appConfig = {
   'db.viewDir': `${rootDir}/sql/views`,
   'db.refreshSchema': false,
   'db.seed': false,
+  'db.seed.tool.number': 50,
+  'db.seed.user.number': 5,
 
   'server.graphql.schemaDir': `${rootDir}/graphql/schema`,
   'server.graphql.typeDir': `${rootDir}/graphql/types`,
@@ -51,6 +53,8 @@ if (appConfig['environment'] == 'test') {
 if (appConfig['environment'] == 'develop') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
+  appConfig['db.seed.tool.number'] = 400;
+  appConfig['db.seed.user.number'] = 30;
   appConfig['ui.url'] = 'http://retina-develop-us-east-2.s3-website.us-east-2.amazonaws.com';
 }
 
