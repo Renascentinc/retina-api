@@ -22,6 +22,7 @@ AS $$
         status       = update_user.status
     	WHERE public.user.id = update_user.id
        AND public.user.organization_id = update_user.organization_id
+       AND public.user.status = 'ACTIVE'::user_status
     RETURNING *;
   END;
 $$

@@ -19,15 +19,15 @@ END IF;
 
 END $$;
 
-CREATE FUNCTION public.is_decomissioned_status(
+CREATE FUNCTION public.is_in_service_status(
 	tool_status tool_status
 )
  RETURNS BOOL
 AS $$
   BEGIN
     RETURN
-      is_decomissioned_status.tool_status = 'BEYOND_REPAIR'::tool_status OR
-      is_decomissioned_status.tool_status = 'LOST_OR_STOLEN'::tool_status;
+      is_in_service_status.tool_status != 'BEYOND_REPAIR'::tool_status AND
+      is_in_service_status.tool_status != 'LOST_OR_STOLEN'::tool_status;
   END;
 $$
 LANGUAGE plpgsql;

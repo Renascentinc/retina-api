@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION public.update_tool (
 	serial_number			str_t,
 	organization_id		id_t,
   owner_id  				id_t,
-	date_purchased		date       = NULL,
+	date_purchased		timestamp  = NULL,
 	purchased_from_id	id_t       = NULL,
 	price           	integer    = NULL,
 	photo							long_str_t = NULL,
@@ -32,6 +32,7 @@ AS $$
         owner_id          = update_tool.owner_id
       WHERE public.tool.id = update_tool.id
         AND public.tool.organization_id = update_tool.organization_id
+        AND is_in_service_status(tool.status)
     RETURNING public.tool.id INTO updated_tool_id;
 
     RETURN QUERY SELECT * FROM public.tool WHERE public.tool.id = updated_tool_id;

@@ -32,6 +32,12 @@ let tool_statuses = [
   'LOST_OR_STOLEN'
 ]
 
+let in_service_tool_statuses = [
+  'AVAILABLE',
+  'IN_USE',
+  'MAINTENANCE'
+]
+
 let user_statuses = [
   'ACTIVE',
   'INACTIVE'
@@ -103,17 +109,34 @@ let user_info = [
 let data = {};
 let metaData = {};
 
-data.organization = [
+orgConfigs = [
   {
-    name: 'Renascent Inc'
+    id: 1,
+    name: 'Renascent Inc',
+    numTool: appConfig['db.seed.tool.number'],
+    numUser: appConfig['db.seed.user.number']
   },
   {
-    name: 'Caterpillar'
+    id: 2,
+    name: 'Caterpillar',
+    numTool: 50,
+    numUser: 5
   },
   {
-    name: 'DeWalt'
+    id: 3,
+    name: 'DeWalt',
+    numTool: 50,
+    numUser: 5
   }
-];
+]
+
+data.organization = [ ];
+
+for (let orgConfig of orgConfigs) {
+  data.organization.push({
+    name: orgConfig.name
+  });
+}
 
 data.configurable_item = [ ];
 
@@ -162,17 +185,26 @@ data.location = [
 ];
 
 data.user = []
-for (let single_user_info of user_info) {
-  data.user.push({
-    first_name: single_user_info.first_name,
-    last_name: single_user_info.last_name,
-    email: `${single_user_info.first_name.toLowerCase()}@renascentinc.com`,
-    phone_number: dataUtil.getRandPhoneNumber(),
-    password: 'Test1234!',
-    role: single_user_info.role,
-    status: dataUtil.getRandFromArray(user_statuses),
-    organization_id: single_user_info.organization_id
-  });
+
+for (let orgConfig of orgConfigs) {
+  let orgId = orgConfig.id;
+  let orgBaseUserInfo = dataUtil.getFromObjectArrayWhere(user_info, 'organization_id', orgId).objects;
+
+  for (var i = 0; i < orgConfig.numUser; i++) {
+    let user = orgBaseUserInfo[i % orgBaseUserInfo.length];
+    let userNumber = Math.floor(i / orgBaseUserInfo.length);
+    let userFirstName = `${user.first_name}${userNumber || ''}`
+    data.user.push({
+      first_name: userFirstName,
+      last_name: user.last_name,
+      email: `${userFirstName.toLowerCase()}@renascentinc.com`,
+      phone_number: dataUtil.getRandPhoneNumber(),
+      password: 'Test1234!',
+      role: user.role,
+      status: 'ACTIVE',
+      organization_id: user.organization_id
+    });
+  }
 }
 
 metaData.tool_owner = [
@@ -181,25 +213,26 @@ metaData.tool_owner = [
 ];
 
 data.tool = []
-let numTools = 50;
 
-for (var i = 0; i < numTools; i++) {
-  let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-  let { objects: configurableItems, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', randOrgId);
-  data.tool.push({
-    type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'TYPE') - 1] + 1,
-    brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'BRAND') - 1] + 1,
-    purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,
-    date_purchased: dataUtil.createRandomDate(),
-    model_number: dataUtil.createRandomId(),
-    status: dataUtil.getRandFromArray(tool_statuses),
-    serial_number: dataUtil.createRandomId(),
-    organization_id: randOrgId,
-    owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', randOrgId),
-    price: null,
-    photo: null,
-    year: null,
-  })
+for (let orgConfig of orgConfigs) {
+  let orgId = orgConfig.id;
+  for (var i = 0; i < orgConfig.numTool; i++) {
+    let { objects: configurableItems, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.configurable_item, 'organization_id', orgId);
+    data.tool.push({
+      type_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'TYPE') - 1] + 1,
+      brand_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'BRAND') - 1] + 1,
+      purchased_from_id: originalIndecies[dataUtil.getRandIdFromObjectArrayWhere(configurableItems, 'type', 'PURCHASED_FROM') - 1] + 1,
+      date_purchased: dataUtil.createRandomDate(),
+      model_number: dataUtil.createRandomId(),
+      status: dataUtil.getRandFromArray(in_service_tool_statuses),
+      serial_number: dataUtil.createRandomId(),
+      organization_id: orgId,
+      owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', orgId),
+      price: null,
+      photo: null,
+      year: null,
+    })
+  }
 }
 
 if (appConfig['environment'] == 'test') {

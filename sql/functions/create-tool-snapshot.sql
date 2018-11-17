@@ -10,7 +10,7 @@ CREATE FUNCTION public.create_tool_snapshot (
   tool_action           tool_action,
   owner_type            tool_owner_type,
   actor_id              id_t,
-	date_purchased		    date          = NULL,
+	date_purchased		    timestamp     = NULL,
 	purchased_from_id	    id_t					= NULL,
 	price           	    integer       = NULL,
 	photo							    long_str_t		= NULL,

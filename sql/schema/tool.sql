@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	serial_number 		str_t			 			 NOT NULL,
   owner_id          id_t             NOT NULL,
   owner_type        tool_owner_type  NOT NULL,
-	date_purchased 		date,
+	date_purchased 		timestamp,
 	purchased_from_id id_t,
 	price 						integer,
 	photo 						long_str_t,

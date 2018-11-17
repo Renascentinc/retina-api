@@ -8,6 +8,7 @@ AS $$
     RETURN QUERY
     	SELECT * FROM public.tool
     	WHERE public.tool.organization_id = get_all_tool_by_configurable_item_id.organization_id
+        AND is_in_service_status(tool.status)
         AND get_all_tool_by_configurable_item_id.configurable_item_id
           = ANY(ARRAY[
             brand_id::integer,

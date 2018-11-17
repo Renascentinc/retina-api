@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	serial_number 		str_t			 			 NOT NULL,
   owner_id          id_t             NOT NULL,
   owner_type        tool_owner_type  NOT NULL,
-	date_purchased 		date,
+	date_purchased 		timestamp,
 	purchased_from_id id_t,
 	price 						integer,
 	photo 						long_str_t,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   actor_id               id_t        NOT NULL,
   action_note            text,
   CHECK (
-    (CASE WHEN is_decomissioned_status(status) THEN action_note IS NOT NULL END)
+    (CASE WHEN NOT is_in_service_status(status) THEN action_note IS NOT NULL END)
   )
 );
 
