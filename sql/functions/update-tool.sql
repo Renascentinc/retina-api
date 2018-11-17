@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION public.update_tool (
 	serial_number			str_t,
 	organization_id		id_t,
   owner_id  				id_t,
-	date_purchased		date       = NULL,
+	date_purchased		timestamp  = NULL,
 	purchased_from_id	id_t       = NULL,
 	price           	integer    = NULL,
 	photo							long_str_t = NULL,
