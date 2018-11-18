@@ -2,6 +2,7 @@ node_modules/
 logs/
 **/.DS_Store
 package-lock.json
+rendered_templates/*
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
