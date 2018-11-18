@@ -2,6 +2,7 @@ const { UserInputError, AuthenticationError } = require('apollo-server');
 const { PasswordResetMailer } = require('mailer');
 const { InsufficientInformationError } = require(`error`);
 const appConfig = require('app-config');
+const { renderTemplate }  = require(`utils/template-utils`);
 
 module.exports = {
   Query: {
@@ -85,16 +86,16 @@ module.exports = {
 
       passwordResetCredentials = passwordResetCredentials[0];
 
+      let templatePath = appConfig['email.resetPassword.templatePath'];
+      let templateArgs = {
+        appUrl: appConfig['ui.url'],
+        passwordResetCredentialsCode: passwordResetCredentials.code
+      }
+
       let sentEmailResult = await new PasswordResetMailer().sendEmail({
         to: user.email,
         subject: 'Response to Password Reset Request',
-        html: `
-          <a href='${appConfig['ui.url']}/#/password-reset?code=${passwordResetCredentials.code}'>
-            Click here to reset your password
-          </a>
-
-          Note this link expires in 2 hours
-        `
+        html: renderTemplate(templatePath, templateArgs)
       });
 
       return sentEmailResult ? true : false;

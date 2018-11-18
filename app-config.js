@@ -24,6 +24,7 @@ let appConfig = {
 
   'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
   'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
+  'email.resetPassword.templatePath': 'templates/password-reset-email.mustache',
 
   'ui.url': 'http://localhost:4200'
 }
