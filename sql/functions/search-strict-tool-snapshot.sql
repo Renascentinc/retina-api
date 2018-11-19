@@ -48,7 +48,7 @@ AS $$
     END IF;
 
     query = query ||
-      ' ORDER BY tool_snapshot.tool_id, tool_snapshot.timestamp' ||
+      ' ORDER BY tool_snapshot.timestamp' ||
       ' OFFSET $6' ||
       ' LIMIT $7';
 
