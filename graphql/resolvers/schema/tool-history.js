@@ -12,7 +12,7 @@ module.exports = {
      * to search_strict_tool_snapshot. For each snapshot returned, create a tool history
      * entry based off of the current snapshot and the previous snapshot.
      */
-    searchToolHistory: async (_, { toolHistoryFilter = {}, pagingParameters = {} }, { db, session }) => {
+    searchToolHistoryEntry: async (_, { toolHistoryFilter = {}, pagingParameters = {} }, { db, session }) => {
       let timeSpan = toolHistoryFilter.time_span;
       delete toolHistoryFilter.time_span;
 
@@ -68,7 +68,7 @@ module.exports = {
 
   },
 
-  ToolSnapshotMetadata: {
+  ToolHistoryEntryMetadata: {
 
     actor: async ({ actor_id }, _, ctx) => {
       return userQueryResolvers.getUser(undefined, { user_id: actor_id }, ctx)
@@ -122,7 +122,7 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   previousToolSnapshotDiff['id'] = currentToolSnapshot.tool_id;
   previousToolSnapshotDiff['owner_type'] = previousToolSnapshot.owner_type;
 
-  let toolSnapshotMetadata = {
+  let toolHistoryEntryMetadata = {
     timestamp: toolSnapshot.timestamp,
     tool_action: toolSnapshot.tool_action,
     action_note: toolSnapshot.action_note,
@@ -132,8 +132,8 @@ async function createToolHistoryEntry(previousToolSnapshot, currentToolSnapshot,
   let toolHistoryEntry = {
     id: currentToolSnapshot.id,
     tool_snapshot: toolSnapshot,
-    tool_snapshot_metadata: toolSnapshotMetadata,
     previous_tool_snapshot_diff: previousToolSnapshotDiff,
+    metadata: toolHistoryEntryMetadata,
   }
 
   return toolHistoryEntry;
