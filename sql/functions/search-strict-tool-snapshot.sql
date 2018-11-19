@@ -28,6 +28,9 @@ AS $$
       query = query || ' AND tool_id IN (SELECT id FROM unnest($1) as id)';
     END IF;
 
+    -- TODO: Move the timestamp check earlier on in the query (maybe here?) to
+    --       narrow the search more quickly
+
     IF owner_ids IS NOT NULL AND array_length(owner_ids, 1) > 0 THEN
       query = query || ' AND owner_id IN (SELECT id FROM unnest($2) as id)';
     END IF;
@@ -45,7 +48,7 @@ AS $$
     END IF;
 
     query = query ||
-      ' ORDER BY tool_snapshot.tool_id, tool_snapshot.timestamp' ||
+      ' ORDER BY tool_snapshot.timestamp' ||
       ' OFFSET $6' ||
       ' LIMIT $7';
 

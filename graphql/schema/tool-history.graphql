@@ -15,12 +15,18 @@ type PreviousToolSnapshotDiff {
   year:           Int
 }
 
+type ToolHistoryEntryMetadata {
+  timestamp: Date!
+  tool_action: ToolAction!
+  actor: User!
+  action_note: String
+}
+
 type ToolHistoryEntry {
   id: ID!
   tool_snapshot: Tool!
-  timestamp: Date!
   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
-  tool_action: ToolAction!
+  metadata: ToolHistoryEntryMetadata!
 }
 
 input ToolHistoryFilter {
@@ -31,5 +37,5 @@ input ToolHistoryFilter {
 }
 
 type Query {
-  searchToolHistory(toolHistoryFilter: ToolHistoryFilter, pagingParameters: PagingParameters): [ToolHistoryEntry!]
+  searchToolHistoryEntry(toolHistoryFilter: ToolHistoryFilter, pagingParameters: PagingParameters): [ToolHistoryEntry!]
 }
