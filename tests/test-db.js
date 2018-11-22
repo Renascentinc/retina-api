@@ -678,6 +678,22 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('search_strict_fuzzy_tool_snapshot()', () => {
+
+    it('successfully searches for tools when both lexemes and filters are passed', async () => {
+      let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
+      let toolSnapshots = await dbFuncs.search_strict_fuzzy_tool_snapshot({
+        organization_id: randomToolSnapshot.organization_id,
+        lexemes: [randomToolSnapshot.serial_number],
+        brand_ids: [randomToolSnapshot.brand_id],
+        tool_actions: [randomToolSnapshot.tool_action]
+      });
+
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
   describe('update_organization()', () => {
 
     it('successfully updates an organization', async () => {
@@ -1048,6 +1064,6 @@ describe('Database creation and usage', async () => {
 
   after(async () => {
     await dbClient.disconnect();
-    await dropDbIfExists(appConfig['db.database']);
+    // await dropDbIfExists(appConfig['db.database']);
   })
 });
