@@ -666,14 +666,14 @@ describe('Database creation and usage', async () => {
 
   describe('search_fuzzy_tool_snapshot()', () => {
 
-    it.skip('successfully searches for tool snapshots when lexemes are passed', async () => {
+    it('successfully searches for tool snapshots when lexemes are passed', async () => {
       let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
-      let tools = await dbFuncs.search_fuzzy_tool_snapshot({
+      let toolSnapshots = await dbFuncs.search_fuzzy_tool_snapshot({
         lexemes: [randomToolSnapshot.serial_number, randomToolSnapshot.tool_action],
         organization_id: randomToolSnapshot.organization_id
       });
 
-      assert.ok(tools.length > 0);
+      assert.ok(toolSnapshots.length > 0);
     });
 
   });

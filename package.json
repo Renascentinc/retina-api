@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_PATH=. RETINA_API_ROOT=`pwd` node main",
-    "test": "NODE_PATH=. RETINA_API_ROOT=`pwd` ENVIRONMENT=test mocha --recursive tests --bail"
+    "test": "NODE_PATH=. RETINA_API_ROOT=`pwd` ENVIRONMENT=test mocha --recursive tests --bail --timeout 15000"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
