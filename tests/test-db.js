@@ -807,14 +807,39 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('update_password()', () => {
+  describe('update_user_password()', () => {
+    it(`successfully updates a user's password`, async () => {
+      let newPassword = "New Password";
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
+
+      let updatedUser = await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: newPassword
+      });
+
+      assert.equal(updatedUser.length, 1);
+
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
+        email: randomUser.email,
+        password: newPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
+    });
+  });
+
+  describe('validated_update_user_password()', () => {
 
     it(`successfully updates a user's password`, async () => {
       let newPassword = "New Password";
 
       let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
       let randomUser = metaData.tool_owner[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
+      let updatedUser = await dbFuncs.validated_update_user_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
         current_password: randomUser.password,
@@ -838,7 +863,7 @@ describe('Database creation and usage', async () => {
 
       let randomUserId = dataUtil.getRandIdFromArray(data.user);
       let randomUser = data.user[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
+      let updatedUser = await dbFuncs.validated_update_user_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
         current_password: "Wrong Password",
