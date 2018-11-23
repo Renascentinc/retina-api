@@ -3,8 +3,7 @@
  * When a new user or location is created, this function is called in order
  * to create a new entry in the tool_owner_id table and the user_id table
  */
-CREATE FUNCTION create_tool_owner_id ()
-  RETURNS TRIGGER
+CREATE FUNCTION create_tool_owner_id () RETURNS TRIGGER
 AS $$
   BEGIN
     INSERT INTO public.tool_owner_id (

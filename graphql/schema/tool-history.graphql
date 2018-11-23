@@ -1,21 +1,9 @@
 
 
 type ToolSnapshot {
-  id:             ID!
-  tool:           Tool!
-  # tool_id:        ID!
-  # type:           ConfigurableItem!
-	# brand:          ConfigurableItem!
-	# model_number:   String!
-  # serial_number:  String!
-	# status:         ToolStatus!
-  # owner:          ToolOwner!
-  # purchased_from: ConfigurableItem
-  # date_purchased: Date
-  # photo:          String
-  # price:          Int
-  # year:           Int
-  metadata:       ToolSnapshotMetadata!
+  id:                     ID!
+  tool:                   Tool!
+  metadata:               ToolSnapshotMetadata!
   previous_tool_snapshot: ToolSnapshot
 }
 
@@ -25,13 +13,6 @@ type ToolSnapshotMetadata {
   actor: User!
   action_note: String
 }
-#
-# type ToolHistoryEntry {
-#   id: ID!
-#   tool_snapshot: Tool!
-#   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
-#   metadata: ToolHistoryEntryMetadata!
-# }
 
 input ToolSnapshotFilter {
   most_recent_only: Boolean
@@ -45,5 +26,6 @@ input ToolSnapshotFilter {
 }
 
 type Query {
+  getToolSnapshot(tool_snapshot_id: ID!): ToolSnapshot
   searchToolSnapshot(query: String, toolSnapshotFilter: ToolSnapshotFilter, pagingParameters: PagingParameters): [ToolSnapshot!]
 }

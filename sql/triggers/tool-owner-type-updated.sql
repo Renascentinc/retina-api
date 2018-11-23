@@ -1,6 +1,5 @@
 
-CREATE FUNCTION update_tool_owner_type ()
-  RETURNS TRIGGER
+CREATE FUNCTION update_tool_owner_type () RETURNS TRIGGER
 AS $$
   BEGIN
     UPDATE public.tool

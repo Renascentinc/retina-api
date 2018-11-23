@@ -1,9 +1,16 @@
 
 
-CREATE FUNCTION upsert_latest_tool_snapshot ()
-  RETURNS TRIGGER
+CREATE FUNCTION upsert_latest_tool_snapshot () RETURNS TRIGGER
 AS $$
   BEGIN
+
+    UPDATE tool_snapshot
+      SET previous_tool_snapshot_id =
+        (SELECT tool_snapshot_id
+          FROM latest_tool_snapshot
+            WHERE tool_id = NEW.tool_id)
+      WHERE id = NEW.id;
+
     INSERT INTO public.latest_tool_snapshot (
       tool_id,
       tool_snapshot_id
