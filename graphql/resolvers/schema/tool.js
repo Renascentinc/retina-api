@@ -21,11 +21,11 @@ module.exports = {
     },
 
     getMultipleTool: async (_, { tool_ids }, { db, session }) => {
-      let tool = await db.get_tool({
-        tool_id,
+      let tools = await db.get_multiple_tool({
+        tool_ids,
         organization_id: session.organization_id
       });
-      return tool[0];
+      return tools;
     },
 
     /**

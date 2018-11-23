@@ -52,7 +52,7 @@ input ToolFilter {
 
 type Query {
   getTool(tool_id: ID!): Tool
-  getMultipleTool(tool_ids: [ID!]): [Tool!]
+  getMultipleTool(tool_ids: [ID!]!): [Tool!]
   getAllTool(pagingParameters: PagingParameters): [Tool!]!
   searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool!]
 }
