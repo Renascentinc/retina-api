@@ -292,6 +292,20 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_multiple_tool()', () => {
+
+    it('successfully gets multiple tools', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let { originalIndecies: toolIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
+      let retrievedTools = await dbFuncs.get_multiple_tool({
+        tool_ids: toolIndecies.map(i => i + 1),
+        organization_id: randOrgId
+      });
+      assert.equal(retrievedTools.length, toolIndecies.length);
+    });
+
+  });
+
   describe('get_all_user()', () => {
 
     it('successfully gets all users for an organization', async () => {

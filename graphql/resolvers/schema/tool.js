@@ -20,6 +20,14 @@ module.exports = {
       return tool[0];
     },
 
+    getMultipleTool: async (_, { tool_ids }, { db, session }) => {
+      let tools = await db.get_multiple_tool({
+        tool_ids,
+        organization_id: session.organization_id
+      });
+      return tools;
+    },
+
     /**
      * Split query into lexemes (stripping all unneccessary whitespace) and send them
      * to the search_tool db function
