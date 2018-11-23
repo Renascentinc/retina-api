@@ -16,10 +16,13 @@ module.exports = {
     },
 
     /**
-     * Pull out and delete the time_span parameter of toolSnapshotFilter. Then
-     * pass in the remaining toolSnapshotFilter (along with time span and other params)
-     * to search_strict_tool_snapshot. For each snapshot returned, create a tool history
-     * entry based off of the current snapshot and the previous snapshot.
+     * Split query into lexemes (stripping all unneccessary whitespace) and send them
+     * to the search_xxxx_tool_snapshot db functions
+     *
+     * 1) If there are no lexems, just use filters
+     * 2) If there are lexemes, but no filters, return fuzzy search
+     * 3) If there are both lexemes and filters, use both
+     * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
     searchToolSnapshot: async (_, { query = '', toolSnapshotFilter, pagingParameters = {} }, { db, session }) => {
 
@@ -36,7 +39,7 @@ module.exports = {
         return await db.search_strict_tool_snapshot({ ...baseFunctionParams, ...toolSnapshotFilter });
       }
 
-      if (!objectHasTruthyValues(toolFilter)) {
+      if (!objectHasTruthyValues(toolSnapshotFilter)) {
         return await db.search_fuzzy_tool_snapshot({ ...baseFunctionParams, lexemes });
       }
 
@@ -73,9 +76,12 @@ module.exports = {
 
 }
 
+/*
+ * Pull the children of the time span object up be first class citizens
+ */
 function normalizeToolSnapshotFilter(toolSnapshotFilter) {
   if (toolSnapshotFilter) {
-    let normalizedToolHistoryFilter = {
+    let normalizedToolSnapshotFilter = {
       ...toolSnapshotFilter,
       ...toolSnapshotFilter.time_span
     };

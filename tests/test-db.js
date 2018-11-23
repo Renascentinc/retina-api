@@ -473,6 +473,19 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_tool_snapshot()', () => {
+
+    it('successfully gets a tool snapshot', async () => {
+      let toolSnapshotId = dataUtil.getRandIdFromArray(data.tool_snapshot);
+      let toolSnapshot = data.tool_snapshot[toolSnapshotId - 1];
+      let retrievedToolSnapshot = await dbFuncs.get_tool_snapshot({
+        tool_snapshot_id: toolSnapshotId,
+        organization_id: toolSnapshot.organization_id
+      });
+      assert.equal(retrievedToolSnapshot.length, 1);
+    });
+
+  });
 
   describe('search_fuzzy_tool()', () => {
 

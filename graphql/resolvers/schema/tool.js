@@ -25,8 +25,8 @@ module.exports = {
      * to the search_tool db function
      *
      * 1) If there are no lexems, just use filters
-     * 2) If there are lexemes, but no filters, return
-     * 3) If there are bot
+     * 2) If there are lexemes, but no filters, return fuzzy search
+     * 3) If there are both lexemes and filters, use both
      * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
     searchTool: async (_, { query = '', toolFilter, pagingParameters = {} }, { db, session }) => {

@@ -4,8 +4,9 @@
  */
 CREATE OR REPLACE FUNCTION public.search_strict_fuzzy_tool_snapshot (
   organization_id id_t,
-	lexemes		      text[],
-  tool_ids        integer[]     = NULL,
+	lexemes		           text[],
+  only_latest_snapshot boolean       = false,
+  tool_ids             integer[]     = NULL,
 
   -------- Tool Search Params --------
   owner_ids       integer[]     = NULL,
@@ -37,7 +38,8 @@ AS $$
           start_time := start_time,
           end_time := end_time,
           page_size := page_size,
-          page_number := page_number
+          page_number := page_number,
+          only_latest_snapshot := only_latest_snapshot
         );
     END IF;
 
@@ -55,7 +57,8 @@ AS $$
           start_time := start_time,
           end_time := end_time,
           page_size := page_size,
-          page_number := page_number
+          page_number := page_number,
+          only_latest_snapshot := only_latest_snapshot
         )
       ),
       page_size := page_size,

@@ -15,14 +15,14 @@ type ToolSnapshotMetadata {
 }
 
 input ToolSnapshotFilter {
-  most_recent_only: Boolean
-  time_span:        TimeSpan
-  tool_ids:         [ID!]
-  tool_actions:     [ToolAction!]
-  brand_ids:        [ID!]
-  type_ids:         [ID!]
-  owner_ids:        [ID!]
-  tool_statuses:    [ToolStatus!]
+  only_latest_snapshot: Boolean
+  time_span:            TimeSpan
+  tool_ids:             [ID!]
+  tool_actions:         [ToolAction!]
+  brand_ids:            [ID!]
+  type_ids:             [ID!]
+  owner_ids:            [ID!]
+  tool_statuses:        [ToolStatus!]
 }
 
 type Query {

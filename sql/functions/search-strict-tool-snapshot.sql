@@ -70,7 +70,7 @@ AS $$
     END IF;
 
     query = query ||
-      ' ORDER BY tool_snapshot.timestamp' ||
+      ' ORDER BY tool_snapshot.timestamp DESC' ||
       ' OFFSET $9' ||
       ' LIMIT $10';
 
