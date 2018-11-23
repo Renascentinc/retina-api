@@ -103,31 +103,12 @@ describe('Database creation and usage', async () => {
 
   describe('create_tool_snapshot()', () => {
 
-    it('successfully creates a tool snapshot', async () => {
-      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-
-      let tools = await dbFuncs.get_all_tool({
-        organization_id: randOrgId
-      })
-
-      let users = await dbFuncs.get_all_user({
-        organization_id: randOrgId
-      });
-
-      let randomTool = dataUtil.getRandFromArray(tools);
-      let randActorId = dataUtil.getRandFromArray(users).id;
-
-      randomTool['status'] = 'IN_USE';
-
-      let toolSnapshot = await dbFuncs.create_tool_snapshot(
-      {
-        ...randomTool,
-        tool_action: dbFuncs.tool_action.CREATE.name,
-        actor_id: randActorId,
-        action_note: "This is the coolest tool ever!"
-      });
-
-      assert.equal(toolSnapshot.length, 1);
+    it('successfully creates several tool snapshots', async () => {
+      let toolSnapshots = [];
+      for (let tool_snapshot of data.tool_snapshot) {
+        toolSnapshots.push(await dbFuncs.create_tool_snapshot(tool_snapshot));
+      }
+      assert.equal(toolSnapshots.length, data.tool_snapshot.length);
     });
 
     it.skip('fails to create a tool snapshot when the tool is being decomissioned, but there is no action note', async () => {
@@ -492,6 +473,19 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_tool_snapshot()', () => {
+
+    it('successfully gets a tool snapshot', async () => {
+      let toolSnapshotId = dataUtil.getRandIdFromArray(data.tool_snapshot);
+      let toolSnapshot = data.tool_snapshot[toolSnapshotId - 1];
+      let retrievedToolSnapshot = await dbFuncs.get_tool_snapshot({
+        tool_snapshot_id: toolSnapshotId,
+        organization_id: toolSnapshot.organization_id
+      });
+      assert.equal(retrievedToolSnapshot.length, 1);
+    });
+
+  });
 
   describe('search_fuzzy_tool()', () => {
 
@@ -653,8 +647,62 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_tool_snapshot()', () => {
 
-    it.skip('successfully searches for tool snapshots', async () => {
+    it('successfully searches for tool snapshots when filters are passed', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let toolSnapshots = await dbFuncs.search_strict_tool_snapshot({
+        organization_id: randOrgId,
+        tool_statuses: ['AVAILABLE'],
+        end_time: new Date()
+      })
 
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_fuzzy_ids_tool_snapshot()', () => {
+
+    it('successfully searches for tool snapshots when lexemes are passed', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let { objects: toolSnapshotArray, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.tool_snapshot, 'organization_id', randOrgId);
+      let randomToolSnapshot = dataUtil.getRandFromArray(toolSnapshotArray);
+
+      let toolSnapshots = await dbFuncs.search_fuzzy_ids_tool_snapshot({
+        lexemes: [randomToolSnapshot.serial_number, randomToolSnapshot.tool_action],
+        tool_snapshot_ids: originalIndecies.map(index => index + 1)
+      });
+
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_fuzzy_tool_snapshot()', () => {
+
+    it('successfully searches for tool snapshots when lexemes are passed', async () => {
+      let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
+      let toolSnapshots = await dbFuncs.search_fuzzy_tool_snapshot({
+        lexemes: [randomToolSnapshot.serial_number, randomToolSnapshot.tool_action],
+        organization_id: randomToolSnapshot.organization_id
+      });
+
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_strict_fuzzy_tool_snapshot()', () => {
+
+    it('successfully searches for tools when both lexemes and filters are passed', async () => {
+      let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
+      let toolSnapshots = await dbFuncs.search_strict_fuzzy_tool_snapshot({
+        organization_id: randomToolSnapshot.organization_id,
+        lexemes: [randomToolSnapshot.serial_number],
+        brand_ids: [randomToolSnapshot.brand_id],
+        tool_actions: [randomToolSnapshot.tool_action]
+      });
+
+      assert.ok(toolSnapshots.length > 0);
     });
 
   });

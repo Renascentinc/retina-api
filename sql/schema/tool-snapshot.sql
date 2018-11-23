@@ -1,7 +1,8 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
-  id                SERIAL           PRIMARY KEY,
+  id                        SERIAL PRIMARY KEY,
+  previous_tool_snapshot_id id_t,
 
   ---------------- Tool Data ------------------
 	tool_id 					id_t             NOT NULL,
