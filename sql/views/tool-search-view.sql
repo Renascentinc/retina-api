@@ -4,7 +4,7 @@ BEGIN;
  * A view to simplify tool searching. It joins together all the fields that
  * a tool needs to be searched on. It also assures all fields will be of type text
  */
-CREATE OR REPLACE VIEW tool_search_item_view AS
+CREATE OR REPLACE VIEW tool_search_view AS
 	SELECT
   	COALESCE(public.user.first_name, '') AS user_first_name,
   	COALESCE(public.user.last_name, '') AS user_last_name,

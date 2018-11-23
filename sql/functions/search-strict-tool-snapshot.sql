@@ -9,28 +9,33 @@
  * I'm assuming SQL injection won't be a problem here because only integers and enums are being passed in.
  */
 CREATE OR REPLACE FUNCTION public.search_strict_tool_snapshot (
-  organization_id id_t,
-  tool_ids        integer[]     = NULL,
+  organization_id      id_t,
+  only_latest_snapshot boolean       = false,
+  tool_ids             integer[]     = NULL,
 
   -------- Tool Search Params --------
-  owner_ids       integer[]     = NULL,
-  brand_ids       integer[]     = NULL,
-  type_ids        integer[]     = NULL,
-  tool_statuses   tool_status[] = NULL,
+  owner_ids            integer[]     = NULL,
+  brand_ids            integer[]     = NULL,
+  type_ids             integer[]     = NULL,
+  tool_statuses        tool_status[] = NULL,
 
   -------- Metadata Search Params --------
-  tool_actions    tool_action[] = NULL,
-  start_time      timestamp     = NULL,
-  end_time        timestamp     = NULL,
+  tool_actions         tool_action[] = NULL,
+  start_time           timestamp     = NULL,
+  end_time             timestamp     = NULL,
 
-  page_size       integer       = NULL,
-  page_number     integer       = 0
+  page_size            integer       = NULL,
+  page_number          integer       = 0
 )
 RETURNS SETOF public.tool_snapshot
 AS $$
   DECLARE
     query text = 'SELECT * FROM public.tool_snapshot WHERE organization_id = ' || organization_id;
   BEGIN
+
+    IF only_latest_snapshot THEN
+      query = query || ' AND id IN (SELECT tool_snapshot_id FROM latest_tool_snapshot)';
+    END IF;
 
     IF tool_ids IS NOT NULL AND array_length(tool_ids, 1) > 0 THEN
       query = query || ' AND tool_id IN (SELECT id FROM unnest($1) as id)';

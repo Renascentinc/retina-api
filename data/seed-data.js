@@ -250,10 +250,12 @@ if (appConfig['environment'] == 'test') {
     })
   });
 
+}
+
+if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
   data.tool_snapshot = []
 
   let numToolSnapshot = 100;
-
   for (var i = 0; i < numToolSnapshot; i++) {
     let randToolId = dataUtil.getRandIdFromArray(data.tool);
     let randTool = data.tool[randToolId - 1];

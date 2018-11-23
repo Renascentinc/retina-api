@@ -1,41 +1,49 @@
 
 
-type PreviousToolSnapshotDiff {
+type ToolSnapshot {
   id:             ID!
-  type:           ConfigurableItem
-	brand:          ConfigurableItem
-	model_number:   String
-  serial_number:  String
-	status:         ToolStatus
-  owner:          ToolOwner
-  purchased_from: ConfigurableItem
-  date_purchased: Date
-  photo:          String
-  price:          Int
-  year:           Int
+  tool:           Tool!
+  # tool_id:        ID!
+  # type:           ConfigurableItem!
+	# brand:          ConfigurableItem!
+	# model_number:   String!
+  # serial_number:  String!
+	# status:         ToolStatus!
+  # owner:          ToolOwner!
+  # purchased_from: ConfigurableItem
+  # date_purchased: Date
+  # photo:          String
+  # price:          Int
+  # year:           Int
+  metadata:       ToolSnapshotMetadata!
+  previous_tool_snapshot: ToolSnapshot
 }
 
-type ToolHistoryEntryMetadata {
+type ToolSnapshotMetadata {
   timestamp: Date!
   tool_action: ToolAction!
   actor: User!
   action_note: String
 }
+#
+# type ToolHistoryEntry {
+#   id: ID!
+#   tool_snapshot: Tool!
+#   previous_tool_snapshot_diff: PreviousToolSnapshotDiff
+#   metadata: ToolHistoryEntryMetadata!
+# }
 
-type ToolHistoryEntry {
-  id: ID!
-  tool_snapshot: Tool!
-  previous_tool_snapshot_diff: PreviousToolSnapshotDiff
-  metadata: ToolHistoryEntryMetadata!
-}
-
-input ToolHistoryFilter {
-  tool_ids:     [ID!]
-  owner_ids:    [ID!]
-  tool_actions: [ToolAction!]
-  time_span:    TimeSpan
+input ToolSnapshotFilter {
+  most_recent_only: Boolean
+  time_span:        TimeSpan
+  tool_ids:         [ID!]
+  tool_actions:     [ToolAction!]
+  brand_ids:        [ID!]
+  type_ids:         [ID!]
+  owner_ids:        [ID!]
+  tool_statuses:    [ToolStatus!]
 }
 
 type Query {
-  searchToolHistoryEntry(toolHistoryFilter: ToolHistoryFilter, pagingParameters: PagingParameters): [ToolHistoryEntry!]
+  searchToolSnapshot(query: String, toolSnapshotFilter: ToolSnapshotFilter, pagingParameters: PagingParameters): [ToolSnapshot!]
 }
