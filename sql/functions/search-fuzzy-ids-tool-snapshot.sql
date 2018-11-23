@@ -1,5 +1,5 @@
 
-/* TODO: Fix this comment
+/*
  * 1) Create a table called summed_scores of all passed in tool snaphot ids, with scores of 0.
  * 2) For each search lexeme
  *    1) For each tool snapshot in summed_scores, find the score of the closest matching column from tool_snapshot_search_view to the lexeme
