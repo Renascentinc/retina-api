@@ -264,7 +264,7 @@ if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
     let randUserIndexInOrg = dataUtil.getRandIdFromObjectArrayWhere(users, 'organization_id', randTool.organization_id) - 1;
     let randUserIdInOrg = originalIndecies[randUserIndexInOrg] + 1;
     data.tool_snapshot.push({
-      id: randToolId,
+      id: dataUtil.normalizeToolId(randToolId),
       ...randTool,
       tool_action: dataUtil.getRandFromArray(tool_actions),
       actor_id: randUserIdInOrg,

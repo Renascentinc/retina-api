@@ -20,7 +20,12 @@ AS $$
     		name,
     		sanctioned,
     		organization_id
-    	) RETURNING *;
+    	) ON CONFLICT ON CONSTRAINT configurable_item_unique_type_name
+          DO UPDATE
+            SET
+              deleted = false
+            WHERE configurable_item.deleted = true
+      RETURNING *;
   END;
 $$
 LANGUAGE plpgsql;

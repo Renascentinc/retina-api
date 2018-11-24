@@ -30,4 +30,5 @@ AS $$
       is_in_service_status.tool_status != 'LOST_OR_STOLEN'::tool_status;
   END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+IMMUTABLE;

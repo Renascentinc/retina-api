@@ -81,6 +81,10 @@ class Util {
  getRandPassword() {
    return faker.internet.password();
  }
+
+ normalizeToolId(toolId) {
+   return parseInt(10000 + toolId - 1)
+ }
 }
 
 module.exports = new Util();

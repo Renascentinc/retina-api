@@ -284,7 +284,7 @@ describe('Database creation and usage', async () => {
       let toolId = dataUtil.getRandIdFromArray(data.tool);
       let tool = data.tool[toolId - 1];
       let retrievedTool = await dbFuncs.get_tool({
-        tool_id: toolId,
+        tool_id: dataUtil.normalizeToolId(toolId),
         organization_id: tool.organization_id
       });
       assert.equal(retrievedTool.length, 1);
@@ -298,7 +298,7 @@ describe('Database creation and usage', async () => {
       let randOrgId = dataUtil.getRandIdFromArray(data.organization);
       let { originalIndecies: toolIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
       let retrievedTools = await dbFuncs.get_multiple_tool({
-        tool_ids: toolIndecies.map(i => i + 1),
+        tool_ids: toolIndecies.map(i => dataUtil.normalizeToolId(i + 1)),
         organization_id: randOrgId
       });
       assert.equal(retrievedTools.length, toolIndecies.length);
@@ -557,7 +557,7 @@ describe('Database creation and usage', async () => {
       let randomToolId = dataUtil.getRandIdFromArray(data.tool);
       let randomTool = data.tool[randomToolId - 1];
       let randomToolFromDb = await dbFuncs.get_tool({
-        tool_id: randomToolId,
+        tool_id: dataUtil.normalizeToolId(randomToolId),
         organization_id: randomTool.organization_id
       });
 
@@ -615,7 +615,7 @@ describe('Database creation and usage', async () => {
       let { objects: toolArray, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
       let tools = await dbFuncs.search_fuzzy_ids_tool({
         lexemes: [dataUtil.getRandFromArray(toolArray).serial_number],
-        tool_ids: originalIndecies.map(index => index + 1)
+        tool_ids: originalIndecies.map(index => dataUtil.normalizeToolId(index + 1))
       });
 
       assert.ok(tools.length > 0);
@@ -636,7 +636,7 @@ describe('Database creation and usage', async () => {
       let toolIndecies = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).originalIndecies;
       let tools = await dbFuncs.search_fuzzy_ids_tool({
         lexemes: [],
-        tool_ids: toolIndecies.map(index => index + 1)
+        tool_ids: toolIndecies.map(index => dataUtil.normalizeToolId(index + 1))
       });
 
       assert.equal(tools.length, toolIndecies.length)
@@ -760,7 +760,7 @@ describe('Database creation and usage', async () => {
     it('successfully updates a tool for an organization', async () => {
       let toolId = dataUtil.getRandIdFromArray(data.tool);
       let tool = data.tool[toolId - 1];
-      tool['id'] = toolId;
+      tool['id'] = dataUtil.normalizeToolId(toolId);
       let updatedToolObject = {...tool,
         ...{
           model_number: dataUtil.createRandomId(),
@@ -843,6 +843,13 @@ describe('Database creation and usage', async () => {
 
       assert.equal(validUser.length, 1);
       assert.equal(validUser[0].id, randomUserId);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: randomUser.password
+      });
     });
   });
 
@@ -870,6 +877,13 @@ describe('Database creation and usage', async () => {
 
       assert.equal(validUser.length, 1);
       assert.equal(validUser[0].id, randomUserId);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: randomUser.password
+      });
     });
 
     it(`does not update a user's password if the wrong current password is given`, async () => {
@@ -920,6 +934,13 @@ describe('Database creation and usage', async () => {
       let authenticatedUser = await dbFuncs.get_user_by_credentials_and_organization(waja);
 
       assert.equal(authenticatedUser.length, 1);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: userId,
+        organization_id: user.organization_id,
+        new_password: user.password
+      });
     });
 
   });
