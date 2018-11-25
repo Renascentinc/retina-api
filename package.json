@@ -18,7 +18,7 @@
     "merge-graphql-schemas": "^1.5.3",
     "nodemailer": "^4.6.8",
     "pg": "^7.4.3",
-    "pg-error": "^1.0.0",
+    "pg-error": "https://github.com/Renascentinc/node-pg-error.git",
     "timsort": "^0.3.0",
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3",
