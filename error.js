@@ -14,13 +14,6 @@ class DbClientError extends Error {
   }
 }
 
-class DbError extends Error {
-  constructor(...args) {
-    super(args);
-    this.name = 'DbError';
-  }
-}
-
 class GraphQlError extends Error {
   constructor(...args) {
     super(args);
@@ -52,10 +45,31 @@ class MailError extends ApolloError
   }
 }
 
+function formatPgError(error) {
+  if (typeof error.extensions.exception.constraint === 'string') {
+    error.extensions.code = `${error.extensions.exception.constraint.toUpperCase()}_CONSTRAINT_VIOLATION`;
+    error.extensions.name = 'DbConstraintViolationError';
+  } else {
+    error.extensions.code = 'UNKNOWN_DB_ERROR';
+    error.extensions.name = 'UnknownDbError';
+  }
+
+  delete error.extensions.exception;
+  return error;
+}
+
+function apolloErrorFormatter(error) {
+    if (error.extensions.exception.name === "PgError") {
+      return formatPgError(error);
+    }
+
+    return error;
+}
+
 module.exports = { ArgumentError,
                    DbClientError,
-                   DbError,
                    GraphQlError,
                    InsufficientInformationError,
                    AuthorizationError,
-                   MailError }
+                   MailError,
+                   apolloErrorFormatter }

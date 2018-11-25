@@ -1,10 +1,11 @@
 const { Client } = require('pg');
 var named = require('yesql').pg
 const appConfig = require('./app-config');
-const { ArgumentError, DbClientError, DbError } = require('./error.js')
+const { ArgumentError, DbClientError } = require('./error.js')
 const { getDbFunctionNamesQuery, getDbTypesQuery } = require('./sql/raw-queries');
 const logger = require('./logger');
 const util = require('util');
+const PgError = require("pg-error")
 
 class DbClient {
 
@@ -22,6 +23,18 @@ class DbClient {
       password: appConfig['db.password'],
       port: appConfig['db.port']
     });
+
+    this.client.connection.parseE = PgError.parse
+    this.client.connection.parseN = PgError.parse
+
+    this.client.connection.on("PgError", function(err) {
+      switch (err.severity) {
+        case "ERROR":
+        case "FATAL":
+        case "PANIC": return this.emit("error", err)
+        default: return this.emit("notice", err)
+      }
+    })
   }
 
   async connect() {
@@ -64,7 +77,7 @@ class DbClient {
       return await this.client.query(queryVal);
     } catch (e) {
       logger.error(`Error executing query \n${e}`);
-      throw new DbError(`Error executing query: \n${e}`)
+      throw (e instanceof PgError) ? e : new DbClientError(e);
     }
   }
 
@@ -83,7 +96,7 @@ class DbClient {
       return await this.client.query(queryString, params);
     } catch (e) {
       logger.error(`Error executing query '${queryString}' with parameters ${params} \n${e}`);
-      throw new DbError(`Error executing query '${queryString}' with parameters ${params}'`)
+      throw (e instanceof PgError) ? e : new DbClientError(e);
     }
   }
 
@@ -116,7 +129,7 @@ class DbClient {
       return result.rows;
     } catch (e) {
       logger.error(`Function '${functionName}' failed to execute with parameters \n${util.inspect(params)} \nCause: ${e}`);
-      throw new DbClientError(`Function '${functionName}' with parameters \n${util.inspect(params)} failed to execute \nCause: ${e}`);
+      throw (e instanceof PgError) ? e : new DbClientError(e);
     }
   }
 

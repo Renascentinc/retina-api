@@ -16,10 +16,8 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	photo 						long_str_t,
 	"year" 						integer,
   PRIMARY KEY (id, organization_id),
-  CONSTRAINT tool_unique_not_decomissioned EXCLUDE (serial_number WITH =, model_number WITH =, brand_id WITH =) WHERE (is_in_service_status(status)),
-  CONSTRAINT tool_unique_decomissioned EXCLUDE (serial_number WITH =, model_number WITH =, brand_id WITH =) WHERE (NOT is_in_service_status(status)),
-  --CONSTRAINT tool_unique_serial_number UNIQUE (serial_number, organization_id),
   CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
+  -- Constraint for unique tool is in triggers/tool-insert-update.sql
 );
 
 CREATE UNIQUE INDEX ON public.tool (id);
