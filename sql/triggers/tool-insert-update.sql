@@ -9,12 +9,11 @@ AS $$
         (
           SELECT status FROM tool
             WHERE
-              id != NEW.id
-              ------------- Constraints --------------
-              AND serial_number = NEW.serial_number
-              AND model_number = NEW.model_number
+              organization_id = NEW.organization_id
               AND brand_id = NEW.brand_id
-              AND organization_id = NEW.organization_id
+              AND model_number = NEW.model_number
+              AND serial_number = NEW.serial_number
+              AND id != NEW.id
           LIMIT 1
         );
 

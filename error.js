@@ -45,7 +45,7 @@ class MailError extends ApolloError
   }
 }
 
-function formatPgError(error) {
+function formatDbError(error) {
   if (typeof error.extensions.exception.constraint === 'string') {
     error.extensions.code = `${error.extensions.exception.constraint.toUpperCase()}_CONSTRAINT_VIOLATION`;
     error.extensions.name = 'DbConstraintViolationError';
@@ -60,7 +60,7 @@ function formatPgError(error) {
 
 function apolloErrorFormatter(error) {
     if (error.extensions.exception.name === "PgError") {
-      return formatPgError(error);
+      return formatDbError(error);
     }
 
     return error;

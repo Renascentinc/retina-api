@@ -8,10 +8,9 @@ AS $$
         (
           SELECT status FROM public.user
             WHERE
-              id != NEW.id
-              ------------- Constraints --------------
+              organization_id = NEW.organization_id
               AND email = NEW.email
-              AND organization_id = NEW.organization_id
+              AND id != NEW.id
           LIMIT 1
         );
 
