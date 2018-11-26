@@ -27,7 +27,9 @@ AS $$
   BEGIN
     RETURN
       is_in_service_status.tool_status != 'BEYOND_REPAIR'::tool_status AND
-      is_in_service_status.tool_status != 'LOST_OR_STOLEN'::tool_status;
+      is_in_service_status.tool_status != 'LOST_OR_STOLEN'::tool_status AND
+      is_in_service_status.tool_status IS NOT NULL;
   END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+IMMUTABLE;

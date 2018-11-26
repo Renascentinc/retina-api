@@ -16,12 +16,14 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	photo 						long_str_t,
 	"year" 						integer,
   PRIMARY KEY (id, organization_id),
-  CONSTRAINT tool_unique_model_number UNIQUE (model_number, organization_id),
-  CONSTRAINT tool_unique_serial_number UNIQUE (serial_number, organization_id),
   CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
+  -- Constraint for unique tool is in triggers/tool-insert-update.sql
 );
 
 CREATE UNIQUE INDEX ON public.tool (id);
 CREATE INDEX ON public.tool (type_id, brand_id, owner_id, status);
+
+-- Make it so that the first tool will have id 10000
+SELECT setval(pg_get_serial_sequence('tool', 'id'), 9999, true);
 
 COMMIT;

@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const { createSchema } = require('./utils/graphql-utils');
 const appConfig = require('./app-config');
 const logger = require('./logger');
-const { GraphQlError } = require('./error');
+const { GraphQlError, apolloErrorFormatter} = require('error');
 const gql = require('graphql-tag');
 const uuidValidate = require('uuid-validate');
 const { UserInputError, AuthenticationError } = require('apollo-server');
@@ -31,6 +31,7 @@ class Server {
     try {
       let server = new ApolloServer({
         schema: schema,
+        formatError: apolloErrorFormatter,
         context: ({req}) => {
           if (this.isIntrospectionRequest(req))
           {
