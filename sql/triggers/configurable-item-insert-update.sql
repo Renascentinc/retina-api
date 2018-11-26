@@ -2,9 +2,9 @@
 CREATE FUNCTION check_configurable_item_unique () RETURNS TRIGGER
 AS $$
   DECLARE
-    existing_configurable_item_record record;
+    existing_configurable_item_deleted boolean;
   BEGIN
-    SELECT * INTO existing_configurable_item_record
+    SELECT deleted INTO existing_configurable_item_deleted
       FROM public.configurable_item
         WHERE
           organization_id = NEW.organization_id
@@ -13,8 +13,8 @@ AS $$
           AND id != NEW.id
       LIMIT 1;
 
-    IF FOUND THEN
-      IF existing_configurable_item_record.deleted THEN
+    IF existing_configurable_item_deleted IS NOT NULL THEN
+      IF existing_configurable_item_deleted THEN
         RAISE EXCEPTION
           'Configurable item with type % and name % already exists in deleted state', NEW.type, NEW.name
           USING CONSTRAINT = 'configurable_item_unique_deleted';
