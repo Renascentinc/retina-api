@@ -43,13 +43,14 @@ AS $$
 
     RETURN
       QUERY
-        SELECT public.user.* FROM public.user
-        JOIN (SELECT * FROM summed_scores
-              ORDER BY score DESC
-              OFFSET page_number*page_size
-              LIMIT page_size) ss
-        ON public.user.id = ss.id
-        ORDER BY ss.score DESC;
+        SELECT * FROM (
+          SELECT public.user.* FROM public.user
+            JOIN summed_scores
+            ON public.user.id = summed_scores.id
+          ORDER BY summed_scores.score DESC
+        ) _
+        OFFSET page_number*page_size
+        LIMIT page_size;
   END;
 $$
 LANGUAGE plpgsql;

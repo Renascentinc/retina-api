@@ -53,13 +53,14 @@
 
      RETURN
        QUERY
-         SELECT tool_snapshot.* FROM tool_snapshot
-         JOIN (SELECT * FROM summed_scores
-               ORDER BY score DESC
-               OFFSET page_number*page_size
-               LIMIT page_size) ss
-         ON tool_snapshot.id = ss.id
-         ORDER BY tool_snapshot.timestamp DESC;
+         SELECT * FROM (
+           SELECT tool_snapshot.* FROM tool_snapshot
+             JOIN summed_scores
+             ON tool_snapshot.id = summed_scores.id
+           ORDER BY tool_snapshot.timestamp DESC
+         ) _
+         OFFSET page_number*page_size
+         LIMIT page_size;
    END;
  $$
  LANGUAGE plpgsql;
