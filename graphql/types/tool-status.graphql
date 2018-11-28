@@ -1,0 +1,19 @@
+
+enum DecomissionedToolStatus {
+  BEYOND_REPAIR
+  LOST_OR_STOLEN
+}
+
+enum InServiceToolStatus {
+  AVAILABLE
+  IN_USE
+  MAINTENANCE
+}
+
+enum ToolStatus {
+  AVAILABLE
+  IN_USE
+  MAINTENANCE
+  BEYOND_REPAIR
+  LOST_OR_STOLEN
+}

@@ -1,0 +1,7 @@
+
+enum ToolAction {
+  CREATE
+  UPDATE
+  TRANSFER
+  DECOMISSION
+}

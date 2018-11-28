@@ -1,0 +1,31 @@
+
+
+type ToolSnapshot {
+  id:                     ID!
+  tool:                   Tool!
+  metadata:               ToolSnapshotMetadata!
+  previous_tool_snapshot: ToolSnapshot
+}
+
+type ToolSnapshotMetadata {
+  timestamp: Date!
+  tool_action: ToolAction!
+  actor: User!
+  action_note: String
+}
+
+input ToolSnapshotFilter {
+  only_latest_snapshot: Boolean
+  time_span:            TimeSpan
+  tool_ids:             [ID!]
+  tool_actions:         [ToolAction!]
+  brand_ids:            [ID!]
+  type_ids:             [ID!]
+  owner_ids:            [ID!]
+  tool_statuses:        [ToolStatus!]
+}
+
+type Query {
+  getToolSnapshot(tool_snapshot_id: ID!): ToolSnapshot
+  searchToolSnapshot(query: String, toolSnapshotFilter: ToolSnapshotFilter, pagingParameters: PagingParameters): [ToolSnapshot!]
+}

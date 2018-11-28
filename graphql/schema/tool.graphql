@@ -1,0 +1,65 @@
+
+type Tool {
+  id:                ID!
+  type:              ConfigurableItem!
+	brand:             ConfigurableItem!
+	model_number:      String!
+  serial_number:     String!
+	status:            ToolStatus!
+  owner:             ToolOwner!
+  purchased_from:    ConfigurableItem
+  date_purchased:    Date
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+input NewTool {
+  type_id:           ID!
+	brand_id:          ID!
+	model_number:      String!
+  serial_number:     String!
+	status:            InServiceToolStatus!
+  owner_id:          ID!
+  purchased_from_id: ID
+  date_purchased:    Date
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+input UpdatedTool {
+  id:                ID!
+  type_id:           ID!
+	brand_id:          ID!
+	model_number:      String!
+  serial_number:     String!
+	status:            InServiceToolStatus!
+  owner_id:          ID!
+  purchased_from_id: ID
+  date_purchased:    Date
+  photo:             String
+  price:             Int
+  year:              Int
+}
+
+input ToolFilter {
+  brand_ids:     [ID!]
+  type_ids:      [ID!]
+  tool_statuses: [InServiceToolStatus!]
+  owner_ids:     [ID!]
+}
+
+type Query {
+  getTool(tool_id: ID!): Tool
+  getMultipleTool(tool_ids: [ID!]!): [Tool!]
+  getAllTool(pagingParameters: PagingParameters): [Tool!]!
+  searchTool(query: String, toolFilter: ToolFilter, pagingParameters: PagingParameters): [Tool!]
+}
+
+type Mutation {
+  createTool(newTool: NewTool!): Tool
+  updateTool(updatedTool: UpdatedTool!): Tool
+  transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
+  decomissionTool(tool_id: ID!, decomissioned_status: DecomissionedToolStatus!, decomission_reason: String!): Tool @requiresRole(requiredRole: ADMINISTRATOR)
+}

@@ -1,0 +1,46 @@
+
+type ConfigurableItem {
+  id: ID!
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input NewConfigurableItem {
+  type: ConfigurableItemType!
+  name: String!
+  sanctioned: Boolean!
+}
+
+input UpdatedConfigurableItem {
+  id: ID!
+  name: String!
+  sanctioned: Boolean!
+}
+
+type DeletedConfigurableItemResponse {
+  toolsWithConfigurableItem: [Tool!]
+  deletedConfigurableItem: ConfigurableItem
+}
+
+type Query {
+  getConfigurableItem(configurable_item_id: ID!): ConfigurableItem
+  getAllConfigurableItem(pagingParameters: PagingParameters): [ConfigurableItem]!
+}
+
+type Mutation {
+  createConfigurableItem(newConfigurableItem: NewConfigurableItem!): ConfigurableItem
+  updateConfigurableItem(updatedConfigurableItem: UpdatedConfigurableItem!): ConfigurableItem
+
+  """
+  If there are no tools with the given configurable_item_id, then DeletedConfigurableItemResponse
+  will contain the deleted item in deletedConfigurableItem and toolsWithConfigurableItem will be null
+
+  If there are tools with the given configurable_item_id, then DeletedConfigurableItemResponse
+  will contain the list of conflicting tools in toolsWithConfigurableItem and deletedConfigurableItem
+  will be null
+
+  If the configurable item does not exist, both values wil be null
+  """
+  deleteConfigurableItem(configurable_item_id: ID!): DeletedConfigurableItemResponse
+}
