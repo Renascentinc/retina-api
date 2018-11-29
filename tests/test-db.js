@@ -1078,6 +1078,12 @@ describe('Database creation and usage', async () => {
 
       let randomToolId = dataUtil.getRandFromArray(allTools).id;
 
+      await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
       let decomissionedTool = await dbFuncs.decomission_tool({
         tool_id: randomToolId,
         organization_id: randOrgId,
@@ -1096,6 +1102,12 @@ describe('Database creation and usage', async () => {
       let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
 
       let randomToolId = dataUtil.getRandFromArray(allTools).id;
+
+      await dbFuncs.decomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        decomissioned_status: 'LOST_OR_STOLEN'
+      })
 
       let recomissionedTool = await dbFuncs.recomission_tool({
         tool_id: randomToolId,

@@ -102,14 +102,18 @@ module.exports = {
         organization_id: session.organization_id
       });
 
-      db.create_tool_snapshot({
-        ...decomissionedTool[0],
-        tool_action: db.tool_action.DECOMISSION.name,
-        actor_id: session.user_id,
-        action_note: decomission_reason
-      });
+      decomissionedTool = decomissionedTool[0];
 
-      return decomissionedTool[0];
+      if (decomissionedTool) {
+        db.create_tool_snapshot({
+          ...decomissionedTool,
+          tool_action: db.tool_action.DECOMISSION.name,
+          actor_id: session.user_id,
+          action_note: decomission_reason
+        });
+      }
+
+      return decomissionedTool;
     },
 
     recomissionTool: async (_, { tool_id, recomissioned_status }, { db, session }) => {
@@ -119,13 +123,17 @@ module.exports = {
         organization_id: session.organization_id
       });
 
-      db.create_tool_snapshot({
-        ...recomissionedTool[0],
-        tool_action: db.tool_action.RECOMISSION.name,
-        actor_id: session.user_id
-      });
+      recomissionedTool = recomissionedTool[0];
 
-      return recomissionedTool[0];
+      if (recomissionedTool) {
+        db.create_tool_snapshot({
+          ...recomissionedTool,
+          tool_action: db.tool_action.RECOMISSION.name,
+          actor_id: session.user_id
+        });
+      }
+
+      return recomissionedTool;
     },
 
     transferMultipleTool: async(_, transferArgs, { db, session }) => {

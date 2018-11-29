@@ -12,6 +12,7 @@ AS $$
         SET status = recomission_tool.recomissioned_status::text::tool_status
           WHERE tool.id = recomission_tool.tool_id
             AND tool.organization_id = recomission_tool.organization_id
+            AND NOT is_in_service_status(tool.status)
 	  RETURNING *;
   END;
 $$
