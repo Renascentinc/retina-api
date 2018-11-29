@@ -52,7 +52,8 @@ let tool_actions = [
   'CREATE',
   'UPDATE',
   'TRANSFER',
-  'DECOMISSION'
+  'DECOMISSION',
+  'RECOMISSION'
 ]
 
 let user_info = [
