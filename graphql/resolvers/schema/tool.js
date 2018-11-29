@@ -112,6 +112,22 @@ module.exports = {
       return decomissionedTool[0];
     },
 
+    recomissionTool: async (_, { tool_id, recomissioned_status }, { db, session }) => {
+      let recomissionedTool = await db.recomission_tool({
+        tool_id,
+        recomissioned_status,
+        organization_id: session.organization_id
+      });
+
+      db.create_tool_snapshot({
+        ...recomissionedTool[0],
+        tool_action: db.tool_action.RECOMISSION.name,
+        actor_id: session.user_id
+      });
+
+      return recomissionedTool[0];
+    },
+
     transferMultipleTool: async(_, transferArgs, { db, session }) => {
       let toOwnerIsActive = (await db.is_user_active({ user_id: transferArgs.to_owner_id }))[0].is_user_active;
 

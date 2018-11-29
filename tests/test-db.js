@@ -1089,6 +1089,25 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('recomission_tool()', () => {
+
+    it('successfully recomissions a tool', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randomToolId = dataUtil.getRandFromArray(allTools).id;
+
+      let recomissionedTool = await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
+      assert.equal(recomissionedTool.length, 1);
+    });
+
+  });
+
   describe('db enum creation', () => {
 
     it('successfully creates the enums', async () => {

@@ -17,6 +17,12 @@ IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'decomissioned_tool_status'
                                                    'LOST_OR_STOLEN');
 END IF;
 
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'in_service_tool_status') THEN
+    CREATE TYPE in_service_tool_status AS ENUM ('IN_USE',
+                                                'MAINTENANCE',
+                                                'AVAILABLE');
+END IF;
+
 END $$;
 
 CREATE FUNCTION public.is_in_service_status(
