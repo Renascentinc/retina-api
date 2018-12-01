@@ -26,7 +26,7 @@ END IF;
 END $$;
 
 -- TODO: Make a `helpers` directory under functions and put this in there
-CREATE FUNCTION retina.is_in_service_status(
+CREATE OR REPLACE FUNCTION retina.is_in_service_status(
 	tool_status tool_status
 )
  RETURNS BOOL

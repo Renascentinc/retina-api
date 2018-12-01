@@ -2,12 +2,13 @@ module.exports = {
   getDropFunctionsQueriesQuery:
     `SELECT 'DROP FUNCTION IF EXISTS ' || ns.nspname || '.' || proname || '(' || oidvectortypes(proargtypes) || ');'
      FROM pg_proc INNER JOIN pg_namespace ns ON (pg_proc.pronamespace = ns.oid)
-     WHERE ns.nspname = 'retina';`,
+     WHERE ns.nspname = 'retina'
+      and proname != 'is_in_service_status';`, // TODO: This is hacked because tool-snapshot relies on this function
 
   getDropTriggersQueriesQuery:
-    `SELECT 'DROP TRIGGER ' || trigger_name || ' ON public.' || event_object_table || ';'
+    `SELECT DISTINCT 'DROP TRIGGER ' || trigger_name || ' ON public.' || event_object_table || ';'
      FROM information_schema.triggers
-     WHERE trigger_schema = 'retina';`,
+     WHERE trigger_schema = 'public';`,
 
   getDbFunctionNamesQuery:
     `SELECT DISTINCT routine_name FROM information_schema.routines
@@ -18,7 +19,7 @@ module.exports = {
     `SELECT 'DROP EXTENSION IF EXISTS "' || extensions.extname || '";'
      FROM pg_extension as extensions
      WHERE extensions.extname != 'plpgsql'
-      AND extensions.extname != 'citext';`, // This is a hack to get around some circular
+      AND extensions.extname != 'citext';`, // TODO: This is a hack to get around some circular
                                             // function <==> extension dependencies for citext
 
   getDbTypesQuery:

@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION check_tool_unique () RETURNS TRIGGER
+CREATE FUNCTION retina.check_tool_unique () RETURNS TRIGGER
 AS $$
   DECLARE
     existing_tool_status tool_status;
@@ -43,4 +43,4 @@ LANGUAGE plpgsql;
 CREATE TRIGGER tool_unique BEFORE INSERT OR UPDATE
   ON public.tool
   FOR EACH ROW
-  EXECUTE PROCEDURE check_tool_unique();
+  EXECUTE PROCEDURE retina.check_tool_unique();
