@@ -8,7 +8,7 @@
  *    4) Add the greatest similarity for each tool to the similarity column in summed_scores
  * 3) Join the resulting ids in summed_scores with the tool table, selecting only the top 25 results (or the requested page of results, once paging is implemented)
  */
- CREATE FUNCTION public.search_fuzzy_ids_tool(
+ CREATE FUNCTION retina.search_fuzzy_ids_tool(
    lexemes		   text[],
    tool_ids      integer[],
    page_size     integer = NULL,

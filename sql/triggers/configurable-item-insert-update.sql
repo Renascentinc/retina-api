@@ -1,5 +1,5 @@
 
-CREATE FUNCTION check_configurable_item_unique () RETURNS TRIGGER
+CREATE FUNCTION retina.check_configurable_item_unique () RETURNS TRIGGER
 AS $$
   DECLARE
     existing_configurable_item_deleted boolean;
@@ -33,4 +33,4 @@ LANGUAGE plpgsql;
 CREATE TRIGGER configurable_item_unique BEFORE INSERT OR UPDATE
   ON public.configurable_item
   FOR EACH ROW
-  EXECUTE PROCEDURE check_configurable_item_unique();
+  EXECUTE PROCEDURE retina.check_configurable_item_unique();

@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.create_location (
+CREATE FUNCTION retina.create_location (
 	city							str_t,
 	state 						state_t,
 	zip 							zip_t,

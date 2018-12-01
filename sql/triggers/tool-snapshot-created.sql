@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION upsert_latest_tool_snapshot () RETURNS TRIGGER
+CREATE FUNCTION retina.upsert_latest_tool_snapshot () RETURNS TRIGGER
 AS $$
   BEGIN
 
@@ -30,4 +30,4 @@ LANGUAGE plpgsql;
 CREATE TRIGGER tool_snapshot_created AFTER INSERT
   ON public.tool_snapshot
   FOR EACH ROW
-  EXECUTE PROCEDURE upsert_latest_tool_snapshot();
+  EXECUTE PROCEDURE retina.upsert_latest_tool_snapshot();

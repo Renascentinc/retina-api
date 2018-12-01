@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.delete_configurable_item(
+CREATE OR REPLACE FUNCTION retina.delete_configurable_item(
 	configurable_item_id  id_t,
   organization_id 			id_t
 )

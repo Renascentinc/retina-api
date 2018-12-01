@@ -23,7 +23,14 @@ CREATE TABLE IF NOT EXISTS public.tool (
 CREATE UNIQUE INDEX ON public.tool (id);
 CREATE INDEX ON public.tool (type_id, brand_id, owner_id, status);
 
--- Make it so that the first tool will have id 10000
-SELECT setval(pg_get_serial_sequence('tool', 'id'), 9999, true);
-
 COMMIT;
+
+DO $$
+
+BEGIN
+-- Make it so that the first tool will have id 10000
+IF NOT (SELECT EXISTS (SELECT 1 FROM public.tool)) THEN
+  PERFORM setval(pg_get_serial_sequence('tool', 'id'), 9999, true);
+END IF;
+
+END $$;

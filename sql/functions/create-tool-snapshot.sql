@@ -1,4 +1,4 @@
-CREATE FUNCTION public.create_tool_snapshot (
+CREATE FUNCTION retina.create_tool_snapshot (
   id                    id_t,
 	type_id						    id_t,
 	brand_id					    id_t,

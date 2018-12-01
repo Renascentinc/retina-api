@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_location(
+CREATE FUNCTION retina.get_location(
 	location_id      id_t,
   organization_id  id_t
 )

@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.create_configurable_item (
+CREATE FUNCTION retina.create_configurable_item (
 	type configurable_item_type,
 	name str_t,
 	sanctioned boolean,

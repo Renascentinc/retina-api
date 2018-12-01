@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.delete_session(
+CREATE OR REPLACE FUNCTION retina.delete_session(
   token           uuid_t
 )
 RETURNS SETOF public.session
