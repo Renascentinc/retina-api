@@ -40,7 +40,7 @@ AS $$
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER tool_unique BEFORE INSERT OR UPDATE
+CREATE TRIGGER tool_insert_or_update BEFORE INSERT OR UPDATE
   ON public.tool
   FOR EACH ROW
   EXECUTE PROCEDURE retina.check_tool_unique();
