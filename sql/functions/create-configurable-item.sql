@@ -22,7 +22,9 @@ AS $$
     		name,
     		sanctioned,
     		organization_id
-    	) RETURNING *;
+    	) ON CONFLICT ON CONSTRAINT configurable_item_unique DO NOTHING RETURNING *; -- TODO: This return anything??
+
+      /* RETURNING *; */
 
    EXCEPTION
     WHEN OTHERS THEN

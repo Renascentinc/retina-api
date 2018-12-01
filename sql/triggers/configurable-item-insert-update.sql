@@ -18,10 +18,10 @@ AS $$
         RAISE EXCEPTION
           'Configurable item with type % and name % already exists in deleted state', NEW.type, NEW.name
           USING CONSTRAINT = 'configurable_item_unique_deleted';
-      ELSE
+      /* ELSE
         RAISE EXCEPTION
           'Configurable item with type % and name % already exists', NEW.type, NEW.name
-          USING CONSTRAINT = 'configurable_item_unique';
+          USING CONSTRAINT = 'configurable_item_unique'; */
       END IF;
     END IF;
 
