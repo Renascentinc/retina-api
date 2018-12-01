@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.delete_password_reset_credentials(
+CREATE OR REPLACE FUNCTION retina.delete_password_reset_credentials(
 	user_id         id_t,
   organization_id id_t
 )

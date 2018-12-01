@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.get_tool(
+CREATE FUNCTION retina.get_tool(
 	tool_id          id_t,
   organization_id  id_t
 )

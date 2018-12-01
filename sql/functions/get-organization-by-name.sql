@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.get_organization_by_name (
+CREATE FUNCTION retina.get_organization_by_name (
 	organization_name str_t
 )
 RETURNS SETOF public.organization

@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   actor_id               id_t        NOT NULL,
   action_note            text,
   CHECK (
-    (CASE WHEN NOT is_in_service_status(status) THEN action_note IS NOT NULL END)
+    (CASE WHEN NOT retina.is_in_service_status(status) THEN action_note IS NOT NULL END)
   )
 );
 

@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_multiple_tool(
+CREATE FUNCTION retina.get_multiple_tool(
 	tool_ids         integer[],
   organization_id  id_t
 )

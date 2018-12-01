@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.update_user_password (
+CREATE OR REPLACE FUNCTION retina.update_user_password (
 	user_id          id_t,
   new_password     long_str_t,
   organization_id  id_t

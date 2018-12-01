@@ -18,14 +18,14 @@ AS $$
         );
 
     IF existing_tool_status IS NOT NULL THEN
-      IF is_in_service_status(existing_tool_status) THEN
+      IF retina.is_in_service_status(existing_tool_status) THEN
         RAISE EXCEPTION
           'Tool with serial number %, model number %, and brand id % already exists in service',
             NEW.serial_number,
             NEW.model_number,
             NEW.brand_id
           USING CONSTRAINT = 'tool_unique_in_service';
-      ELSIF (NOT is_in_service_status(existing_tool_status)) THEN
+      ELSIF (NOT retina.is_in_service_status(existing_tool_status)) THEN
         RAISE EXCEPTION
           'Tool with serial number %, model number %, and brand id % already exists in decomissioned state',
             NEW.serial_number,

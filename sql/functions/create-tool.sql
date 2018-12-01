@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.create_tool (
+CREATE OR REPLACE FUNCTION retina.create_tool (
 	type_id						id_t,
 	brand_id					id_t,
 	model_number    	str_t,

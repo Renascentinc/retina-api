@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.decomission_tool(
+CREATE OR REPLACE FUNCTION retina.decomission_tool(
   organization_id      id_t,
 	tool_id              id_t,
   decomissioned_status decomissioned_tool_status
@@ -12,7 +12,7 @@ AS $$
         SET status = decomission_tool.decomissioned_status::text::tool_status
           WHERE tool.id = decomission_tool.tool_id
             AND tool.organization_id = decomission_tool.organization_id
-            AND is_in_service_status(tool.status)
+            AND retina.is_in_service_status(tool.status)
 	  RETURNING *;
   END;
 $$

@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.get_user_by_credentials (
+CREATE OR REPLACE FUNCTION retina.get_user_by_credentials (
   email           citext,
   password        str_t
 )

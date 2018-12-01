@@ -1,4 +1,4 @@
-CREATE FUNCTION public.create_session (
+CREATE FUNCTION retina.create_session (
   user_id         id_t,
   organization_id id_t
 )

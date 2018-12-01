@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.validated_update_user_password (
+CREATE OR REPLACE FUNCTION retina.validated_update_user_password (
 	user_id          id_t,
 	current_password long_str_t,
   new_password     long_str_t,

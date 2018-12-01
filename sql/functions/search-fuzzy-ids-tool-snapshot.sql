@@ -8,7 +8,7 @@
  *    4) Add the greatest similarity for each snapshots to the similarity column in summed_scores
  * 3) Join the resulting ids in summed_scores with the snapshots table, selecting only the top 25 results (or the requested page of results, once paging is implemented)
  */
- CREATE FUNCTION public.search_fuzzy_ids_tool_snapshot(
+ CREATE FUNCTION retina.search_fuzzy_ids_tool_snapshot(
    lexemes		       text[],
    tool_snapshot_ids integer[],
    page_size         integer = NULL,
