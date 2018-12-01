@@ -2,7 +2,7 @@
 /*
  * Pass lexems and the results from search_strict_tool to search_fuzzy_ids_tool
  */
-CREATE OR REPLACE FUNCTION public.search_strict_fuzzy_tool_snapshot (
+CREATE OR REPLACE FUNCTION retina.search_strict_fuzzy_tool_snapshot (
   organization_id id_t,
 	lexemes		           text[],
   only_latest_snapshot boolean       = false,
@@ -27,7 +27,7 @@ AS $$
   BEGIN
     IF array_length(lexemes, 1) = 0 THEN
       RETURN QUERY
-        SELECT * FROM search_strict_tool_snapshot (
+        SELECT * FROM retina.search_strict_tool_snapshot (
           organization_id := organization_id,
           tool_ids := tool_ids,
           owner_ids := owner_ids,
@@ -43,10 +43,10 @@ AS $$
         );
     END IF;
 
-    RETURN QUERY SELECT * FROM search_fuzzy_ids_tool_snapshot (
+    RETURN QUERY SELECT * FROM retina.search_fuzzy_ids_tool_snapshot (
       lexemes,
       ARRAY (
-        SELECT id FROM search_strict_tool_snapshot (
+        SELECT id FROM retina.search_strict_tool_snapshot (
           organization_id := organization_id,
           tool_ids := tool_ids,
           owner_ids := owner_ids,

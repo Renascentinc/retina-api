@@ -1078,6 +1078,12 @@ describe('Database creation and usage', async () => {
 
       let randomToolId = dataUtil.getRandFromArray(allTools).id;
 
+      await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
       let decomissionedTool = await dbFuncs.decomission_tool({
         tool_id: randomToolId,
         organization_id: randOrgId,
@@ -1085,6 +1091,31 @@ describe('Database creation and usage', async () => {
       })
 
       assert.equal(decomissionedTool.length, 1);
+    });
+
+  });
+
+  describe('recomission_tool()', () => {
+
+    it('successfully recomissions a tool', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randomToolId = dataUtil.getRandFromArray(allTools).id;
+
+      await dbFuncs.decomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        decomissioned_status: 'LOST_OR_STOLEN'
+      })
+
+      let recomissionedTool = await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
+      assert.equal(recomissionedTool.length, 1);
     });
 
   });
@@ -1113,8 +1144,14 @@ describe('Database creation and usage', async () => {
 
   describe('is_in_service_status()', () => {
 
-    it.skip('indicates whether or not a tool status is an in-service type status', async () => {
+    it('indicates whether or not a tool status is an in-service type status', async () => {
+      let isInServiceStatus = await dbFuncs.is_in_service_status({ tool_status: 'AVAILABLE' });
+      assert.ok(isInServiceStatus[0])
+      assert.ok(isInServiceStatus[0].is_in_service_status)
 
+      isInServiceStatus = await dbFuncs.is_in_service_status({ tool_status: 'BEYOND_REPAIR' });
+      assert.ok(isInServiceStatus[0])
+      assert.ok(!isInServiceStatus[0].is_in_service_status)
     });
 
   });
@@ -1125,14 +1162,12 @@ describe('Database creation and usage', async () => {
 
     });
 
-  });
+    it('is able to be called', async () => {
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
 
-  describe('array_contains_null()', () => {
-
-    it.skip('indicates whether or not an array contains at least one null value', async () => {
-
+      let isUserActive = await dbFuncs.is_user_active({ user_id: randUserId });
+      assert.ok(isUserActive[0])
     });
-
   });
 
   after(async () => {

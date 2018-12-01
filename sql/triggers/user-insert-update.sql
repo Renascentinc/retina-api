@@ -1,5 +1,5 @@
 
-CREATE FUNCTION check_user_unique () RETURNS TRIGGER
+CREATE FUNCTION retina.check_user_unique () RETURNS TRIGGER
 AS $$
   DECLARE
     existing_user_status user_status;
@@ -34,4 +34,4 @@ LANGUAGE plpgsql;
 CREATE TRIGGER user_unique BEFORE INSERT OR UPDATE
   ON public.user
   FOR EACH ROW
-  EXECUTE PROCEDURE check_user_unique();
+  EXECUTE PROCEDURE retina.check_user_unique();

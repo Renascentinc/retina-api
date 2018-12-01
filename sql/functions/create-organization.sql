@@ -1,4 +1,4 @@
-CREATE FUNCTION public.create_organization (
+CREATE FUNCTION retina.create_organization (
 	name long_str_t
 )
 RETURNS SETOF public.organization

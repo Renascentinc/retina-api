@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.get_user_by_email_and_organization (
+CREATE OR REPLACE FUNCTION retina.get_user_by_email_and_organization (
   email           citext,
   organization_id id_t
 )

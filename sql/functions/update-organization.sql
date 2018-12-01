@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.update_organization (
+CREATE OR REPLACE FUNCTION retina.update_organization (
 	id              id_t,
 	name 						long_str_t
 )

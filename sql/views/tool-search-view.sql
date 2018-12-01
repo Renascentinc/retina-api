@@ -22,6 +22,6 @@ CREATE OR REPLACE VIEW tool_search_view AS
   	JOIN public.configurable_item AS brand ON brand.id = tool.brand_id
   	JOIN public.configurable_item AS type ON type.id = tool.type_id
 
-    WHERE is_in_service_status(tool.status);
+    WHERE retina.is_in_service_status(tool.status);
 
 COMMIT;

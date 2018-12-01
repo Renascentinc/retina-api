@@ -1,5 +1,5 @@
 
-CREATE FUNCTION check_configurable_item_unique () RETURNS TRIGGER
+CREATE FUNCTION retina.check_configurable_item_unique () RETURNS TRIGGER
 AS $$
   DECLARE
     existing_configurable_item_deleted boolean;
@@ -13,16 +13,10 @@ AS $$
           AND id != NEW.id
       LIMIT 1;
 
-    IF existing_configurable_item_deleted IS NOT NULL THEN
-      IF existing_configurable_item_deleted THEN
-        RAISE EXCEPTION
-          'Configurable item with type % and name % already exists in deleted state', NEW.type, NEW.name
-          USING CONSTRAINT = 'configurable_item_unique_deleted';
-      ELSE
-        RAISE EXCEPTION
-          'Configurable item with type % and name % already exists', NEW.type, NEW.name
-          USING CONSTRAINT = 'configurable_item_unique';
-      END IF;
+    IF existing_configurable_item_deleted IS NOT NULL AND existing_configurable_item_deleted THEN
+      RAISE EXCEPTION
+        'Configurable item with type % and name % already exists in deleted state', NEW.type, NEW.name
+        USING CONSTRAINT = 'configurable_item_unique_deleted';
     END IF;
 
     RETURN NEW;
@@ -30,7 +24,7 @@ AS $$
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER configurable_item_unique BEFORE INSERT OR UPDATE
+CREATE TRIGGER configurable_item_insert_or_update BEFORE INSERT OR UPDATE
   ON public.configurable_item
   FOR EACH ROW
-  EXECUTE PROCEDURE check_configurable_item_unique();
+  EXECUTE PROCEDURE retina.check_configurable_item_unique();

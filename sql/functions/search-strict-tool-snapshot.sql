@@ -8,7 +8,7 @@
  *
  * I'm assuming SQL injection won't be a problem here because only integers and enums are being passed in.
  */
-CREATE OR REPLACE FUNCTION public.search_strict_tool_snapshot (
+CREATE OR REPLACE FUNCTION retina.search_strict_tool_snapshot (
   organization_id      id_t,
   only_latest_snapshot boolean       = false,
   tool_ids             integer[]     = NULL,

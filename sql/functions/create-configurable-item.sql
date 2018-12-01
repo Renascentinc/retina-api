@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.create_configurable_item (
+CREATE FUNCTION retina.create_configurable_item (
 	type configurable_item_type,
 	name str_t,
 	sanctioned boolean,
@@ -22,7 +22,9 @@ AS $$
     		name,
     		sanctioned,
     		organization_id
-    	) RETURNING *;
+    	) ON CONFLICT ON CONSTRAINT configurable_item_unique DO UPDATE
+        SET id = configurable_item.id
+      RETURNING *; -- TODO: A hack for returing an item that already existed
 
    EXCEPTION
     WHEN OTHERS THEN

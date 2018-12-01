@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_tool_snapshot (
+CREATE FUNCTION retina.get_tool_snapshot (
 	tool_snapshot_id id_t,
   organization_id  id_t
 )

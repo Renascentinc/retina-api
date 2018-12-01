@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.update_user (
+CREATE OR REPLACE FUNCTION retina.update_user (
   id              id_t,
   first_name			str_t,
 	last_name				str_t,

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.update_configurable_item(
+CREATE OR REPLACE FUNCTION retina.update_configurable_item(
 	id 	                  id_t,
 	name 									str_t,
 	sanctioned 						boolean,

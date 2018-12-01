@@ -62,4 +62,5 @@ type Mutation {
   updateTool(updatedTool: UpdatedTool!): Tool
   transferMultipleTool(tool_id_list: [ID!]!, to_owner_id: ID!): [Tool!]
   decomissionTool(tool_id: ID!, decomissioned_status: DecomissionedToolStatus!, decomission_reason: String!): Tool @requiresRole(requiredRole: ADMINISTRATOR)
+  recomissionTool(tool_id: ID!, recomissioned_status: InServiceToolStatus!): Tool @requiresRole(requiredRole: ADMINISTRATOR)
 }

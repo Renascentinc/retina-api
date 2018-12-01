@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.create_user (
+CREATE OR REPLACE FUNCTION retina.create_user (
 	first_name			str_t,
 	last_name				str_t,
 	email						str_t,

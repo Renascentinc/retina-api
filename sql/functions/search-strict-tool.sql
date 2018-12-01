@@ -7,7 +7,7 @@
  *
  * I'm assuming SQL injection won't be a problem here because only integers and enums are being passed in.
  */
-CREATE OR REPLACE FUNCTION public.search_strict_tool (
+CREATE OR REPLACE FUNCTION retina.search_strict_tool (
   organization_id id_t,
   owner_ids       integer[]     = NULL,
   brand_ids       integer[]     = NULL,
@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION public.search_strict_tool (
 RETURNS SETOF public.tool
 AS $$
   DECLARE
-    query text = 'SELECT * FROM public.tool WHERE organization_id = ' || organization_id || ' AND is_in_service_status(tool.status)';
+    query text = 'SELECT * FROM public.tool WHERE organization_id = ' || organization_id || ' AND retina.is_in_service_status(tool.status)';
   BEGIN
 
     IF owner_ids IS NOT NULL AND array_length(owner_ids, 1) > 0 THEN

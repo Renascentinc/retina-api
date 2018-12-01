@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_all_user(
+CREATE FUNCTION retina.get_all_user(
   organization_id id_t,
   page_size       integer = NULL,
   page_number     integer = 0

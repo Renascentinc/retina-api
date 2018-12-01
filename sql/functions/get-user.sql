@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.get_user(
+CREATE FUNCTION retina.get_user(
 	user_id          id_t,
   organization_id  id_t
 )

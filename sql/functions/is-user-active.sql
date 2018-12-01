@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.is_user_active(
+CREATE FUNCTION retina.is_user_active(
 	user_id          id_t
 )
  RETURNS Boolean

@@ -2,7 +2,7 @@
 /*
  * Fuzzy search on all tool snapshots in an organization
  */
-CREATE FUNCTION public.search_fuzzy_tool_snapshot(
+CREATE FUNCTION retina.search_fuzzy_tool_snapshot(
   organization_id id_t,
 	lexemes		      text[],
   page_size       integer = NULL,
@@ -12,7 +12,7 @@ CREATE FUNCTION public.search_fuzzy_tool_snapshot(
 AS $$
   BEGIN
   	RETURN QUERY
-      SELECT * FROM search_fuzzy_ids_tool_snapshot(
+      SELECT * FROM retina.search_fuzzy_ids_tool_snapshot(
         lexemes := lexemes,
         tool_snapshot_ids := ARRAY(
           SELECT id FROM tool_snapshot
