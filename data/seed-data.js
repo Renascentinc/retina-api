@@ -172,7 +172,7 @@ data.location = [
     organization_id: 2,
     address_line_one: '7638 Construction Ln.',
     address_line_two: null,
-    name: null
+    name: "ShatterDome"
   },
   {
     city: 'Nashville',
@@ -181,7 +181,7 @@ data.location = [
     organization_id: 3,
     address_line_one: '9183 Working Way',
     address_line_two: 'Greenfield Tower Room 3456',
-    name: null
+    name: "HQ"
   }
 ];
 
