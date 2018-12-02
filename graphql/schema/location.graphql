@@ -6,7 +6,7 @@ type Location {
   address_line_one: String!
   type:             ToolOwnerType!
   name: 						String!
-  address_line_two: String  
+  address_line_two: String
 }
 
 input NewLocation {
