@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS public.configurable_item (
   -- Constraint for unique configurable item w/different deleted status is in triggers/configurable-item-insert-update.sql
 );
 
-CREATE UNIQUE INDEX ON public.configurable_item (id);
+CREATE UNIQUE INDEX IF NOT EXISTS configurable_item_id_index ON public.configurable_item (id);
 
 COMMIT;

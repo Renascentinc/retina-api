@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS public.tool (
   -- Constraint for unique tool is in triggers/tool-insert-update.sql
 );
 
-CREATE UNIQUE INDEX ON public.tool (id);
-CREATE INDEX ON public.tool (type_id, brand_id, owner_id, status);
+CREATE UNIQUE INDEX IF NOT EXISTS tool_id_index ON public.tool (id);
+CREATE INDEX IF NOT EXISTS tool_filters_index ON public.tool (type_id, brand_id, owner_id, status);
 
 COMMIT;
 

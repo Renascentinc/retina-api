@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.user (
   -- Constraint for unique user is in triggers/tool-insert-update.sql
 ) INHERITS (tool_owner);
 
-CREATE UNIQUE INDEX ON public.user (id);
+CREATE UNIQUE INDEX IF NOT EXISTS user_id_index ON public.user (id);
 
 /**
  * Because table public.user is an inherited table, its columns cannot be used

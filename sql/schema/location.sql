@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS public."location" (
   CONSTRAINT session_unique_city_state_zip_address_line_one UNIQUE (city, state, zip, address_line_one, organization_id)
 ) INHERITS (tool_owner);
 
-CREATE UNIQUE INDEX ON public.location (id);
+CREATE UNIQUE INDEX IF NOT EXISTS location_id_index ON public.location (id);
 
 COMMIT;

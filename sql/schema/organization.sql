@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS public.organization (
 	"name" 	citext 	    NOT NULL UNIQUE
 );
 
-CREATE UNIQUE INDEX ON public.organization (id);
+CREATE UNIQUE INDEX IF NOT EXISTS organization_id_index ON public.organization (id);
 
 COMMIT;
