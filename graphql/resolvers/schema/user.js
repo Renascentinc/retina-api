@@ -46,10 +46,19 @@ module.exports = {
       return updatedUser[0];
     },
 
-    updatePassword: async (_, { user_id, current_password, new_password }, { db, session }) => {
-      let updatedUser = await db.update_password({
-        user_id,
+    updateCurrentUserPassword: async (_, { current_password, new_password }, { db, session }) => {
+      let updatedUser = await db.validated_update_user_password({
         current_password,
+        new_password,
+        user_id: session.user_id,
+        organization_id: session.organization_id
+      });
+      return updatedUser[0] ? true : false;
+    },
+
+    updateUserPassword: async (_, { user_id, new_password }, { db, session }) => {
+      let updatedUser = await db.update_user_password({
+        user_id,
         new_password,
         organization_id: session.organization_id
       });

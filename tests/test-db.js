@@ -103,31 +103,12 @@ describe('Database creation and usage', async () => {
 
   describe('create_tool_snapshot()', () => {
 
-    it('successfully creates a tool snapshot', async () => {
-      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
-
-      let tools = await dbFuncs.get_all_tool({
-        organization_id: randOrgId
-      })
-
-      let users = await dbFuncs.get_all_user({
-        organization_id: randOrgId
-      });
-
-      let randomTool = dataUtil.getRandFromArray(tools);
-      let randActorId = dataUtil.getRandFromArray(users).id;
-
-      randomTool['status'] = 'IN_USE';
-
-      let toolSnapshot = await dbFuncs.create_tool_snapshot(
-      {
-        ...randomTool,
-        tool_action: dbFuncs.tool_action.CREATE.name,
-        actor_id: randActorId,
-        action_note: "This is the coolest tool ever!"
-      });
-
-      assert.equal(toolSnapshot.length, 1);
+    it('successfully creates several tool snapshots', async () => {
+      let toolSnapshots = [];
+      for (let tool_snapshot of data.tool_snapshot) {
+        toolSnapshots.push(await dbFuncs.create_tool_snapshot(tool_snapshot));
+      }
+      assert.equal(toolSnapshots.length, data.tool_snapshot.length);
     });
 
     it.skip('fails to create a tool snapshot when the tool is being decomissioned, but there is no action note', async () => {
@@ -303,10 +284,24 @@ describe('Database creation and usage', async () => {
       let toolId = dataUtil.getRandIdFromArray(data.tool);
       let tool = data.tool[toolId - 1];
       let retrievedTool = await dbFuncs.get_tool({
-        tool_id: toolId,
+        tool_id: dataUtil.normalizeToolId(toolId),
         organization_id: tool.organization_id
       });
       assert.equal(retrievedTool.length, 1);
+    });
+
+  });
+
+  describe('get_multiple_tool()', () => {
+
+    it('successfully gets multiple tools', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let { originalIndecies: toolIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
+      let retrievedTools = await dbFuncs.get_multiple_tool({
+        tool_ids: toolIndecies.map(i => dataUtil.normalizeToolId(i + 1)),
+        organization_id: randOrgId
+      });
+      assert.equal(retrievedTools.length, toolIndecies.length);
     });
 
   });
@@ -492,6 +487,19 @@ describe('Database creation and usage', async () => {
 
   });
 
+  describe('get_tool_snapshot()', () => {
+
+    it('successfully gets a tool snapshot', async () => {
+      let toolSnapshotId = dataUtil.getRandIdFromArray(data.tool_snapshot);
+      let toolSnapshot = data.tool_snapshot[toolSnapshotId - 1];
+      let retrievedToolSnapshot = await dbFuncs.get_tool_snapshot({
+        tool_snapshot_id: toolSnapshotId,
+        organization_id: toolSnapshot.organization_id
+      });
+      assert.equal(retrievedToolSnapshot.length, 1);
+    });
+
+  });
 
   describe('search_fuzzy_tool()', () => {
 
@@ -549,7 +557,7 @@ describe('Database creation and usage', async () => {
       let randomToolId = dataUtil.getRandIdFromArray(data.tool);
       let randomTool = data.tool[randomToolId - 1];
       let randomToolFromDb = await dbFuncs.get_tool({
-        tool_id: randomToolId,
+        tool_id: dataUtil.normalizeToolId(randomToolId),
         organization_id: randomTool.organization_id
       });
 
@@ -607,7 +615,7 @@ describe('Database creation and usage', async () => {
       let { objects: toolArray, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId);
       let tools = await dbFuncs.search_fuzzy_ids_tool({
         lexemes: [dataUtil.getRandFromArray(toolArray).serial_number],
-        tool_ids: originalIndecies.map(index => index + 1)
+        tool_ids: originalIndecies.map(index => dataUtil.normalizeToolId(index + 1))
       });
 
       assert.ok(tools.length > 0);
@@ -628,7 +636,7 @@ describe('Database creation and usage', async () => {
       let toolIndecies = dataUtil.getFromObjectArrayWhere(data.tool, 'organization_id', randOrgId).originalIndecies;
       let tools = await dbFuncs.search_fuzzy_ids_tool({
         lexemes: [],
-        tool_ids: toolIndecies.map(index => index + 1)
+        tool_ids: toolIndecies.map(index => dataUtil.normalizeToolId(index + 1))
       });
 
       assert.equal(tools.length, toolIndecies.length)
@@ -653,8 +661,62 @@ describe('Database creation and usage', async () => {
 
   describe('search_strict_tool_snapshot()', () => {
 
-    it.skip('successfully searches for tool snapshots', async () => {
+    it('successfully searches for tool snapshots when filters are passed', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let toolSnapshots = await dbFuncs.search_strict_tool_snapshot({
+        organization_id: randOrgId,
+        tool_statuses: ['AVAILABLE'],
+        end_time: new Date()
+      })
 
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_fuzzy_ids_tool_snapshot()', () => {
+
+    it('successfully searches for tool snapshots when lexemes are passed', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let { objects: toolSnapshotArray, originalIndecies } = dataUtil.getFromObjectArrayWhere(data.tool_snapshot, 'organization_id', randOrgId);
+      let randomToolSnapshot = dataUtil.getRandFromArray(toolSnapshotArray);
+
+      let toolSnapshots = await dbFuncs.search_fuzzy_ids_tool_snapshot({
+        lexemes: [randomToolSnapshot.serial_number, randomToolSnapshot.tool_action],
+        tool_snapshot_ids: originalIndecies.map(index => index + 1)
+      });
+
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_fuzzy_tool_snapshot()', () => {
+
+    it('successfully searches for tool snapshots when lexemes are passed', async () => {
+      let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
+      let toolSnapshots = await dbFuncs.search_fuzzy_tool_snapshot({
+        lexemes: [randomToolSnapshot.serial_number, randomToolSnapshot.tool_action],
+        organization_id: randomToolSnapshot.organization_id
+      });
+
+      assert.ok(toolSnapshots.length > 0);
+    });
+
+  });
+
+  describe('search_strict_fuzzy_tool_snapshot()', () => {
+
+    it('successfully searches for tools when both lexemes and filters are passed', async () => {
+      let randomToolSnapshot = dataUtil.getRandFromArray(data.tool_snapshot);
+      let toolSnapshots = await dbFuncs.search_strict_fuzzy_tool_snapshot({
+        organization_id: randomToolSnapshot.organization_id,
+        lexemes: [randomToolSnapshot.serial_number],
+        brand_ids: [randomToolSnapshot.brand_id],
+        tool_actions: [randomToolSnapshot.tool_action]
+      });
+
+      assert.ok(toolSnapshots.length > 0);
     });
 
   });
@@ -698,7 +760,7 @@ describe('Database creation and usage', async () => {
     it('successfully updates a tool for an organization', async () => {
       let toolId = dataUtil.getRandIdFromArray(data.tool);
       let tool = data.tool[toolId - 1];
-      tool['id'] = toolId;
+      tool['id'] = dataUtil.normalizeToolId(toolId);
       let updatedToolObject = {...tool,
         ...{
           model_number: dataUtil.createRandomId(),
@@ -759,14 +821,46 @@ describe('Database creation and usage', async () => {
 
   });
 
-  describe('update_password()', () => {
+  describe('update_user_password()', () => {
+    it(`successfully updates a user's password`, async () => {
+      let newPassword = "New Password";
+      let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+      let randomUser = metaData.tool_owner[randomUserId - 1];
+
+      let updatedUser = await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: newPassword
+      });
+
+      assert.equal(updatedUser.length, 1);
+
+      let validUser = await dbFuncs.get_user_by_credentials_and_organization({
+        email: randomUser.email,
+        password: newPassword,
+        organization_id: randomUser.organization_id
+      });
+
+      assert.equal(validUser.length, 1);
+      assert.equal(validUser[0].id, randomUserId);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: randomUser.password
+      });
+    });
+  });
+
+  describe('validated_update_user_password()', () => {
 
     it(`successfully updates a user's password`, async () => {
       let newPassword = "New Password";
 
       let randomUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
       let randomUser = metaData.tool_owner[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
+      let updatedUser = await dbFuncs.validated_update_user_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
         current_password: randomUser.password,
@@ -783,6 +877,13 @@ describe('Database creation and usage', async () => {
 
       assert.equal(validUser.length, 1);
       assert.equal(validUser[0].id, randomUserId);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: randomUserId,
+        organization_id: randomUser.organization_id,
+        new_password: randomUser.password
+      });
     });
 
     it(`does not update a user's password if the wrong current password is given`, async () => {
@@ -790,7 +891,7 @@ describe('Database creation and usage', async () => {
 
       let randomUserId = dataUtil.getRandIdFromArray(data.user);
       let randomUser = data.user[randomUserId - 1];
-      let updatedUser = await dbFuncs.update_password({
+      let updatedUser = await dbFuncs.validated_update_user_password({
         user_id: randomUserId,
         organization_id: randomUser.organization_id,
         current_password: "Wrong Password",
@@ -833,6 +934,13 @@ describe('Database creation and usage', async () => {
       let authenticatedUser = await dbFuncs.get_user_by_credentials_and_organization(waja);
 
       assert.equal(authenticatedUser.length, 1);
+
+      // reset user's password
+      await dbFuncs.update_user_password({
+        user_id: userId,
+        organization_id: user.organization_id,
+        new_password: user.password
+      });
     });
 
   });
@@ -970,6 +1078,12 @@ describe('Database creation and usage', async () => {
 
       let randomToolId = dataUtil.getRandFromArray(allTools).id;
 
+      await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
       let decomissionedTool = await dbFuncs.decomission_tool({
         tool_id: randomToolId,
         organization_id: randOrgId,
@@ -977,6 +1091,31 @@ describe('Database creation and usage', async () => {
       })
 
       assert.equal(decomissionedTool.length, 1);
+    });
+
+  });
+
+  describe('recomission_tool()', () => {
+
+    it('successfully recomissions a tool', async () => {
+      let randOrgId = dataUtil.getRandIdFromArray(data.organization);
+      let allTools = await dbFuncs.get_all_tool({ organization_id: randOrgId });
+
+      let randomToolId = dataUtil.getRandFromArray(allTools).id;
+
+      await dbFuncs.decomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        decomissioned_status: 'LOST_OR_STOLEN'
+      })
+
+      let recomissionedTool = await dbFuncs.recomission_tool({
+        tool_id: randomToolId,
+        organization_id: randOrgId,
+        recomissioned_status: 'AVAILABLE'
+      });
+
+      assert.equal(recomissionedTool.length, 1);
     });
 
   });
@@ -1005,8 +1144,14 @@ describe('Database creation and usage', async () => {
 
   describe('is_in_service_status()', () => {
 
-    it.skip('indicates whether or not a tool status is an in-service type status', async () => {
+    it('indicates whether or not a tool status is an in-service type status', async () => {
+      let isInServiceStatus = await dbFuncs.is_in_service_status({ tool_status: 'AVAILABLE' });
+      assert.ok(isInServiceStatus[0])
+      assert.ok(isInServiceStatus[0].is_in_service_status)
 
+      isInServiceStatus = await dbFuncs.is_in_service_status({ tool_status: 'BEYOND_REPAIR' });
+      assert.ok(isInServiceStatus[0])
+      assert.ok(!isInServiceStatus[0].is_in_service_status)
     });
 
   });
@@ -1017,14 +1162,12 @@ describe('Database creation and usage', async () => {
 
     });
 
-  });
+    it('is able to be called', async () => {
+      let randUserId = dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
 
-  describe('array_contains_null()', () => {
-
-    it.skip('indicates whether or not an array contains at least one null value', async () => {
-
+      let isUserActive = await dbFuncs.is_user_active({ user_id: randUserId });
+      assert.ok(isUserActive[0])
     });
-
   });
 
   after(async () => {

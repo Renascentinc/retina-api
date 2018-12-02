@@ -5,6 +5,12 @@ REFERENCES public."tool" (id, organization_id)
 	ON UPDATE RESTRICT;
 
 ALTER TABLE public.tool_snapshot
+ADD FOREIGN KEY (previous_tool_snapshot_id)
+REFERENCES public.tool_snapshot (id)
+	ON DELETE RESTRICT
+  ON UPDATE RESTRICT;
+
+ALTER TABLE public.tool_snapshot
 ADD FOREIGN KEY (owner_id, organization_id)
 REFERENCES public."tool_owner_id" (id, organization_id)
 	ON DELETE RESTRICT

@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_configurable_item(
+CREATE FUNCTION retina.get_configurable_item(
 	configurable_item_id  id_t,
 	organization_id 			id_t
 )

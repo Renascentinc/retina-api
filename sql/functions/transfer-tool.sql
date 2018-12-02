@@ -9,7 +9,7 @@
  * Each tool that is updated is added to the updated_tool_ids list. Finally,
  * all the updated tools are returned.
  */
-CREATE OR REPLACE FUNCTION public.transfer_tool (
+CREATE OR REPLACE FUNCTION retina.transfer_tool (
 	tool_id_list    integer[],
 	to_owner_id 	  id_t,
   organization_id id_t,

@@ -20,13 +20,21 @@ module.exports = {
       return tool[0];
     },
 
+    getMultipleTool: async (_, { tool_ids }, { db, session }) => {
+      let tools = await db.get_multiple_tool({
+        tool_ids,
+        organization_id: session.organization_id
+      });
+      return tools;
+    },
+
     /**
      * Split query into lexemes (stripping all unneccessary whitespace) and send them
      * to the search_tool db function
      *
      * 1) If there are no lexems, just use filters
-     * 2) If there are lexemes, but no filters, return
-     * 3) If there are bot
+     * 2) If there are lexemes, but no filters, return fuzzy search
+     * 3) If there are both lexemes and filters, use both
      * Whitespace removal regex found at https://stackoverflow.com/questions/2898192/how-to-remove-extra-white-spaces-using-javascript-or-jquery
      */
     searchTool: async (_, { query = '', toolFilter, pagingParameters = {} }, { db, session }) => {
@@ -94,14 +102,38 @@ module.exports = {
         organization_id: session.organization_id
       });
 
-      db.create_tool_snapshot({
-        ...decomissionedTool[0],
-        tool_action: db.tool_action.DECOMISSION.name,
-        actor_id: session.user_id,
-        action_note: decomission_reason
+      decomissionedTool = decomissionedTool[0];
+
+      if (decomissionedTool) {
+        db.create_tool_snapshot({
+          ...decomissionedTool,
+          tool_action: db.tool_action.DECOMISSION.name,
+          actor_id: session.user_id,
+          action_note: decomission_reason
+        });
+      }
+
+      return decomissionedTool;
+    },
+
+    recomissionTool: async (_, { tool_id, recomissioned_status }, { db, session }) => {
+      let recomissionedTool = await db.recomission_tool({
+        tool_id,
+        recomissioned_status,
+        organization_id: session.organization_id
       });
 
-      return decomissionedTool[0];
+      recomissionedTool = recomissionedTool[0];
+
+      if (recomissionedTool) {
+        db.create_tool_snapshot({
+          ...recomissionedTool,
+          tool_action: db.tool_action.RECOMISSION.name,
+          actor_id: session.user_id
+        });
+      }
+
+      return recomissionedTool;
     },
 
     transferMultipleTool: async(_, transferArgs, { db, session }) => {

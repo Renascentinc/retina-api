@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_PATH=. node main",
-    "test": "NODE_PATH=. ENVIRONMENT=test mocha --recursive tests --bail"
+    "start": "NODE_PATH=. RETINA_API_ROOT=`pwd` node main",
+    "test": "NODE_PATH=. RETINA_API_ROOT=`pwd` ENVIRONMENT=test mocha --recursive tests --bail --timeout 15000"
   },
   "dependencies": {
     "apollo-server": "^2.0.0",
@@ -19,6 +19,7 @@
     "mustache": "^3.0.1",
     "nodemailer": "^4.6.8",
     "pg": "^7.4.3",
+    "pg-error": "https://github.com/Renascentinc/node-pg-error.git",
     "timsort": "^0.3.0",
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3",

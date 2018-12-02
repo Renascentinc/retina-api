@@ -26,7 +26,7 @@ let appConfig = {
   'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
   'email.resetPassword.templatePath': 'templates/password-reset-email.mustache',
 
-  'ui.url': 'http://localhost:4200'
+  'ui.url': 'http://retina-us-east-1.s3-website.us-east-2.amazonaws.com'
 }
 
 appConfig['environment'] = process.env.ENVIRONMENT || 'local';
@@ -41,6 +41,7 @@ if (appConfig['environment'] == 'local') {
   appConfig['db.refreshSchema'] = true;
   appConfig['db.seed'] = true;
   process.env['DB_NAME'] = 'local_db';
+  appConfig['ui.url'] = 'http://localhost:4200';
 }
 
 if (appConfig['environment'] == 'test') {

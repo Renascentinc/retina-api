@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.update_location (
+CREATE OR REPLACE FUNCTION retina.update_location (
   id                id_t,
   city							str_t,
 	state 						state_t,

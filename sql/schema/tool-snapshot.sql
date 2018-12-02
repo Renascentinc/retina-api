@@ -1,7 +1,8 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.tool_snapshot (
-  id                SERIAL           PRIMARY KEY,
+  id                        SERIAL PRIMARY KEY,
+  previous_tool_snapshot_id id_t,
 
   ---------------- Tool Data ------------------
 	tool_id 					id_t             NOT NULL,
@@ -25,12 +26,12 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   actor_id               id_t        NOT NULL,
   action_note            text,
   CHECK (
-    (CASE WHEN NOT is_in_service_status(status) THEN action_note IS NOT NULL END)
+    (CASE WHEN NOT retina.is_in_service_status(status) THEN action_note IS NOT NULL END)
   )
 );
 
-CREATE INDEX ON public.tool_snapshot (tool_id);
-CREATE INDEX ON public.tool_snapshot (organization_id);
-CREATE INDEX ON public.tool_snapshot (tool_id, organization_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_index ON public.tool_snapshot (tool_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_organization_id_index ON public.tool_snapshot (organization_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_organization_id_index ON public.tool_snapshot (tool_id, organization_id);
 
 COMMIT;

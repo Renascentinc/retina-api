@@ -1,4 +1,4 @@
-CREATE FUNCTION public.get_all_organization()
+CREATE FUNCTION retina.get_all_organization()
  RETURNS SETOF public.organization
 AS $$
   BEGIN

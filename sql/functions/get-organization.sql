@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.get_organization(
+CREATE FUNCTION retina.get_organization(
 	organization_id id_t
 )
  RETURNS SETOF public.organization

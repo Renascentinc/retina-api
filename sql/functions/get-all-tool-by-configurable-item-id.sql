@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_all_tool_by_configurable_item_id (
+CREATE FUNCTION retina.get_all_tool_by_configurable_item_id (
   organization_id      id_t,
   configurable_item_id id_t
 ) RETURNS SETOF public.tool
@@ -8,7 +8,7 @@ AS $$
     RETURN QUERY
     	SELECT * FROM public.tool
     	WHERE public.tool.organization_id = get_all_tool_by_configurable_item_id.organization_id
-        AND is_in_service_status(tool.status)
+        AND retina.is_in_service_status(tool.status)
         AND get_all_tool_by_configurable_item_id.configurable_item_id
           = ANY(ARRAY[
             brand_id::integer,

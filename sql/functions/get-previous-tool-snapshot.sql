@@ -1,6 +1,6 @@
 
 
-CREATE FUNCTION public.get_previous_tool_snapshot(
+CREATE FUNCTION retina.get_previous_tool_snapshot(
 	tool_id   id_t,
   "timestamp" timestamp
 )

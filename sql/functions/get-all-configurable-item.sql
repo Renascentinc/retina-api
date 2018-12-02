@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.get_all_configurable_item (
+CREATE OR REPLACE FUNCTION retina.get_all_configurable_item (
 	organization_id id_t,
   page_size       integer = NULL,
   page_number     integer = 0

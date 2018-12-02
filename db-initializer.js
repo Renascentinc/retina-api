@@ -93,7 +93,7 @@ async function createDbFunctions(dbClient) {
 
   functionNames.forEach(name => {
     dbFunctions[name] = async params => {
-      return await dbClient.executeDbFunction(name, params);
+      return await dbClient.executeDbFunction(`retina.${name}`, params);
     }
   });
 

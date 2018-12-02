@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.update_tool (
+CREATE OR REPLACE FUNCTION retina.update_tool (
   id                id_t,
 	type_id						id_t,
 	brand_id					id_t,
@@ -32,7 +32,7 @@ AS $$
         owner_id          = update_tool.owner_id
       WHERE public.tool.id = update_tool.id
         AND public.tool.organization_id = update_tool.organization_id
-        AND is_in_service_status(tool.status)
+        AND retina.is_in_service_status(tool.status)
     RETURNING public.tool.id INTO updated_tool_id;
 
     RETURN QUERY SELECT * FROM public.tool WHERE public.tool.id = updated_tool_id;

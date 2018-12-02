@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS public.user (
 	role				 		role				     NOT NULL,
 	status			 		user_status      NOT NULL,
   organization_id id_t             NOT NULL,
-  PRIMARY KEY (id, organization_id),
-  CONSTRAINT user_unique_email UNIQUE (email, organization_id)
+  PRIMARY KEY (id, organization_id)
+  -- Constraint for unique user is in triggers/tool-insert-update.sql
 ) INHERITS (tool_owner);
 
-CREATE UNIQUE INDEX ON public.user (id);
+CREATE UNIQUE INDEX IF NOT EXISTS user_id_index ON public.user (id);
 
 /**
  * Because table public.user is an inherited table, its columns cannot be used

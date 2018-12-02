@@ -4,4 +4,5 @@ enum ToolAction {
   UPDATE
   TRANSFER
   DECOMISSION
+  RECOMISSION
 }

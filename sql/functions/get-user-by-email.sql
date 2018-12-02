@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION public.get_user_by_email (
+CREATE OR REPLACE FUNCTION retina.get_user_by_email (
   email           citext
 )
 RETURNS SETOF public.user

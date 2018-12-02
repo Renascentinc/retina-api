@@ -1,5 +1,10 @@
 const appConfig = require('../app-config');
-const { getDropFunctionsQueriesQuery, getDropExtensionsQueriesQuery, getDropTriggersQueriesQuery } = require('../sql/raw-queries');
+
+const { getDropFunctionsQueriesQuery,
+        getDropExtensionsQueriesQuery,
+        getDropTriggersQueriesQuery,
+        createSchemaQuery } = require('../sql/raw-queries');
+
 const { Client } = require('pg');
 const logger = require('../logger');
 const fileUtils = require('./file-utils');
@@ -46,6 +51,9 @@ async function createDb() {
 
 async function loadSchema(dbClient) {
   try {
+    logger.info('Creating Retina Namespace');
+    await createRetinaNamespace(dbClient);
+
     logger.info('Creating Extensions');
     await createExtensions(dbClient);
 
@@ -101,6 +109,10 @@ async function createTypes(dbClient) {
   }
 }
 
+async function createRetinaNamespace(dbClient) {
+  await dbClient.query(createSchemaQuery);
+}
+
 /**
  * Create the database schema from the schema .sql files.
  *
@@ -109,8 +121,8 @@ async function createTypes(dbClient) {
  */
 async function createSchema(dbClient) {
   try {
-    let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
     let base_schemas = fileUtils.readFilesFromDir(appConfig['db.baseSchemaDir']);
+    let schemas = fileUtils.readFilesFromDir(appConfig['db.schemaDir']);
     let all_schemas = [...base_schemas, ...schemas]
     await dbClient.query(all_schemas.join(';'));
   } catch (e) {
@@ -219,7 +231,7 @@ async function seedDb(dbClient) {
     for (let tableName in data) {
       let tableRows = data[tableName];
       for (let row of tableRows) {
-        await dbClient.executeDbFunction(`create_${tableName}`, row);
+        await dbClient.executeDbFunction(`retina.create_${tableName}`, row);
       }
     }
   } catch (e) {

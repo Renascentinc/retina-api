@@ -52,7 +52,8 @@ let tool_actions = [
   'CREATE',
   'UPDATE',
   'TRANSFER',
-  'DECOMISSION'
+  'DECOMISSION',
+  'RECOMISSION'
 ]
 
 let user_info = [
@@ -171,7 +172,7 @@ data.location = [
     organization_id: 2,
     address_line_one: '7638 Construction Ln.',
     address_line_two: null,
-    name: null
+    name: "ShatterDome"
   },
   {
     city: 'Nashville',
@@ -180,7 +181,7 @@ data.location = [
     organization_id: 3,
     address_line_one: '9183 Working Way',
     address_line_two: 'Greenfield Tower Room 3456',
-    name: null
+    name: "HQ"
   }
 ];
 
@@ -207,6 +208,8 @@ for (let orgConfig of orgConfigs) {
   }
 }
 
+// NOTE: It is currently critical that locations come before users in the
+//       tool_owner array because that is the order the are added to the `data` object
 metaData.tool_owner = [
   ...(data.location.map(location => ({...location, type: 'LOCATION'}))),
   ...(data.user.map(location => ({...location, type: 'USER'})))
@@ -230,7 +233,7 @@ for (let orgConfig of orgConfigs) {
       owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', orgId),
       price: null,
       photo: null,
-      year: null,
+      year: null
     })
   }
 }
@@ -247,6 +250,29 @@ if (appConfig['environment'] == 'test') {
       organization_id: metaData.tool_owner[originalIndex].organization_id
     })
   });
+
+}
+
+if (appConfig['environment'] == 'test' || appConfig['environment'] == 'local') {
+  data.tool_snapshot = []
+
+  let numToolSnapshot = 100;
+  for (var i = 0; i < numToolSnapshot; i++) {
+    let randToolId = dataUtil.getRandIdFromArray(data.tool);
+    let randTool = data.tool[randToolId - 1];
+
+    let { objects: users, originalIndecies } = dataUtil.getFromObjectArrayWhere(metaData.tool_owner, 'type', 'USER');
+    let randUserIndexInOrg = dataUtil.getRandIdFromObjectArrayWhere(users, 'organization_id', randTool.organization_id) - 1;
+    let randUserIdInOrg = originalIndecies[randUserIndexInOrg] + 1;
+    data.tool_snapshot.push({
+      id: dataUtil.normalizeToolId(randToolId),
+      ...randTool,
+      tool_action: dataUtil.getRandFromArray(tool_actions),
+      actor_id: randUserIdInOrg,
+      owner_type: metaData.tool_owner[randTool.owner_id - 1].type,
+      action_note: "A cool note"
+    })
+  }
 }
 
 module.exports = { data, metaData };

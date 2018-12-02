@@ -38,5 +38,6 @@ type Query {
 type Mutation {
   createUser(newUser: NewUser!): User
   updateUser(updatedUser: UpdatedUser!): User
-  updatePassword(user_id: ID!, current_password: String!, new_password: String!): Boolean
+  updateCurrentUserPassword(current_password: String!, new_password: String!): Boolean
+  updateUserPassword(user_id: ID!, new_password: String!): Boolean @requiresRole(requiredRole: ADMINISTRATOR)
 }

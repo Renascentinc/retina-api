@@ -1,5 +1,5 @@
 
-CREATE FUNCTION public.get_all_location (
+CREATE FUNCTION retina.get_all_location (
 	organization_id id_t
 )
  RETURNS SETOF public.location
