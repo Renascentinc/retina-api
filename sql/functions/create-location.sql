@@ -5,8 +5,8 @@ CREATE FUNCTION retina.create_location (
 	zip 							zip_t,
 	organization_id 	id_t,
 	address_line_one	long_str_t,
-  address_line_two 	long_str_t  = NULL,
-	"name" 						str_t       = NULL
+  "name" 						str_t,
+  address_line_two 	long_str_t  = NULL
 )
 RETURNS SETOF public.location
 AS $$

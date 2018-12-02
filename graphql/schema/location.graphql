@@ -5,8 +5,8 @@ type Location {
   zip:              String!
   address_line_one: String!
   type:             ToolOwnerType!
+  name: 						String!
   address_line_two: String
-  name: 						String
 }
 
 input NewLocation {
@@ -14,8 +14,8 @@ input NewLocation {
   state:            String!
   zip:              String!
   address_line_one: String!
+  name: 						String!
   address_line_two: String
-  name: 						String
 }
 
 input UpdatedLocation {
@@ -24,8 +24,8 @@ input UpdatedLocation {
   state:            String!
   zip:              String!
   address_line_one: String!
+  name: 						String!
   address_line_two: String
-  name: 						String
 }
 
 type Query {

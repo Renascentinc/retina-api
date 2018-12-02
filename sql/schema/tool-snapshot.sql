@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   )
 );
 
-CREATE INDEX ON public.tool_snapshot (tool_id);
-CREATE INDEX ON public.tool_snapshot (organization_id);
-CREATE INDEX ON public.tool_snapshot (tool_id, organization_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_index ON public.tool_snapshot (tool_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_organization_id_index ON public.tool_snapshot (organization_id);
+CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_organization_id_index ON public.tool_snapshot (tool_id, organization_id);
 
 COMMIT;
