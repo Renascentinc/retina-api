@@ -899,7 +899,7 @@
       "integrity": "sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k="
     },
     "enums": {
-      "version": "git+https://github.com/ekraihan/enums.git#0e456dacbdf605bbf3dedd0baa59c4c9ddf18b46"
+      "version": "git+https://github.com/ekraihan/enums.git#40cc1a0f7f5956aebb247a04e9e1aeeb57f3fa0f"
     },
     "env-variable": {
       "version": "0.0.5",
@@ -1733,6 +1733,11 @@
       "version": "2.0.0",
       "resolved": "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz",
       "integrity": "sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g="
+    },
+    "mustache": {
+      "version": "3.0.1",
+      "resolved": "https://registry.npmjs.org/mustache/-/mustache-3.0.1.tgz",
+      "integrity": "sha512-jFI/4UVRsRYdUbuDTKT7KzfOp7FiD5WzYmmwNwXyUVypC0xjoTL78Fqc0jHUPIvvGD+6DQSPHIt1NE7D1ArsqA=="
     },
     "mute-stream": {
       "version": "0.0.7",
