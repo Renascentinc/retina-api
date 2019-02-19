@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
 	serial_number 		str_t			 			 NOT NULL,
   owner_id          id_t             NOT NULL,
   owner_type        tool_owner_type  NOT NULL,
+  tagged            boolean          NOT NULL DEFAULT false,
 	date_purchased 		timestamp,
 	purchased_from_id id_t,
 	price 						integer,

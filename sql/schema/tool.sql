@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	price 						integer,
 	photo 						long_str_t,
 	"year" 						integer,
+  tagged            boolean          NOT NULL DEFAULT false,
   PRIMARY KEY (id, organization_id),
   CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
   -- Constraint for unique tool is in triggers/tool-insert-update.sql
