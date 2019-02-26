@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS public.tool (
 	price 						integer,
 	photo 						long_str_t,
 	"year" 						integer,
-  tagged            boolean          NOT NULL DEFAULT false,
   PRIMARY KEY (id, organization_id),
   CONSTRAINT tool_unique_photo UNIQUE (photo, organization_id)
   -- Constraint for unique tool is in triggers/tool-insert-update.sql
@@ -23,6 +22,9 @@ CREATE TABLE IF NOT EXISTS public.tool (
 
 CREATE UNIQUE INDEX IF NOT EXISTS tool_id_index ON public.tool (id);
 CREATE INDEX IF NOT EXISTS tool_filters_index ON public.tool (type_id, brand_id, owner_id, status);
+
+-- Add "tagged" column to tools setting the tools that already exist to true (all tools in the production app had been tagged)
+ALTER TABLE public.tool ADD COLUMN IF NOT EXISTS tagged BOOL NOT NULL DEFAULT true;
 
 COMMIT;
 
