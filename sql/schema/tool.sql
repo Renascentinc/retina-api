@@ -24,7 +24,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS tool_id_index ON public.tool (id);
 CREATE INDEX IF NOT EXISTS tool_filters_index ON public.tool (type_id, brand_id, owner_id, status);
 
 -- Add "tagged" column to tools setting the tools that already exist to true (all tools in the production app had been tagged)
-ALTER TABLE public.tool ADD COLUMN IF NOT EXISTS tagged BOOL NOT NULL DEFAULT true;
+ALTER TABLE public.tool ADD COLUMN IF NOT EXISTS tagged BOOL NOT NULL DEFAULT false;
 
 COMMIT;
 
