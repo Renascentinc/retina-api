@@ -50,7 +50,8 @@ input ToolFilter {
   brand_ids:     [ID!]
   type_ids:      [ID!]
   tool_statuses: [InServiceToolStatus!]
-  owner_ids:     [ID!]
+  owner_ids:     [ID!],
+  tagged:        Boolean
 }
 
 type Query {

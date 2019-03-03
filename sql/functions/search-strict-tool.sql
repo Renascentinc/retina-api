@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION retina.search_strict_tool (
   brand_ids       integer[]     = NULL,
   type_ids        integer[]     = NULL,
   tool_statuses   tool_status[] = NULL,
+  tagged          boolean       = NULL,
   page_size       integer       = NULL,
   page_number     integer       = 0
 )
@@ -38,15 +39,20 @@ AS $$
       query = query || ' AND status IN (SELECT status FROM unnest($4) as status)';
     END IF;
 
+    IF tagged IS NOT NULL THEN
+      query = query || ' AND tagged = $5';
+    END IF;
+
     query = query ||
       ' ORDER BY tool.id ASC' ||
-      ' OFFSET $5' ||
-      ' LIMIT $6';
+      ' OFFSET $6' ||
+      ' LIMIT $7';
 
     RETURN QUERY EXECUTE query USING owner_ids,
                                      brand_ids,
                                      type_ids,
                                      tool_statuses,
+                                     tagged,
                                      page_number*page_size,
                                      page_size;
 
