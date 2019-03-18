@@ -14,8 +14,7 @@ CREATE OR REPLACE VIEW tool_search_view AS
     tool.model_number AS tool_model_number,
     tool.serial_number AS tool_serial_number,
     COALESCE(public.location.name, '') AS location_name,
-    tool.status::text AS tool_status,
-    tool.tagged::text AS tagged
+    tool.status::text AS tool_status
     FROM tool
 
     LEFT JOIN public.user ON public.user.id = tool.owner_id
