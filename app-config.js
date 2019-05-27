@@ -25,8 +25,8 @@ let appConfig = {
   'server.graphql.resolver.scalarDir': `${rootDir}/graphql/resolvers/scalars`,
   'server.port': process.env.PORT || 4000,
 
-  'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
-  'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
+  'email.resetPassword.password': 'ae5845!!',
+  'email.resetPassword.address': 'amos@renascentinc.com',
   'email.resetPassword.templatePath': 'templates/password-reset-email.mustache',
 
   'ui.url': 'http://retina-us-east-1.s3-website.us-east-2.amazonaws.com'
