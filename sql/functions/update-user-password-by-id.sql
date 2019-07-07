@@ -1,5 +1,5 @@
 
-
+-- TODO: Delete this function and replace its usage with update_user_password (verify that deleting is truely safe)
 CREATE OR REPLACE FUNCTION retina.update_user_password_by_id (
 	user_id          id_t,
   new_password     long_str_t,

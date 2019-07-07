@@ -568,7 +568,8 @@ describe('Database creation and usage', async () => {
         type_ids: [randomToolFromDb.type_id],
         brand_ids: [randomToolFromDb.brand_id],
         tool_statuses: [randomToolFromDb.status],
-        organization_id: randomToolFromDb.organization_id
+        organization_id: randomToolFromDb.organization_id,
+        tagged: randomToolFromDb.tagged
       });
 
       assert.ok(tools.length > 0);
@@ -1167,6 +1168,16 @@ describe('Database creation and usage', async () => {
 
       let isUserActive = await dbFuncs.is_user_active({ user_id: randUserId });
       assert.ok(isUserActive[0])
+    });
+  });
+
+  describe('array_to_string_list()', () => {
+    // TODO: Had to use a raw sql query because postgres wasn't able to derive
+    //       the type of the js array being passed. Possibly add logic to
+    //       executeDbFunction that explicitly converts js arrays to "ARRAY[x,y,z]"?
+    it('combines array values into a list of quoted values', async () => {
+      const result = await dbClient.query("SELECT * FROM retina.array_to_string_list(ARRAY[9,10,32,1])");
+      assert.equal(result.rows[0].array_to_string_list, "('9','10','32','1')")
     });
   });
 

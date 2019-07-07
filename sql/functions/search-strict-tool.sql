@@ -20,41 +20,36 @@ CREATE OR REPLACE FUNCTION retina.search_strict_tool (
 RETURNS SETOF public.tool
 AS $$
   DECLARE
-    query text = 'SELECT * FROM public.tool WHERE organization_id = ' || organization_id || ' AND retina.is_in_service_status(tool.status)';
+    queryString text = 'SELECT * FROM public.tool WHERE organization_id = ' || organization_id || ' AND retina.is_in_service_status(tool.status)';
   BEGIN
 
     IF owner_ids IS NOT NULL AND array_length(owner_ids, 1) > 0 THEN
-      query = query || ' AND owner_id IN (SELECT id FROM unnest($1) as id)';
+      queryString = queryString || ' AND owner_id IN ' || retina.array_to_string_list(owner_ids);
     END IF;
 
     IF brand_ids IS NOT NULL AND array_length(brand_ids, 1) > 0 THEN
-      query = query || ' AND brand_id IN (SELECT id FROM unnest($2) as id)';
+      queryString = queryString || ' AND brand_id IN ' || retina.array_to_string_list(brand_ids);
     END IF;
 
     IF type_ids IS NOT NULL AND array_length(type_ids, 1) > 0 THEN
-      query = query || ' AND type_id IN (SELECT id FROM unnest($3) as id)';
+      queryString = queryString || ' AND type_id IN ' || retina.array_to_string_list(type_ids);
     END IF;
 
     IF tool_statuses IS NOT NULL AND array_length(tool_statuses, 1) > 0 THEN
-      query = query || ' AND status IN (SELECT status FROM unnest($4) as status)';
+      queryString = queryString || ' AND status IN ' || retina.array_to_string_list(tool_statuses);
     END IF;
 
     IF tagged IS NOT NULL THEN
-      query = query || ' AND tagged = $5';
+      queryString = queryString || ' AND tagged = ' || tagged;
     END IF;
 
-    query = query ||
-      ' ORDER BY tool.id ASC' ||
-      ' OFFSET $6' ||
-      ' LIMIT $7';
+    queryString = queryString || ' ORDER BY tool.id ASC ';
 
-    RETURN QUERY EXECUTE query USING owner_ids,
-                                     brand_ids,
-                                     type_ids,
-                                     tool_statuses,
-                                     tagged,
-                                     page_number*page_size,
-                                     page_size;
+    IF page_size IS NOT NULL THEN
+      queryString = queryString || ' OFFSET ' || page_number*page_size || ' LIMIT ' || page_size;
+    END IF;
+
+    RETURN QUERY EXECUTE queryString;
 
   END;
 $$
