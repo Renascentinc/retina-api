@@ -15,7 +15,8 @@ CREATE FUNCTION retina.create_tool_snapshot (
 	price           	    integer       = NULL,
 	photo							    long_str_t		= NULL,
 	"year"						    integer				= NULL,
-  action_note           text          = NULL
+  action_note           text          = NULL,
+  tagged                boolean       = false
 ) RETURNS SETOF public.tool_snapshot
 AS $$
   BEGIN
@@ -37,7 +38,8 @@ AS $$
         tool_action,
         owner_type,
         actor_id,
-        action_note
+        action_note,
+        tagged
       )
       VALUES (
         id,
@@ -56,7 +58,8 @@ AS $$
         tool_action,
         owner_type,
         actor_id,
-        action_note
+        action_note,
+        tagged
       )
       RETURNING *;
   END;

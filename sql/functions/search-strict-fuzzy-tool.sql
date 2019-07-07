@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION retina.search_strict_fuzzy_tool (
   brand_ids       integer[]     = NULL,
   type_ids        integer[]     = NULL,
   tool_statuses   tool_status[] = NULL,
+  tagged          boolean       = NULL,
   page_size       integer       = NULL,
   page_number     integer       = 0
 )
@@ -23,6 +24,7 @@ AS $$
           brand_ids := brand_ids,
           type_ids := type_ids,
           tool_statuses := tool_statuses,
+          tagged := tagged,
           page_size := page_size,
           page_number := page_number
         );
@@ -36,7 +38,8 @@ AS $$
           owner_ids := owner_ids,
           brand_ids := brand_ids,
           type_ids := type_ids,
-          tool_statuses := tool_statuses
+          tool_statuses := tool_statuses,
+          tagged := tagged
         )
       ),
       page_size := page_size,

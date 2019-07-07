@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION retina.create_tool (
 	purchased_from_id	id_t					= NULL,
 	price           	integer       = NULL,
 	photo							long_str_t		= NULL,
-	"year"						integer				= NULL
+	"year"						integer				= NULL,
+  tagged            boolean       = false
 ) RETURNS SETOF public.tool
 AS $$
   BEGIN
@@ -28,6 +29,7 @@ AS $$
         serial_number,
         organization_id,
         owner_id,
+        tagged,
         owner_type
       )
       VALUES (
@@ -43,6 +45,7 @@ AS $$
         serial_number,
         organization_id,
         owner_id,
+        tagged,
         (SELECT type from public.tool_owner where id = owner_id)
       )
       RETURNING *;

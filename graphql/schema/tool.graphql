@@ -2,45 +2,48 @@
 type Tool {
   id:                ID!
   type:              ConfigurableItem!
-	brand:             ConfigurableItem!
-	model_number:      String!
+  brand:             ConfigurableItem!
+  model_number:      String!
   serial_number:     String!
-	status:            ToolStatus!
+  status:            ToolStatus!
   owner:             ToolOwner!
   purchased_from:    ConfigurableItem
   date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
+  tagged:            Boolean
 }
 
 input NewTool {
   type_id:           ID!
-	brand_id:          ID!
-	model_number:      String!
+  brand_id:          ID!
+  model_number:      String!
   serial_number:     String!
-	status:            InServiceToolStatus!
+  status:            InServiceToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
+  tagged:            Boolean
 }
 
 input UpdatedTool {
   id:                ID!
   type_id:           ID!
-	brand_id:          ID!
-	model_number:      String!
+  brand_id:          ID!
+  model_number:      String!
   serial_number:     String!
-	status:            InServiceToolStatus!
+  status:            InServiceToolStatus!
   owner_id:          ID!
   purchased_from_id: ID
   date_purchased:    Date
   photo:             String
   price:             Int
   year:              Int
+  tagged:            Boolean
 }
 
 input ToolFilter {

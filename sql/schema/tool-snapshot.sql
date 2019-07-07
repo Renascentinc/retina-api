@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS public.tool_snapshot (
   )
 );
 
+-- Add column to track wether the tool has an NFC tag
+ALTER TABLE public.tool_snapshot ADD COLUMN IF NOT EXISTS tagged BOOL NOT NULL DEFAULT false;
+
 CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_index ON public.tool_snapshot (tool_id);
 CREATE INDEX IF NOT EXISTS tool_snapshot_organization_id_index ON public.tool_snapshot (organization_id);
 CREATE INDEX IF NOT EXISTS tool_snapshot_tool_id_organization_id_index ON public.tool_snapshot (tool_id, organization_id);
