@@ -16,6 +16,7 @@
     "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.9.2",
     "merge-graphql-schemas": "^1.5.3",
+    "mustache": "^3.0.1",
     "nodemailer": "^4.6.8",
     "pg": "^7.4.3",
     "pg-error": "https://github.com/Renascentinc/node-pg-error.git",

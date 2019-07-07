@@ -2,6 +2,8 @@ node_modules/
 logs/
 **/.DS_Store
 
+rendered_templates/*
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

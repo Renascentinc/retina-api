@@ -27,6 +27,7 @@ let appConfig = {
 
   'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
   'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
+  'email.resetPassword.templatePath': 'templates/password-reset-email.mustache',
 
   'ui.url': 'http://retina-us-east-1.s3-website.us-east-2.amazonaws.com'
 }
