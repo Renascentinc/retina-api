@@ -8,9 +8,9 @@ type ToolSnapshot {
 }
 
 type ToolSnapshotMetadata {
-  timestamp: Date!
+  timestamp:   Date!
   tool_action: ToolAction!
-  actor: User!
+  actor:       User!
   action_note: String
 }
 

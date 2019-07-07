@@ -233,7 +233,8 @@ for (let orgConfig of orgConfigs) {
       owner_id: dataUtil.getRandIdFromObjectArrayWhere(metaData.tool_owner, 'organization_id', orgId),
       price: null,
       photo: null,
-      year: null
+      year: null,
+      tagged: false
     })
   }
 }

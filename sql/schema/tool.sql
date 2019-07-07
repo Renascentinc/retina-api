@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS public.tool (
   -- Constraint for unique tool is in triggers/tool-insert-update.sql
 );
 
+-- Field tracking whether the tool has an NFC tag
+ALTER TABLE public.tool ADD COLUMN IF NOT EXISTS tagged BOOL NOT NULL DEFAULT false;
+
 CREATE UNIQUE INDEX IF NOT EXISTS tool_id_index ON public.tool (id);
 CREATE INDEX IF NOT EXISTS tool_filters_index ON public.tool (type_id, brand_id, owner_id, status);
 
