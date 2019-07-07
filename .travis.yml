@@ -10,6 +10,9 @@ cache:
     - "node_modules"
     - $HOME/.npm
 
+install:
+  - npm ci
+
 deploy:
   - provider: elasticbeanstalk
     access_key_id: $AWS_ACCESS_KEY_ID
