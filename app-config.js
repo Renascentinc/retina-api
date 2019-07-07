@@ -25,7 +25,7 @@ let appConfig = {
   'server.graphql.resolver.scalarDir': `${rootDir}/graphql/resolvers/scalars`,
   'server.port': process.env.PORT || 4000,
 
-  'email.resetPassword.password': rocess.env.RESET_PASSWORD_EMAIL_PASSWORD,
+  'email.resetPassword.password': process.env.RESET_PASSWORD_EMAIL_PASSWORD,
   'email.resetPassword.address': process.env.RESET_PASSWORD_EMAIL_ADDRESS,
   'email.resetPassword.templatePath': 'templates/password-reset-email.mustache',
 
