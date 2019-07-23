@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION retina.update_tool (
 	purchased_from_id	id_t       = NULL,
 	price           	integer    = NULL,
 	photo							long_str_t = NULL,
-	"year"						integer    = NULL
+	"year"						integer    = NULL,
+  tagged            boolean    = false
 ) RETURNS SETOF public.tool
 AS $$
   DECLARE
@@ -29,7 +30,8 @@ AS $$
         photo             = update_tool.photo,
         "year"            = update_tool.year,
         serial_number     = update_tool.serial_number,
-        owner_id          = update_tool.owner_id
+        owner_id          = update_tool.owner_id,
+        tagged            = update_tool.tagged
       WHERE public.tool.id = update_tool.id
         AND public.tool.organization_id = update_tool.organization_id
         AND retina.is_in_service_status(tool.status)
