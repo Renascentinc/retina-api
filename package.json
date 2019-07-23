@@ -1,6 +1,6 @@
 {
   "name": "retina-api",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "scripts": {
     "start": "NODE_PATH=. RETINA_API_ROOT=`pwd` node main",
