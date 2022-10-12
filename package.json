@@ -7,7 +7,7 @@
     "test": "NODE_PATH=. RETINA_API_ROOT=`pwd` ENVIRONMENT=test mocha --recursive tests --bail --timeout 15000"
   },
   "dependencies": {
-    "apollo-server": "^2.0.0",
+    "apollo-server": "^2.25.4",
     "chalk": "^2.4.1",
     "enums": "https://github.com/ekraihan/enums.git",
     "faker": "^4.1.0",
